@@ -4,12 +4,15 @@ library(rtweet)
 library(twitteR)
 library(ROAuth)
 library(jsonlite)
+library(dotenv)
+
+load_dot_env()
 
 ## Twitter Keys
-consumer_key = '3EuROHEpPcp45Gl7kU86X9JfT'
-consumer_secret = '81jx9G70Neb7xbThikeKMb0nRYn7OZYuLkAVZTgByvZPeaWfJo'
-access_token = '1410722016081108994-LP9HQ1kqveMY0cAN55OvY98gfCZh8W'
-access_secret = '2Hgy2Qyymw01vh1ODyvSI1y3OqpTDKmTBpiMlWpAjGo42'
+consumer_key = TWITTER_CONSUMER_KEY
+consumer_secret = TWITTER_CONSUMER_SECRET
+access_token = TWITTER_ACCESS_TOKEN
+access_secret = TWITTER_ACCESS_SECRET
 
 
 ## Setup
