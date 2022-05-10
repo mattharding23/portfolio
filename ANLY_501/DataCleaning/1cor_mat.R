@@ -1,0 +1,1 @@
+ggpairs(dataset[,c(4:11)])
