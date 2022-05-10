@@ -1,0 +1,82 @@
+## Creating Table of Lift Values
+
+## Sort by Lift
+eotb_rules_lift = sort(eotb_rules, by="lift", decreasing=TRUE)
+inspect(eotb_rules_lift[1:20])
+
+# Create dataframe with rules sorted by confidence
+eotb_lift = DATAFRAME(eotb_rules_lift, separate = TRUE)
+
+# Make rules more visually appealing
+eotb_lift[] = lapply(eotb_lift, gsub, pattern='[{]', replacement='')
+eotb_lift[] = lapply(eotb_lift, gsub, pattern='[}]', replacement='')
+eotb_lift[] = lapply(eotb_lift, gsub, pattern='[_]', replacement=' ')
+eotb_lift[] = lapply(eotb_lift, gsub, pattern='[,]', replacement=' & ')
+
+# Get columns for table & change column names
+eotb_lift = eotb_lift[,c('LHS','RHS','confidence','support','lift')]
+colnames(eotb_lift) = c('Source','Target', 'Confidence','Support','Lift')
+
+# Round numbers for table
+eotb_lift[,3:5] = as.numeric(unlist(eotb_lift[,3:5]))
+eotb_lift[,3:5] = round(eotb_lift[,3:5],3)
+
+# Get top 15 rules
+disp_lift = eotb_lift[1:15,]
+
+# Don't show row names
+row.names(disp_lift) = NULL
+
+
+# Create table with gt package
+lift = gt(disp_lift)
+lift = lift %>%
+  
+  # Create title & Subtitle
+  tab_header(
+    title = 'Association Rules',
+    subtitle = "Sorted by Lift"
+  ) %>%
+  
+  # Highlight Column of interest
+  tab_style(
+    style = cell_fill(color = "yellow"),
+    locations = cells_body(
+      columns = Lift)) %>%
+  
+  # Show High confidence values
+  tab_style(
+    style = cell_fill(color = "lightgreen"),
+    locations = cells_body(
+      columns = Confidence,
+      rows = Confidence > .8
+    )
+  )%>%
+  
+  # Show high support values
+  tab_style(
+    style = cell_fill(color = "lightgreen"),
+    locations = cells_body(
+      columns = Support,
+      rows = Support > .1
+    )
+  )%>%
+  
+  # Bold source where both support and confidence are high
+  tab_style(
+    style = cell_text(weight = "bold"),
+    locations = cells_body(
+      columns = Source,
+      rows = (Confidence > .8 & Support > .1)
+  )) %>%
+  
+  # Bold target where both support and confidence are high
+  tab_style(
+    style = cell_text(weight = "bold"),
+    locations = cells_body(
+      columns = Target,
+      rows = (Confidence > .8 & Support > .1)))
+
+lift
+gtsave(lift,'lift_table.html')
+

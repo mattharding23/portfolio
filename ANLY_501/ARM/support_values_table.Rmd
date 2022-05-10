@@ -1,0 +1,82 @@
+## Creating Table of Support Values
+
+## Sort by Sup
+eotb_rules_sup = sort(eotb_rules, by="support", decreasing=TRUE)
+inspect(eotb_rules_sup[1:20])
+
+# Create dataframe with rules sorted by confidence
+eotb_sup = DATAFRAME(eotb_rules_sup, separate = TRUE)
+
+# Make rules more visually appealing
+eotb_sup[] = lapply(eotb_sup, gsub, pattern='[{]', replacement='')
+eotb_sup[] = lapply(eotb_sup, gsub, pattern='[}]', replacement='')
+eotb_sup[] = lapply(eotb_sup, gsub, pattern='[_]', replacement=' ')
+eotb_sup[] = lapply(eotb_sup, gsub, pattern='[,]', replacement=' & ')
+
+# Get columns for table & change column names
+eotb_sup = eotb_sup[,c('LHS','RHS','confidence','support','lift')]
+colnames(eotb_sup) = c('Source','Target', 'Confidence','Support','Lift')
+
+# Round numbers for table
+eotb_sup[,3:5] = as.numeric(unlist(eotb_sup[,3:5]))
+eotb_sup[,3:5] = round(eotb_sup[,3:5],3)
+
+# Get top 15 rules
+disp_sup = eotb_sup[1:15,]
+
+# Don't show row names
+row.names(disp_sup) = NULL
+
+
+# Create table with gt package
+sup = gt(disp_sup)
+sup = sup %>%
+  
+  # Create title & Subtitle
+  tab_header(
+    title = 'Association Rules',
+    subtitle = "Sorted by Support"
+  ) %>%
+  
+  # Highlight Column of interest
+  tab_style(
+    style = cell_fill(color = "yellow"),
+    locations = cells_body(
+      columns = Support)) %>%
+  
+  # Show High confidence values
+  tab_style(
+    style = cell_fill(color = "lightgreen"),
+    locations = cells_body(
+      columns = Confidence,
+      rows = Confidence > .75
+    )
+  )%>%
+  
+  # Show high lift values
+  tab_style(
+    style = cell_fill(color = "lightgreen"),
+    locations = cells_body(
+      columns = Lift,
+      rows = Lift > 1.8
+    )
+  )%>%
+  
+  # Bold source where both lift and confidence are high
+  tab_style(
+    style = cell_text(weight = "bold"),
+    locations = cells_body(
+      columns = Source,
+      rows = (Confidence > .75 & Lift > 1.8)
+  )) %>%
+  
+  # Bold target where both lift and confidence are high
+  tab_style(
+    style = cell_text(weight = "bold"),
+    locations = cells_body(
+      columns = Target,
+      rows = (Confidence > .75 & Lift > 1.8)))
+
+sup
+gtsave(sup,'support_table.html')
+
