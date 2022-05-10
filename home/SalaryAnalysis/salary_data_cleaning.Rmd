@@ -1,0 +1,124 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+###########################
+Notes about output:
+
+Upon output - there will be a single data set for each season spanning from the 
+09-10 season to the 20-21 season. Each dataset contains the player, his team, his 
+salary, and the number of games he played that season. My thoughts for using this 
+for analysis would be to label teams based on win percentage as a good or bad team
+and then we could do some hypothesis testing on whether the good teams have a higher
+or lower median salary, top salary, Q3 salary etc. 
+
+###########################
+
+### Data URLs ###
+https://hoopshype.com/salaries/players/2020-2021/
+https://www.nba.com/stats/players/traditional/?sort=PTS&dir=-1&Season=2020-21&SeasonType=Regular%20Season
+
+#################
+
+## Libraries
+```{r}
+library(ggplot2)
+library(XLConnect)
+library(tidyverse)
+library(ggimage)
+library(jsonlite)
+library(httr)
+library(rvest)
+library(gghighlight)
+`%!in%` <- Negate(`%in%`)
+options(java.parameters = "- Xmx1024m")
+```
+
+
+## Importing Datasets
+```{r}
+l_sals = c()
+years = c('09_10',"10_11","11_12","12_13","13_14","14_15","15_16","16_17","17_18","18_19","19_20","20_21")
+for(i in 1:12){
+  sals = readWorksheetFromFile("raw_salary_data.xlsx",sheet = i,header = FALSE)
+  d_var_1 = paste0('sals_',years[i])
+  sals = sals[,2:3]
+  colnames(sals) = c('player','salary')
+  assign(d_var_1, sals)
+  xlcFreeMemory()
+
+  
+}
+l_stats = c()
+for(i in 1:12){
+  stats = readWorksheetFromFile("raw_player+team_data.xlsx",sheet = i)
+  d_var_2 = paste0('stats_',years[i])
+  stats = stats[,c(2:3,5)]
+  assign(d_var_2, stats)
+  xlcFreeMemory()
+}
+
+```
+
+## Join Datasets
+```{r}
+sal_join = function(sal,stat){
+  sal = sal %>%
+    left_join(stat, by = c('player' = 'PLAYER')) %>%
+    drop_na() %>%
+    arrange(TEAM)
+  return(sal)
+}
+sals_09_10 = sal_join(sals_09_10,stats_09_10)
+sals_10_11 = sal_join(sals_10_11,stats_10_11)
+sals_11_12 = sal_join(sals_11_12,stats_11_12)
+sals_12_13 = sal_join(sals_12_13,stats_12_13)
+sals_13_14 = sal_join(sals_13_14,stats_13_14)
+sals_14_15 = sal_join(sals_14_15,stats_14_15)
+sals_15_16 = sal_join(sals_15_16,stats_15_16)
+sals_16_17 = sal_join(sals_16_17,stats_16_17)
+sals_17_18 = sal_join(sals_17_18,stats_17_18)
+sals_18_19 = sal_join(sals_18_19,stats_18_19)
+sals_19_20 = sal_join(sals_19_20,stats_19_20)
+sals_20_21 = sal_join(sals_20_21,stats_20_21)
+sals = list(sals_09_10,sals_10_11,sals_11_12,sals_12_13,sals_13_14,
+            sals_14_15,sals_15_16,sals_16_17,sals_17_18,sals_18_19,
+            sals_19_20,sals_20_21)
+
+
+
+
+```
+
+## Write to csvs
+```{r}
+for(i in 1:12){
+  fn = paste0('salaries_',years[i],'.csv')
+  write_csv(sals[[i]],fn)
+}
+
+```
+
+
+```{r}
+df = data.frame(player=character(),
+                salary=numeric(), 
+                TEAM=character(),
+                GP=numeric(),
+                year=character(),
+                stringsAsFactors=FALSE) 
+
+for(i in 1:12){
+  x = sals[[i]]
+  x$year = years[i]
+
+  df = rbind(df,x)
+  
+}
+write_csv(df,'all_seasons_salaries.csv')
+
+```
+
+
+
