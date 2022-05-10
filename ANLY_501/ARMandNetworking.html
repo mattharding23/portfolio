@@ -1,0 +1,217 @@
+<html>
+    <head>
+        <link rel="stylesheet" type="text/css" href="https://mharding.georgetown.domains/style.css"/>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+        <script type="text/javascript" src="https://mharding.georgetown.domains/portfolio_java.js"></script>
+    </head>
+    <body>
+  
+        <div class = "top_image_box">
+            <img src="http://mharding.georgetown.domains/chesapeake_bay_img1.jpg" width = "1640"/>
+        </div>
+        
+        <div id="mySidebar" class="sidebar">
+            <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+            <a href="https://mharding.georgetown.domains/">Home</a>
+            <a href="https://mharding.georgetown.domains/ANLY_501/Introduction.html">Introduction</a>
+            <a href="https://mharding.georgetown.domains/ANLY_501/DataGathering.html">Data Gathering</a>
+            <a href="https://mharding.georgetown.domains/ANLY_501/DataCleaning.html">Data Cleaning</a>
+            <a href="https://mharding.georgetown.domains/ANLY_501/DataExploration.html">Exploring Data</a>
+            <a href="https://mharding.georgetown.domains/ANLY_501/Clustering.html">Clustering</a>
+            <a href="https://mharding.georgetown.domains/ANLY_501/ARMandNetworking.html">ARM & Networking</a>
+            <a href="https://mharding.georgetown.domains/ANLY_501/DecisionTrees.html">Decision Trees</a>
+            <a href="https://mharding.georgetown.domains/ANLY_501/NaiveBayes.html">NaiveBayes</a>
+            <a href="https://mharding.georgetown.domains/ANLY_501/SVM.html">SVM</a>
+            <a href="https://mharding.georgetown.domains/ANLY_501/Conclusions.html">Conclusions</a>
+
+
+        </div>
+    
+        <div id="main">
+            <button class="openbtn" onclick="openNav()">&#9776;</button>
+        </div>
+
+        <div id="intro_title">
+            Association Rule Mining & Networking
+        </div>
+        <div class = "arm">
+            <div>
+                <h2 class = "arm_head">
+                    "Eyes on the Bay" Data ARM & Networking
+                </h2>
+            </div>
+            <div>
+                <div id = "data_gather_buttons" text-align = "left">
+
+                        <a class="btn btn-outline-secondary btn-sm" href = "http://mharding.georgetown.domains/ANLY_501/DataCleaning/EOTB_Cleaned.csv" download="EOTB_Cleaned.csv" role = "button">Record Data</a>
+                        <a class="btn btn-outline-secondary btn-sm" href = "http://mharding.georgetown.domains/ANLY_501/ARM/eotb_grouped.csv" download="eotb_grouped.csv" role = "button">Transaction Data</a>
+                        
+                        <a class="btn btn-outline-secondary btn-sm" href = "http://mharding.georgetown.domains/ANLY_501/ARM/EOTB_ARM.Rmd" download="EOTB_ARM.Rmd" role = "button">All R Code</a>
+                </div>
+                    
+            </div>
+            <div class = "arm_txt_box">
+                <p>
+                    The "Eyes on the Bay" data structured as record data can be a bit overwhelming to view visually as is. There are millions of data points that span several dimensions and it is difficult to visualize relationships between many of the variables. One way to simplify this is to categorize each column of data such that each numerical value in a column is summarized into a fixed number of bins. For example, a low value in one column may be changed from the number "2" to the character value "Low x" because the values that go in "Low x" are any values in that column below the number 5. For this dataset the bin ranges were selected by either using knowledge about the variable, or viewing the summary statistics of the variable to determine approriate ranges. The bins of each variable can be seen in <i>Table 1</i> below. 
+                </p>
+
+            </div>
+            <div>
+                <figure class = "arm_img_box">
+                    <iframe id="igraph" scrolling="no" style="border:none;" seamless="seamless" src="https://mattharding23.github.io/ARM/specs_table.html" height="325" width="100%"></iframe>
+                    <figcaption>
+                        Table 1: Specifications for bins of each category with numerical data
+                    </figcaption>
+                </figure>
+            </div>
+            <div class = "arm_txt_box">
+                <p>
+                    In addition to those six columns, the month and station location column were also included in this data set. There were no alterations to the station location as it was already categorized. The month column was changed from the numerical version of the month to a character version. At this point, the data was ready to be read in as transaction data. A sample of the data is pictured in <i>Table 2</i>. Additionally, <i>Figure 1</i> shows the relative frequencies of some of the top items in the dataset.
+                </p>
+
+            </div>
+            <div>
+                <figure>
+                    <img src="http://mharding.georgetown.domains/ANLY_501/ARM/cat_data_ss.png" class = "arm_img_box" >
+                    <figcaption>
+                        Table 2: Categorized version of "Eyes on the Bay" data
+                    </figcaption>
+                </figure>
+            </div>
+            <div>
+                <figure>
+                    <img src="http://mharding.georgetown.domains/ANLY_501/ARM/freq_plot.png" class = "arm_img_box" >
+                    <figcaption>
+                        Figure 1: Frequencies of top 15 most popular items in dataset <a href = "http://mharding.georgetown.domains/ANLY_501/ARM/1_freq_plot.R" download="1_freq_plot.R" role = "button">Code</a>
+                    </figcaption>
+                </figure>
+            </div>
+            <div class = "arm_txt_box">
+                <p>
+                    This categorized data can be thought of as a type of transaction data. Each row or data point equates to a transaction in that each column in a row can be thought of as an item in a transaction basket. By converting this data from a data frame into transaction data, it is then possible to perferm association rule mining (ARM) on the data. The goal of performing ARM on this data set is to find relationships between variables in the dataset that may have been more ddificult to see when visualizing the data as record data. To perform ARM, a algorithm called apriori can be utilized to avoid the unnecessary calculation of associtations between variables that are already known to not be associated. For example, if it is known that item A is not associated with item B, then the algorithm automatically knows that item A cannot be associated with a combination of items B and C. This algorithm avoids a significant amount of computation by doing this and eventually will output a series of rules which can be quantified using different metrics that accompany each of the rules. 
+                </p>
+                <p>
+                    The metrics that will be studied with this data set are called "support", "confidence", and "lift". The support of a rule refers to how often the association between the two item sets in the rule occurs relative to the total amount of transactions or rows in a data set. The confidence then measures the probability the items associate to each other relative to the probability that one of the items shows up in the dataset. the confidence will never be smaller than the support. Finally, the lift measures the independence of the items in the rule by taking the probability that the items occur together and dividing that by the product of probability that each item occurs in the dataset, regardless of the other item. It should be noted that a lift that is less than 1 shows very little association and a lift that is close to 1 means that the items are dependent on each other.  Each of these measurements can give an insight into the strength of a rule. Using the apriori algorith with a minimum support of 0.075 and a confidence of at least 0.6, 94 rules were found from this dataset. <i>Figure 2</i> below shows a 3D plot of the support, confidence and lift of each rule. 
+                </p>
+
+            </div>
+            <div>
+                <figure class = "arm_img_box">
+                    <iframe id="igraph" scrolling="no" style="border:none;" seamless="seamless" src="https://mattharding23.github.io/ARM/Association_Rules_3d_plot.html" height="525" width="75%"></iframe>
+                    <figcaption>
+                        Figure 2: 3D plot of measurements of rules in "Eyes on the Bay" data set <a  href = "http://mharding.georgetown.domains/ANLY_501/ARM/3D_plot_arm.rmd" download="3D_plot_arm.rmd">Plot Code</a>
+                    </figcaption>
+                </figure>
+            </div>
+            <div class = "arm_txt_box">
+                <p>
+                    As can be seen in <i>Figure 2</i>, each measurement of association identifies different rules to be the strongest rules. Fortuantely, the data can be sorted in order to highlight which rules are strongest for each measurement. To start with the simplest of associations, the data can be sorted to view the largest values of support, which can be seen in <i>Table 3</i> below. The table shows the 15 rules with the highest values of support. Additionally, it can be seen that there are some rules which have high confidence and or lift values which are highlighted in green. Another way to view these rules is a network plot. This plot, shown in <i>Figure 3</i>, shows which items associate with others and gives a better view than the table of which items associate with multiple other items. The plot is interactive so nodes can be selected and moved around to get a better view of its associations. Additionally, the different colors of nodes represent the degree of the node, or the number of edges that are adjacent to it. Finally, <i>Figure 4</i> shows a paralell coordinates plot which is another representation of how each item relates to other items. The more colorful and fuller arrows represent stronger associations. 
+                </p>
+
+            </div>
+            <div>
+                <figure class = "arm_img_box">
+                    <iframe id="igraph" scrolling="no" style="border:none;" seamless="seamless" src="https://mattharding23.github.io/ARM/support_table.html" height="635" width="100%"></iframe>
+                    <figcaption>
+                        Table 3: Rules with 15 highest support values (<a  href = "http://mharding.georgetown.domains/ANLY_501/ARM/support_values_table.Rmd" download="support_values_table.Rmd">Code</a>) 
+                    </figcaption>
+                </figure>
+            </div>
+            <div>
+                <figure class = "arm_img_box">
+                    <iframe id="igraph" scrolling="no" seamless="seamless" src="https://mattharding23.github.io/ARM/d3_network_eotb_support.html" height="550" width="75%"></iframe>
+                    <figcaption>
+                        Figure 3: Network of rules with 15 highest support values (<a  href = "http://mharding.georgetown.domains/ANLY_501/ARM/support_network.Rmd" download="support_network.Rmd">Code</a>) 
+                    </figcaption>
+                </figure>
+            </div>
+            <div>
+                <figure>
+                    <img src="http://mharding.georgetown.domains/ANLY_501/ARM/par_coord_sup.png" class = "arm_img_box" >
+                    <figcaption>
+                        Figure 4: Parallel coordinates plot of rules with 15 highest support values (<a  href = "http://mharding.georgetown.domains/ANLY_501/ARM/par_coord_sup.Rmd" download="par_coord_sup.Rmd">Code</a>)
+                    </figcaption>
+                </figure>
+            </div>
+            <div class = "arm_txt_box">
+                <p>
+                    Next, the top confidence associations can be examined in a similar manner. It can be noted that many of the associations from the top support values are not included in the confidence associations. <i>Table 4</i> lists the top rules by confidence while <i>Figures 5 and 6</i> show the network and parallel coordinates plots respectively. The table of the shows the top confidence value to have a target of "very high salinity" which did not even appear on the table for support. Additionally, the parallel coordinates plot shows that there are some stronger associations among the top confidence values than the top support values. 
+                </p>
+
+            </div>
+            <div>
+                <figure class = "arm_img_box">
+                    <iframe id="igraph" scrolling="no" style="border:none;" seamless="seamless" src="https://mattharding23.github.io/ARM/confidence_table.html" height="635" width="100%"></iframe>
+                    <figcaption>
+                        Table 4: Rules with 15 highest confidence values (<a  href = "http://mharding.georgetown.domains/ANLY_501/ARM/confidence_values_table.Rmd" download="confidence_values_table.Rmd">Code</a>) 
+                    </figcaption>
+                </figure>
+            </div>
+            <div>
+                <figure class = "arm_img_box">
+                    <iframe id="igraph" scrolling="no" seamless="seamless" src="https://mattharding23.github.io/ARM/d3_network_eotb_confidence.html" height="550" width="75%"></iframe>
+                    <figcaption>
+                        Figure 5: Network of rules with 15 highest confidence values (<a  href = "http://mharding.georgetown.domains/ANLY_501/ARM/confidence_network.Rmd" download="confidence_network.Rmd">Code</a>) 
+                    </figcaption>
+                </figure>
+            </div>
+            <div>
+                <figure>
+                    <img src="http://mharding.georgetown.domains/ANLY_501/ARM/par_coord_conf.png" class = "arm_img_box" >
+                    <figcaption>
+                        Figure 6: Parallel coordinates plot of rules with 15 highest confidence values (<a  href = "http://mharding.georgetown.domains/ANLY_501/ARM/par_coord_conf.Rmd" download="par_coord_conf.Rmd">Code</a>)
+                    </figcaption>
+                </figure>
+            </div>
+            <div class = "arm_txt_box">
+                <p>
+                    Finally, the top lift associations can be seen in <i>Table 5</i> and <i>Figures 7 & 8</i>. While the top support and confidence values all seemed to be very tied to the "Very low salinity" item, the top lift values seem to be spread out among a variety of items. Additionally, the parallel coordinates plot shows that there are more strong associations in the top lift values than either of the support and confidence plots. 
+                </p>
+
+            </div>
+            <div>
+                <figure class = "arm_img_box">
+                    <iframe id="igraph" scrolling="no" style="border:none;" seamless="seamless" src="https://mattharding23.github.io/ARM/lift_table.html" height="635" width="100%"></iframe>
+                    <figcaption>
+                        Table 5: Rules with 15 highest lift values (<a  href = "http://mharding.georgetown.domains/ANLY_501/ARM/lift_values_table.Rmd" download="lift_values_table.Rmd">Code</a>) 
+                    </figcaption>
+                </figure>
+            </div>
+            <div>
+                <figure class = "arm_img_box">
+                    <iframe id="igraph" scrolling="no" seamless="seamless" src="https://mattharding23.github.io/ARM/d3_network_eotb_lift.html" height="550" width="75%"></iframe>
+                    <figcaption>
+                        Figure 7: Network of rules with 15 highest lift values (<a  href = "http://mharding.georgetown.domains/ANLY_501/ARM/lift_network.Rmd" download="lift_network.Rmd">Code</a>) 
+                    </figcaption>
+                </figure>
+            </div>
+            <div>
+                <figure>
+                    <img src="http://mharding.georgetown.domains/ANLY_501/ARM/par_coord_lift.png" class = "arm_img_box" >
+                    <figcaption>
+                        Figure 8: Parallel coordinates plot of rules with 15 highest lift values (<a  href = "http://mharding.georgetown.domains/ANLY_501/ARM/par_coord_lift.Rmd" download="par_coord_lift.Rmd">Code</a>)
+                    </figcaption>
+                </figure>
+            </div>
+            <div>
+                <h2 class = "arm_head">
+                    Conclusion
+                </h2>
+            </div>
+             <div class = "arm_txt_box">
+                <p>
+                    There are a few key takeaways from this data. The first thing that becomes very obvious is that most of the highest associations, no matter how it is calculated, are related in some way to salinity. Specifically, the extreme values of salinity are commonly matched with station locations, pH values, turbidity, and oxygen levels. Each of theses measurements are key to understanding water quality and knowing certain associations between the measurments could help to understand what causes changes in water quality.  
+                </p>
+                <p>
+                    Oxygen levels are one of the most important measurements of water quality when talking about wildlife. Fish and plants rely on oxygen saturated in the water to breathe. According to <i>Table 5</i>, normal oxygen levels are associated with low salinity and low chlorophyll levels. This means that most likely if there are low levels of chlorophyll and low salinity in the water, the water will have a normal amount of oxygen. Additionally, in the same table, it can be seen that a high amount of oxygen is associated with a basic pH. So figuring out what contributes to the pH of water could be a way to understand how to keep oxygen levels high for the wildlife that relies on oxygen to live. 
+                </p>
+                <p>
+                    Another key takeaway from this data exploration is that certain measuring station locations have associations with different measurements. For example, the 'MP' station is strongly associated with acidity while the 'PL' station is associated with high salinity. Understanding these associations at different locations can open up new questions such as what makes the water in location 'MP' so much more acidic than the water at 'PL' and 'IP'. Additionally, it could suggest that it may be better to view the data in subsets by station rather than wholistically to see a better picture of the water quality in each area. 
+                </p>
+
+            </div>
+            
+        </div>
+    </body>
+</html>

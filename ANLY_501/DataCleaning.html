@@ -1,0 +1,224 @@
+<html>
+    <head>
+        <link rel="stylesheet" type="text/css" href="https://mharding.georgetown.domains/style.css"/>
+        
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+
+        <script type="text/javascript" src="https://mharding.georgetown.domains/portfolio_java.js"></script>
+        
+    
+    </head>
+    <body>
+  
+        <div class = "top_image_box">
+            <img src="http://mharding.georgetown.domains/chesapeake_bay_img1.jpg" width = "1640"/>
+        </div>
+
+        <div id="mySidebar" class="sidebar">
+            <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+            <a href="https://mharding.georgetown.domains/">Home</a>
+            <a href="https://mharding.georgetown.domains/ANLY_501/Introduction.html">Introduction</a>
+            <a href="https://mharding.georgetown.domains/ANLY_501/DataGathering.html">Data Gathering</a>
+            <a href="https://mharding.georgetown.domains/ANLY_501/DataCleaning.html">Data Cleaning</a>
+            <a href="https://mharding.georgetown.domains/ANLY_501/DataExploration.html">Exploring Data</a>
+            <a href="https://mharding.georgetown.domains/ANLY_501/Clustering.html">Clustering</a>
+            <a href="https://mharding.georgetown.domains/ANLY_501/ARMandNetworking.html">ARM & Networking</a>
+            <a href="https://mharding.georgetown.domains/ANLY_501/DecisionTrees.html">Decision Trees</a>
+            <a href="https://mharding.georgetown.domains/ANLY_501/NaiveBayes.html">NaiveBayes</a>
+            <a href="https://mharding.georgetown.domains/ANLY_501/SVM.html">SVM</a>
+            <a href="https://mharding.georgetown.domains/ANLY_501/Conclusions.html">Conclusions</a>
+
+        </div>
+        
+        <div id="intro_title">
+            Data Cleaning
+        </div>
+        <div id="main">
+            <button class="openbtn" onclick="openNav()">&#9776;</button>
+        </div>
+        <div class = "clean">
+            <div>
+                <h2 class = "clean_head">
+                    "Eyes on the Bay" Data Cleaning
+                </h2>
+            </div>
+            <div>
+                <div id = "data_gather_buttons">
+                        <a class="btn btn-outline-secondary btn-sm" href = "http://mharding.georgetown.domains/ANLY_501/DataCleaning/EyesOnTheBayData.zip" download="EyesOnTheBayData.zip" role = "button">Raw Data</a>
+                    
+                        <a class="btn btn-outline-secondary btn-sm" href = "http://mharding.georgetown.domains/ANLY_501/DataCleaning/EOTB_Cleaned.csv" download="EOTB_Cleaned.csv" role = "button">Cleaned Data</a>
+                        
+                        <a class="btn btn-outline-secondary btn-sm" href = "http://mharding.georgetown.domains/ANLY_501/DataCleaning/EOTB_data_cleaning.Rmd" download="EOTB_data_cleaning.Rmd" role = "button">R Code</a>
+                </div>
+                    
+            </div>
+            <div>
+                <p class = 'wrapping_p'>
+                    The "Eyes on the Bay" data was downloaded via the website and consists of data from several collection points combined into one dataset. Each collection point is located somewhere on the Chesapeake Bay Watershed - some in the open water of the Bay while others in tributaries of the Bay. The raw data begins as seven similar .csv files that contain information about collection date and time, collection location, and water quality attributes. The data is read in via R and immeadiately combined into a single dataset and merged with an index of each row number, to keep track of rows. A sample of the raw data set can be seen in <i>Figure 1</i>. The initial raw data contains 15 columns with 2,495,406 rows and an additional 16th column was immeadiately added to keep track of the row numbers.   
+                </p>
+                <figure id = "fig1">
+                    <img src="http://mharding.georgetown.domains/ANLY_501/DataCleaning/Raw_Data.png"  id = "clean_img_left">
+                    <figcaption>
+                        Figure 1: Raw Data
+                    </figcaption>
+                </figure>
+                
+                <p class = 'wrapping_p'>
+                    The station name column contained no missing data and the station names were long so they were shortened to abreviations. Next, there were three columns representing the date and/or the time the sample was collected. Given that there was one column that displayed both at the same time, the other two columns, "Sample_Date" and "Sample_Time", were deleted. The "DateTime" column was represented by characters but needed to be changed to a datetime format to be eventually be used as time-series data. 
+                </p>
+                <p class = 'wrapping_p'>
+                    Now that some redunant columns have been removed and some text in columns have been abbreviated, the next thing to do is to find missing values in the data. A function was created that finds columns in the data that only contain missing values and deletes those columns because they have no useful information. This function was run and one column, Blue Green Algae ("BGA_RFU"), was deleted due to it having missing data in every row. 
+                </p>
+                <p class = 'wrapping_p'>
+                    Next, there is a column identifying the layer ("Layer") in which the sample was taken at. By creating a table of values for this column, it can be seen that the same value is used in every row and therefore does not reveal any useful information. So this column was also deleted. <i>Figure 2</i> shows a sample of what the data looks like after these steps where there are now only 12 columns.  
+                </p>
+                <figure id = "fig2">
+                    <img src="http://mharding.georgetown.domains/ANLY_501/DataCleaning/EOTB_Clean_1.png"  id = "clean_img_right">
+                    <figcaption>
+                        Figure 2: Data after initial cleaning steps
+                    </figcaption>
+                </figure>
+                <p class = 'wrapping_p'>
+                    After removing these columns, the missing values were revisited. None of the columns containing qualitiative data had any missing values however, all of the columns containing quantitative data had a lot of missing values. They ranged between 90,000 to 350,000 missing values out of a total of just under 2,500,000 rows or up to 14% of rows. Given that there were two columns labeled with temperature where the only difference was the units of measurement, it made sense to start with those missing values and try to convert one column to the other column where values were missing.
+                </p>
+                <p class = 'wrapping_p'>
+                    However, in subsetting the data to compare the missing values of each column, it became apparent that each missng value in the Fahrenheit column corresponded to a missing value in the Celsius column. Moving on from that, a subset of the all the rows where data was missing in the temperature columns was made and it became obvious that most of the rows were missing all of the quantitative data. There was no choice but to delete these rows at this point - 88,713 rows were deleted from the overall data, leaving 5,274 rows in the subset where temperature columns have missing values. Of these rows, the overwhelming majority of them are missing values in all of the same columns except for sample depth as seen in <i>Figure 3</i>. 
+                </p>
+                <figure id = "fig3">
+                    <img src="http://mharding.georgetown.domains/ANLY_501/DataCleaning/EOTB_Clean_2.png"  id = "clean_img_left">
+                    <figcaption>
+                        Figure 3: Subset of missing temperature data after deleting 88,713 rows
+                    </figcaption>
+                </figure>
+                <p class = 'wrapping_p'>
+                    In 5,089 out of the 5,274 rows in this subset, there are too many columns missing data to be able to try and accurately replace the values of all the missing columns in each row, so these 5,089 rows were also deleted from the overall data. Now there are only 185 rows left with missing temperature data. A correlation matrix was created in order to view any possible correlations between the temperature variables and other variables (Note: beware if running the attached code that this correlation matrix is commented out due to the amount of time it takes for R to run that line of code). The correlation matrix is shown in <i>Figure 4</i>. From this figure, it appears that there may be a correlation between temperature and dissolved oxygen which would be helpful because I could create a linear model to fill in missing values for temperature. However, as can be seen in <i>Figure 5</i>, which is a plot of temperature vs. dissolved oxygen, it appears that there actually is not a correlation between the two.
+                </p> 
+                    
+                <figure id = "fig4">
+                    <img src="http://mharding.georgetown.domains/ANLY_501/DataCleaning/temp_corr_mat.png"  id = "clean_img_left">
+                    <figcaption>
+                        Figure 4: Correlation Matrix of quantitative columns to search for correlation between any variable and temperature <a href = "http://mharding.georgetown.domains/ANLY_501/DataCleaning/1cor_mat.R" download="1cor_mat.R" role = "button">Code</a>
+                    </figcaption>
+                </figure>
+                <figure id = "fig5">
+                    <img src="http://mharding.georgetown.domains/ANLY_501/DataCleaning/TvsDO.png"  id = "clean_img_right">
+                    <figcaption>
+                        Figure 5: Correlation Plot for Temperature vs. Dissolved Oxygen <a href = "http://mharding.georgetown.domains/ANLY_501/DataCleaning/2temp_ox_corr.R" download="2temp_ox_corr.R" role = "button">Code</a>
+                    </figcaption>
+                </figure>
+                <p class = 'wrapping_p'>
+                    However, based on prior knowledge, it is reasonable to assume the temperature on a given day would be in a similar range to the average temperature of the month that the day resides in. Further, the 185 values that would be replaces are a very small portion of the data that should not have a great effect on the overall data. So, the missing temperatures were replaced with the average monthly temperature. And, because the two temperature columns are redundant, the column in the units of Celsius was deleted due to the standard temperature in the area being studied is measured in Fahrenheit. Additionally, a column with the month that corresponds to the date has been added to the data for ease of replacing values and because there could be some interesting information found by comparing variables by month. Now, the data has 12 columns and 2,401,604 rows. 
+                </p>
+                
+                <p class = 'wrapping_p'>
+                    Now that the temperature column is cleaned of missing values, the next focus becomes the sample depth. That is because it has a lot of missing values, is not a very interesting variable in terms of water quality, and unless it has a strong correlation to another variable, it can be removed from the data. As can be seen from the correlation matrix in <i>Figure 4</i> and is reiterated by running a spearman correlation against all the variables in R, there is not a strong correlation between sample depth and any other variables. So the column was dropped from the data, leaving the data with 11 columns. 
+                </p>
+                <p class = 'wrapping_p'>
+                    The next variable to focus on is dissolved oxygen. Interstingly, there are two columns that have dissolved oxygen measurements. Upon further review, these columns are redundant and one can be removed. Both columns have the same number of missing values, in the same location, so that does not help choose which column to keep. However, by reading some explanations of the variables on the site where the data was drawn from, it can be determined that it is more common to refer to dissolved oxygen by its percentage saturation so the column that measures it in mg/L is dropped. The dataset now has 10 columns. The missing values for dissolved oxygen now must be addressed. Unfortunately, there are no strong correlations with dissolved oxygen, and there is too much varience to replace values by the mean or median, even if it was filtered by month, station, or both. So these rows must be deleted. That lowers the row number in the dataset by 100,981 rows. 
+                </p>
+                <p class = 'wrapping_p'>
+                    The salinity in the water is another variable that has a large amount of missing values. It can be seen in <i>Figure 4</i>that there may be a correlation between salinity and the pH of the water. Upon further inspection, using a Spearman correlation test, there appears to be a correlation between the two. Unfortunately, all of the missing salinity values correspond to missing pH values. While pH has additional missing values beyond those that correspond with salinity. Salinity, however, does have small varience compared to the mean when filtered by month and collecting station together. So, the missing values can be replaced with the mean salinity in each month at each station. And now, with no missing salinity values, a linear regression can be done on pH with salinity, month, and station, to realize coeffients to determine missing values for the pH of the water. 
+                    
+                </p>
+                <p class = 'wrapping_p'>
+                    The final two columns with missing values, turbidity and chlorophyll, have a problem similar to that of the dissolved oxygen column. Their variance compared to the means are too large even when filtered by station and month. Both columns required the rows with missing values to be deleted. Deleting these rows, removed another 197,883 from the dataset. Leaving the amount of rows after all missing values are gone at 2,102,740. A sample of the dataset can also be seen in <i>Figure 6</i>. 
+                </p>
+                <figure id = "fig6">
+                    <img src="http://mharding.georgetown.domains/ANLY_501/DataCleaning/EOTB_NoNA.png"  id = "clean_img_left">
+                    <figcaption>
+                        Figure 6: Sample of Data with no missing variables 
+                    </figcaption>
+                </figure>
+                <p class = 'wrapping_p'>
+                    The next thing that needed to be done was look for incorrect values. To do this a summary of each column was created using an apply function. The first thing that stood out was that median and mean of the salinity column were very different and in plotting the data as shown in <i>Figure 7</i>, The data is very skewed. Upon doing further research however, all of the values for salinity fell into the range of normal outcomes for brackish/fresh water. 
+                </p>
+                <figure id = "fig7">
+                    <img src="http://mharding.georgetown.domains/ANLY_501/DataCleaning/salinity.png"  id = "clean_img_right">
+                    <figcaption>
+                        Figure 7: Histogram of Salinity Data <a href = "http://mharding.georgetown.domains/ANLY_501/DataCleaning/3_sal_hist.R" download="3_sal_hist.R" role = "button">Code</a>
+                    </figcaption>
+                </figure>
+                <p class = 'wrapping_p'>
+                    Another part of the summary that was concerning was that the percent saturation of oxygen in the water had many levels that were above 100%. However, according to the documention on the website where the data was downloaded, as well as looking at other resources, this is normal and these measurements can be well over 100%. Two columns that did have incorrect data were the turbidity and chlorophyll columns. Both of these columns had negative data. In looking up what negative data could mean for these measurements it came up that negative data is meaningful to the recorder but not for analyzation because it means that something was wrong with how the measurement was taken. So those 27,581 rows have to be removed, leaving the dataset with 2,074,788 rows. At this point the data is sufficiently cleaned to move on to some data exploration where it then may need to be cleaned again after. The final dataframe was saved to a .csv file and can be accessed via the 'Cleaned Data' button at the top of this section. The code to clean the data can also be accessed via the 'R Code' button at the top of this section. 
+                </p>
+                <p class = 'wrapping_p'>
+                    
+                </p>
+            </div>
+        </div>
+            
+        <div class = "clean">
+            <div>
+                <h2 class = "clean_head">
+                    Twitter Data Cleaning
+                </h2>
+            </div>
+            <div>
+                <div id = "data_gather_buttons">
+                        <a class="btn btn-outline-secondary btn-sm" href = "http://mharding.georgetown.domains/ANLY_501/DataCleaning/tweet_csvs.zip" download="tweet_CSVs.zip" role = "button">Raw Data</a>
+                    
+                        <a class="btn btn-outline-secondary btn-sm" href = "#" download="#" role = "button">Cleaned Data</a>
+                        
+                        <a class="btn btn-outline-secondary btn-sm" href = "#" download="#" role = "button">Python Code</a>
+                </div>
+                    
+            </div>
+                <p class = 'wrapping_p'>
+                    The Twitter data was aquired via Twitter's API and the R code sampled on the <a href="https://mharding.georgetown.domains/ANLY_501/DataGathering.html">Data Gathering</a> page. That code was run for multiple key words/phrases: "chesapeake bay", "chesapeake bay + river", "chesapeake bay + tributary", and "chesapeake bay + environment". The raw data which is linked above, is four different .csv files containing many rows of columns of record data corresponding to tweets consisting of the phrases mentioned previously as well as various data from the tweets such as likes and retweets. A sample of the raw data is shown in <i>Figure 8</i> below.   
+                </p>
+                <figure id = "fig8">
+                    <img src="http://mharding.georgetown.domains/ANLY_501/DataCleaning/tweet_raw.png"  id = "clean_img_left">
+                    <figcaption>
+                        Figure 8: Raw Data
+                    </figcaption>
+                </figure>
+                <p class = 'wrapping_p'>
+                    These .csv files were read into python via the 'csv.ReaderDict' function and a for loop which read each of the .csv files in as dictionaries. Then with a for loop inside of the first for loop, each tweet was extracted from the data and saved as a .txt file in a folder. Additionally, for each tweet saved to a .txt file, the label of the tweet which corresponded to the key phrased that found that tweet. The data then consisted of a corpus of 1572 .txt files and a list of corresponding labels. This data is now considered text data.  
+                </p>
+                <p class = 'wrapping_p'>
+                    Next, the 'CountVectorizer' function from 'sklearn' was utilized to create a count vectorizer. The count vectorizer created reads in a list .txt of filenames and counts the occurances of the words in that file with the exception of the 'sklearn' default English stopwords. Once the filenames were run through the count vectorizer, it output a document term matrix. This document term matrix was then transformed into a 'pandas' dataframe using the column names from the document term matrix. Finally, a labels column was added to the dataframe to make the data "labeled data". A sample of what the data now looks like is shown in <i>Figure 9</i>.
+                </p>
+                <figure id = "fig9">
+                    <img src="http://mharding.georgetown.domains/ANLY_501/DataCleaning/tweet_img_1.png"  id = "clean_img_right">
+                    <figcaption>
+                        Figure 9: Sample of Labeled Text data
+                    </figcaption>
+                </figure>
+                
+                <p class = 'wrapping_p'>
+                    As can be seen in <i>Figure 9</i>, there are a lot of columns labeled as words that are not words. Many of these columns are strictly numbers, and some are a combination of numbers and letters. These values mostly come from links and pictures attached to tweets which are not useful. Additionally, in the context of the text being analyzed, numbers that were intentionally part of the tweet would not be significant either. So all columns that included a number were removed. This brought the number of columns down from 4,440 to 3,526. At this point, the data was ready to be visualized to learn whether more cleaning was required. A wordcloud is shown in <i>Figure 10</i> depicting the number of times each word is used in the corpus. The wordcloud only contains words that are used more than two times to emphasize the words that are used more frequently. 
+                </p>
+                <figure id = "fig10">
+                    <img src="http://mharding.georgetown.domains/ANLY_501/DataCleaning/wc1.png"  id = "clean_img_left">
+                    <figcaption>
+                        Figure 10: Wordcloud of Cleaned Text Data <a href = "http://mharding.georgetown.domains/ANLY_501/DataCleaning/4wc_1.py" download="4wc_1.py" role = "button">Code</a>
+                    </figcaption>
+                </figure>
+                <p class = 'wrapping_p'>
+                    As can be seen in <i>Figure 10</i>, there are some words and phrases that don't look to be very useful. In order to remove these, extra stop words were manually added - 'https', 'rt', and 'ivepetthatdog'. The first word is left over from links and did not get removed because it does not contain numbers. The second word is Twitter specific and refers to a 'retweet' but does not add meaningful context to the text data. The third word is also Twitter specific because it is a hashtag. While a lot of hashtags are useful, this one is not very useful and it stands out a lot in the data so it is best to remove it. After the stopwords were removed, another wordcloud was created in order to view the data again and can be seen in <i>Figure 11</i>.
+                </p>
+                 <figure id = "fig11">
+                    <img src="http://mharding.georgetown.domains/ANLY_501/DataCleaning/wc2.png"  id = "clean_img_right">
+                    <figcaption>
+                        Figure 11: Wordcloud of Cleaned Text Data with Added Stopwords <a href = "http://mharding.georgetown.domains/ANLY_501/DataCleaning/5wc_2.py" download="5wc_2.py" role = "button">Code</a>
+                    </figcaption>
+                </figure>
+                <p class = 'wrapping_p'>
+                   At this point, the text data looks sufficiently cleaned for doing data exploration. Some additional cleaning may be required depending on analysis and it may be useful to reintegrate this in some way with the origianl .csv file that contained data such as likes and retweets. The cleaned data is saved in a .csv file which can be accessed via the 'Cleaned Data' button at the top of the section and the corpus of the .txt files can also be accessed via the 'Corpus' button at the top of the section. Finally, the python code can be accessed via the 'Python Code' button, also located at the top of the section. 
+                </p>
+        </div>
+        
+            
+            
+            
+            
+            
+        
+            
+        
+        
+
+    </body>
+    
+</html>

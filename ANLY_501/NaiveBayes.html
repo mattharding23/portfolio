@@ -1,0 +1,202 @@
+<html>
+    <head>
+        <link rel="stylesheet" type="text/css" href="https://mharding.georgetown.domains/style.css"/>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+        <script type="text/javascript" src="https://mharding.georgetown.domains/portfolio_java.js"></script>
+    </head>
+    <body>
+  
+        <div class = "top_image_box">
+            <img src="http://mharding.georgetown.domains/chesapeake_bay_img1.jpg" width = "1640"/>
+        </div>
+        
+        <div id="mySidebar" class="sidebar">
+            <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+            <a href="https://mharding.georgetown.domains/">Home</a>
+            <a href="https://mharding.georgetown.domains/ANLY_501/Introduction.html">Introduction</a>
+            <a href="https://mharding.georgetown.domains/ANLY_501/DataGathering.html">Data Gathering</a>
+            <a href="https://mharding.georgetown.domains/ANLY_501/DataCleaning.html">Data Cleaning</a>
+            <a href="https://mharding.georgetown.domains/ANLY_501/DataExploration.html">Exploring Data</a>
+            <a href="https://mharding.georgetown.domains/ANLY_501/Clustering.html">Clustering</a>
+            <a href="https://mharding.georgetown.domains/ANLY_501/ARMandNetworking.html">ARM & Networking</a>
+            <a href="https://mharding.georgetown.domains/ANLY_501/DecisionTrees.html">Decision Trees</a>
+            <a href="https://mharding.georgetown.domains/ANLY_501/NaiveBayes.html">NaiveBayes</a>
+            <a href="https://mharding.georgetown.domains/ANLY_501/SVM.html">SVM</a>
+            <a href="https://mharding.georgetown.domains/ANLY_501/Conclusions.html">Conclusions</a>
+
+
+        </div>
+    
+        <div id="main">
+            <button class="openbtn" onclick="openNav()">&#9776;</button>
+        </div>
+        <div id="intro_title">
+            Naive Bayes
+        </div>
+        <div class = "nb">
+            <div>
+                <h2 class = "nb_head">
+                    "Eyes on the Bay" Data 
+                </h2>
+            </div>
+            <div>
+                <div id = "data_gather_buttons" text-align = "left">
+
+                        <a class="btn btn-outline-secondary btn-sm" href = "http://mharding.georgetown.domains/ANLY_501/DataCleaning/EOTB_Cleaned.csv" download="EOTB_Cleaned.csv" role = "button">Record Data</a>
+                        
+                        <a class="btn btn-outline-secondary btn-sm" href = "http://mharding.georgetown.domains/ANLY_501/NaiveBayes/naive_bayes.Rmd" download="naive_bayes.Rmd" role = "button">R Code</a>
+                </div>
+                    
+            </div>
+            <div class = "nb_txt_box">
+                <p>
+                    As stated in the decision tree analysis page, at this point in the analysis, it is clear that the "Eyes on the Bay" data set is being used to study the water quality in the Chesapeake Bay. More specifically, the most crucial aspect of water quality as it relates to the wild life who call the Bay home - the dissolved oxygen content in the water. As has been seen in some other analysis, the dissolved oxygen content is affected by many different variables, some that are outside the scope of this dataset. However, given that this data is constantly recorded and readily available, it woud be extremely useful for those in charge of making decisions as it relates to the Chesapeake Bay to be able to have a way to accurately predict dissolved oxygen levels in the Bay. 
+                </p>
+                <p>
+                    Using decision trees, some information was able to be gathered about predicting dissolved oxygen levels such as the summer months, acidic water, and higher salinity levels all suggested there would be low oxygen levels more times than not. But these decision tree models were not very accurate in actually predicting when the oxygen levels would actually be low. To try to create a better predictive model, another approach that can be taken is to use a naive Bayes model. This model assumes independence between each variable and calculates conditional probabilities for each label of the data based on the corresponding values of each variable. The model can then be used to predict the label of the data by inputting all of the same variables into the model.
+                </p>
+                <p>
+                    To try to create a predictive model for dissolved oxygen, the data needed to be modified slightly. The label variable, dissolved oxygen, needed to become a categorical variable, not a numeric class. The values were split into three categories, low, normal, and high oxygen, with low oxygen being the label of interest. The threshold for low oxygen was chosen to be 70% saturated oxygen because this is the level at which some wildlife becomes stressed by the low oxygen levels. The station location variable was removed from the data because it does not help to predict water quality values but can skew the results. To further prevent skewing from any variables, the numeric variables were normalized. The data was then split into training and testing sets so that the predictive abilities of the model could be tested after it was trained. In order to train the model correctly, the training set needed to have equal or similar to equal values of each label. Since high and low oxygen levels are not as frequent as the training set needed to sample an equal number of rows from each of the categories. At this point, the data was ready to be modeled and was run through a Naive Bayes function and output the model which includes probabilities as well as means and standard deviations for each variable depending on its class. Below, <i>Tables 1 & 2</i> show the output of the model while <i>Figure 1</i> displays the accuracy of the model using a confusion matrix. 
+                </p>
+
+            </div>
+            <div>
+                <figure class = "nb_img_box">
+                    <iframe id="igraph" scrolling="no" style="border:none;" seamless="seamless" src="https://mattharding23.github.io/501NaiveBayes/Ox_stats_tab.html" height="280" width="100%"></iframe>
+                    <figcaption>
+                        Table 1: Naive Bayes model variable properties for dissolved oxygen label
+                    </figcaption>
+                </figure>
+            </div>
+            <div>
+                <figure class = "nb_img_box">
+                    <iframe id="igraph" scrolling="no" style="border:none;" seamless="seamless" src="https://mattharding23.github.io/501NaiveBayes/Ox_mon_tab.html" height="500" width="100%"></iframe>
+                    <figcaption>
+                        Table 2: Naive Bayes model conditional probabilities of dissolved oxygen by month
+                    </figcaption>
+                </figure>
+            </div>
+            <div>
+                <figure>
+                    <img src="http://mharding.georgetown.domains/ANLY_501/NaiveBayes/ox_cm.png" class = "nb_img_box" >
+                    <figcaption>
+                        Figure 1: Naive Bayes confusion matrix for dissolved oxygen labels
+                    </figcaption>
+                </figure>
+            </div>
+ 
+            
+            <div class = "nb_txt_box">
+                <p>
+                    It can first be noted from <i>Figure 1</i> that the Naive Bayes model for predicting low dissolved oxygen levels was significantly more successful than the decision tree model. The decision tree model failed to reach 50% predictability for low oxygen levels while the Naive Bayes model was able to reach a 70% accuracy rate for the same low oxygen levels. While not nearly perfect, this is a significant jump in accuracy and becomes a lot closer to actually being a useful model to predict low dissolved oxygen levels. Some other noteworthy aspects of this model were, again, as seen in <i>Tables 2</i>, dissolved oxyge levels are most likely to be low in the warmer months of the year. Additionally, the variables with the lowest stardard deviation from their mean, and therefore the most stabily predictive within the model were pH and water temperature, with the mean pH being acidic and the temperature being on the warmer side. It should be noted again that the variables were normalized with a mean of zero so negative values correspond with below average values while positive values are higher than average values. 
+                    
+                    
+                </p>
+                <p>
+                    As discussed in other sections, another important aspect of water quality is chlorophyll levels in the water. While chlorophyll itself is not bad for water, large quantities of can lead to algae blooms which will deplete oxygen levels and block sunlight from plants that require it for survival. Similarly to dissolved oxygen levels, it would be very useful to be able to predict when chlorophyll levels may be high so that authorities may be allowed to take preventitive actions to prevent widespread fish kills and plant deaths. The data for chlorophyll was cleaned identically to the dissolved oxygen data with the exception of making the chlorophyll variable the label as opposed to the dissolved oxygen variable. The chlorophyll variable was split into two categories - harmful and not harmful chlorophyll levels - and was split at the level of chlorophyll where algae blooms become prevelant. Again it was run through a Naive Bayes function and output a model which included probabilities as well as means and standard deviations for each variable depending on its class. <i>Tables 3 & 4</i> show the output of the model while <i>Figure 2</i> displays the accuracy of the model using a confusion matrix. 
+                </p>
+
+            </div>
+            <div>
+                <figure class = "nb_img_box">
+                    <iframe id="igraph" scrolling="no" style="border:none;" seamless="seamless" src="https://mattharding23.github.io/501NaiveBayes/CL_stats_tab.html" height="280" width="100%"></iframe>
+                    <figcaption>
+                        Table 3: Naive Bayes model variable properties for chlorophyll label
+                    </figcaption>
+                </figure>
+            </div>
+            <div>
+                <figure class = "nb_img_box">
+                    <iframe id="igraph" scrolling="no" style="border:none;" seamless="seamless" src="https://mattharding23.github.io/501NaiveBayes/CL_mon_tab.html" height="500" width="100%"></iframe>
+                    <figcaption>
+                        Table 4: Naive Bayes model conditional probabilities of chlorophyll by month
+                    </figcaption>
+                </figure>
+            </div>
+            <div>
+                <figure>
+                    <img src="http://mharding.georgetown.domains/ANLY_501/NaiveBayes/cl_cm.png" class = "nb_img_box" >
+                    <figcaption>
+                        Figure 2: Naive Bayes confusion matrix for chlorophyll labels
+                    </figcaption>
+                </figure>
+            </div>
+            <div class = "nb_txt_box">
+                <p>
+                    Again, <i>Figure 2</i> shows that the Naive Bayes model for predicting harmful chlorophyll levels outperformed the decision tree model. This model accurately predicted harmful levels of chlorophyll at a 71% rate while the decision tree model was only able to be accurate on 49% of its predictions. Similarly to the Naive Bayes model for predicting dissolved oxygen levels, this is a significant improvement and much closer to being a useful predictive model. Additional to its predictive accuracy, <i>Table 3</i> shows that the models most predictive feature is water temperature which coincides with the fact that <i>Table 4</i> states that chlorophyll levels will most likely be high during the warmer months of the year. 
+                    
+                    </p>
+
+            </div>
+            
+            <div class = "nb_txt_box">
+                <p>
+                    From these two models, a few conclusions can be drawn. Firstly, it is clear that the warm months - ranging from late Spring to early Fall - are the most dangerous for wildlife in the Chesapeake Bay with both low dissolved oxygen levels and harmful chlorophyll levels being predicted to occur most often in those months. The models have also shown consistentcy in which variables in the water quality are most predictive of oxygen levels and chlorophyll levels. These factors are pH and water temperature for dissolved oygen and water temperature, salinity, and pH for chlorophyll. Moreover, the most important part of this analysis is that these models showed a vast improvement in predicitive accuracy - each jumping by around 20% in comparison to the decision tree models. While 70% accuracy is not ideal, this shows that these characteristics of water quality may be able to be predicted with an even higher accuracy with a more robust model or combination of models. If a model could be trained to at or above 90% accuracy, it could be used as a tool for law makers, regulators, and species protecors in order to take preventiative actions against low oxygen level and harmful chlorophyll level events happening. 
+                    
+                </p>
+
+            </div>
+            
+        </div>
+        
+        
+        <div class = "nb">
+            <div>
+                <h2 class = "nb_head">
+                    Twitter Data
+                </h2>
+            </div>
+            <div>
+                <div id = "data_gather_buttons" text-align = "left">
+
+                         <a class="btn btn-outline-secondary btn-sm" href = "http://mharding.georgetown.domains/ANLY_501/DataCleaning/tweet_csvs.zip" download="tweets_csv.zip" role = "button">Download Tweets</a>
+                        
+                        <a class="btn btn-outline-secondary btn-sm" href = "http://mharding.georgetown.domains/ANLY_501/NaiveBayes/NaiveBayes.py" download="NaiveBayes.py" role = "button">Python Code</a>
+                </div>
+                    
+            </div>
+            <div class = "nb_txt_box">
+                <p>
+                    Similarly to the Eyes on the Bay data, the twitter data that has been studied through out this exploration of the Chesapeake Bay can be analyzed and predicted with a Naive Bayes model. For this to be possible, the text data from the tweets needs to be in a numeric form. To do this they were run through a count vectorizer which places the number of times each word was used in each tweet into a numeric matrix. After this, it was possible to run the data through a Naive Bayes model. The data was split into training and testing sets and run through the model. The predictiveness of the model was then tested by comparing the model to the labels of the test set. A confusion matrix of this process was created and can be seen in <i>Figure 3</i>
+                    
+                </p>
+
+            </div>
+
+            <div>
+                <figure>
+                    <img src="http://mharding.georgetown.domains/ANLY_501/NaiveBayes/cm_cv.png" class = "nb_img_box" >
+                    <figcaption>
+                        Figure 3: Confusion Matrix of Naive Bayes Model on Count Vectorizer Data
+                    </figcaption>
+                </figure>
+            </div>
+            
+            <div class = "nb_txt_box">
+                <p>
+                    Immeadiately, it can be seen that this model appears to work very well, only incorrectly predicting one tweet. However, it is possible that this accuracy could be in part due to the fact that there are not that many tweets to be working with and that one of the categories has significantly more tweets than the other two categories. Unfortunately, there is not much that can be done to fix this as there just aren't that many tweets out there about this topic. However, more tweets could be gathered over time as they are put out and the model can then be updated to determine whether the model is really that accurate or not. Another way to try and determine whether the accuracy on this model is correct is to use the same data but with normalized values which can be done using a TF-IDF vectorizer instead of a count vectorizer. This will likely put slightly different weights on each word and could ultimately affect the conditional probabilities that each label has associated with each word. Given the small dataset, the model may rely heavily on certain words that give it the illusion of accurate predictability when in reality a larger dataset would show it is much less accurate. When the TF-IDF data was run through a Naive Bayes model, the results were similar though slightly less accurate than the when the count vectorizer was used. This could show that the model may not be as robust as it looks for this dataset. The confusion matrix can be seen in <i>Figure 4</i> below. 
+                    
+                </p>
+
+            </div>
+            <div>
+                <figure>
+                    <img src="http://mharding.georgetown.domains/ANLY_501/NaiveBayes/cm_tv.png" class = "nb_img_box" >
+                    <figcaption>
+                        Figure 4: Confusion Matrix of Naive Bayes Model on TF-IDF Vectorizer Data
+                    </figcaption>
+                </figure>
+            </div>
+            <div class = "nb_txt_box">
+                <p>
+                    <i>Figure 3</i> and <i>Figure 4</i> show that a Naive Bayes model can very accurately categorize tweets based on the individual words inside of each tweet. While it is possible that the model may not be as great as it looks as was explained above, from the results that are there, it appears that it can categorize tweets at a very high accuracy rate. This type of model could be useful for companies and non-profits who are focused on the health of they Chesapeake Bay. They could possibly use it to select tweets that their account retweets or adds to the scroll on their website. Additionally, companies and politicians could use the model to filter tweets to understand what things people care about when it comes to the health of the Chesapeake Bay. As mentioned above, the model could definitely use some more data to become even better, but a model like this could definitely be useful to those with a stake in the health of the Bay. 
+                    
+                </p>
+
+            </div>
+            
+            
+        </div>
+    </body>
+</html>

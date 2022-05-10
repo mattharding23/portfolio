@@ -1,0 +1,197 @@
+<html>
+    <head>
+        <link rel="stylesheet" type="text/css" href="https://mharding.georgetown.domains/style.css"/>
+        
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+
+        <script type="text/javascript" src="https://mharding.georgetown.domains/portfolio_java.js"></script>
+        
+    
+    </head>
+    <body>
+  
+        <div class = "top_image_box">
+            <img src="http://mharding.georgetown.domains/chesapeake_bay_img1.jpg" width = "1640"/>
+        </div>
+
+
+        <div id="mySidebar" class="sidebar">
+            <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+            <a href="https://mharding.georgetown.domains/">Home</a>
+            <a href="https://mharding.georgetown.domains/ANLY_501/Introduction.html">Introduction</a>
+            <a href="https://mharding.georgetown.domains/ANLY_501/DataGathering.html">Data Gathering</a>
+            <a href="https://mharding.georgetown.domains/ANLY_501/DataCleaning.html">Data Cleaning</a>
+            <a href="https://mharding.georgetown.domains/ANLY_501/DataExploration.html">Exploring Data</a>
+            <a href="https://mharding.georgetown.domains/ANLY_501/Clustering.html">Clustering</a>
+            <a href="https://mharding.georgetown.domains/ANLY_501/ARMandNetworking.html">ARM & Networking</a>
+            <a href="https://mharding.georgetown.domains/ANLY_501/DecisionTrees.html">Decision Trees</a>
+            <a href="https://mharding.georgetown.domains/ANLY_501/NaiveBayes.html">NaiveBayes</a>
+            <a href="https://mharding.georgetown.domains/ANLY_501/SVM.html">SVM</a>
+            <a href="https://mharding.georgetown.domains/ANLY_501/Conclusions.html">Conclusions</a>
+
+
+        </div>
+        <div id="intro_title">
+            Exploring the Data
+        </div>
+        <div id="main">
+            <button class="openbtn" onclick="openNav()">&#9776;</button>
+        </div>
+        <div class = "explore">
+            <div>
+                <h2 class = "clean_head">
+                    "Eyes on the Bay" Data Exploration
+                </h2>
+            </div>
+            <div>
+                <div id = "data_gather_buttons">
+                        <a class="btn btn-outline-secondary btn-sm" href = "http://mharding.georgetown.domains/ANLY_501/DataCleaning/EOTB_Cleaned.csv" download="EOTB_Cleaned.csv" role = "button">View Data</a>
+                    
+                        <a class="btn btn-outline-secondary btn-sm" href = "http://mharding.georgetown.domains/ANLY_501/DataExploration/EOTB_Exploration.Rmd" download="EOTB_Exploration.Rmd" role = "button">View R Code</a>
+                        
+                </div>
+                    
+            </div>
+            <div >
+                <figure>
+                    <figcaption>
+                        Correlation Matrix of all of the data <a href = "http://mharding.georgetown.domains/ANLY_501/DataCleaning/1cor_mat.R" download="1cor_mat.R" role = "button">Code</a>
+                    </figcaption>
+                    <img src="http://mharding.georgetown.domains/ANLY_501/DataExploration/corr_mat_order_by_date.png" class = "exp_img_box" >
+                    
+                </figure>
+                
+            </div>
+            <div class = "exp_txt_box" >
+                <p>
+                    The correlation matrix shows a lot of interesting information. Right away, it can be seen that the strongest correlations are with pH as it corresponds to salinity and percent oxygen saturation. Addtionally, the histograms down the diagonal are very interesting. A few are skewed very right, pH appears to be bimodal, percent oxygen saturation appears to be somewhat normally distributed, and the temperature seems to be skewed slightly to the left. 
+                </p>
+            </div>
+                <figure>
+                    <figcaption>
+                        Boxplots of All Quantitative Variables in Dataset <a href = "http://mharding.georgetown.domains/ANLY_501/DataExploration/6_bp_data.R" download="6_bp_data.R" role = "button">Code</a>
+                    </figcaption>
+                    <img src="http://mharding.georgetown.domains/ANLY_501/DataExploration/var_box_plots.png" class = "exp_img_box" >
+                    
+                </figure>
+            <div class = "exp_txt_box" >
+                <p>
+                    The plot above displays the box plots of the different quantitative variables in the dataset. These plots help to identify the different quartiles of the variables as well as some outliers. Additionally they show the distribution of the variables. For a lot of the data columns it can be seen mroe clearly that the majority of the data are very small values, but there are instances of very high values. It will be interesting to see if these high values correspond to any major or uncommon events. 
+                </p>
+            </div>
+            <div>
+                <figure>
+                    
+                    <img src="http://mharding.georgetown.domains/ANLY_501/DataExploration/hist_pH_stations.png" class = "exp_img_box" >
+                    <figcaption>
+                        Histograms of pH levels at each station location <a href = "http://mharding.georgetown.domains/ANLY_501/DataExploration/7_ph.R" download="7_ph.R" role = "button">Code</a>
+                    </figcaption>
+                    
+                </figure>
+                
+            </div>
+            <div class = "exp_txt_box" >
+                <p>
+                    The plot above displays the histograms of the pH values at the different recording stations in the data. The fact that some of the stations have a mean acidic pH while others have a mean basic pH is very interesting. It also explains the bimodality of the column of data. 
+                </p>
+            </div>
+            <div>
+                <figure>
+                    
+                    <img src="http://mharding.georgetown.domains/ANLY_501/DataExploration/salinity_over_time.png" class = "exp_img_box" >
+                    <figcaption>
+                        Salinity values over a range of time <a href = "http://mharding.georgetown.domains/ANLY_501/DataExploration/8_sal_time.R" download="8_sal_time.R" role = "button">Code</a>
+                    </figcaption>
+                    
+                </figure>
+                
+            </div>
+            <div class = "exp_txt_box" >
+                <p>
+                    Another interesting thing that can be seen in this data is the cyclical nature of some of the variables. The plot of a sample of salinity over the course of a few years shows how it tends to completely drop to zero in the winter months while it usually hits a maximum around October. The one thing that could be an issue with this visual is that, the reader cannot tell strictly from looking at this plot that there are many more small salinity values than large ones. However, the purpose of this was to display the cyclical nature of salinity, not the distribution. 
+                </p>
+            </div>
+                
+        </div>
+        <div class = "explore">
+            <div>
+                <h2 class = "clean_head">
+                    Twitter Text Data Exploration
+                </h2>
+            </div>
+            <div>
+                <div id = "data_gather_buttons">
+                        <a class="btn btn-outline-secondary btn-sm" href = "http://mharding.georgetown.domains/ANLY_501/DataCleaning/tweets_corpus.zip" download="tweets_corpus.zip" role = "button">Download Corous</a>
+                    
+                        <a class="btn btn-outline-secondary btn-sm" href = "http://mharding.georgetown.domains/ANLY_501/Tweet_Data_Exploration.py" download="Tweet_Data_Exploration.py" role = "button">View Python Code</a>
+                        
+                </div>
+                    
+            </div>
+            <div >
+                <figure>
+                    <figcaption>
+                        Wordcloud of All Gathered Tweets
+                    </figcaption>
+                    <img src="http://mharding.georgetown.domains/ANLY_501/DataCleaning/wc2.png" class = "exp_img_box" >
+                    
+                </figure>
+                
+            </div>
+            <div class = "exp_txt_box" >
+                <p>
+                    This is the wordcloud that is also displayed at the end of the data cleaning section. It shows the frequency of word use for all the tweets that were collected using the keywords laid out in the data cleaning section. This is informative in that it shows what people commonly are talking about when they mention the Chesapeake Bay. However, for the purpose of understanding the health of the Chesapeake Bay, this visual does not have very much good information. That is why it was helpful to label the data based on the other keywords that were used to search. The three wordclouds below show that some of the keywords were useful while others were not.  
+                </p>
+            </div>
+            <div >
+                <figure>
+                    <figcaption>
+                        Wordcloud of Tweets with Keyword 'River'
+                    </figcaption>
+                    <img src="http://mharding.georgetown.domains/ANLY_501/DataExploration/tributaries_wordcloud.png" class = "exp_img_box" >
+                    
+                </figure>
+                
+            </div>
+            <div class = "exp_txt_box" >
+                <p>
+                    'River' is a keyword that was not necessarily expected to be much more helpful than 'Chesapeake Bay'. However, it was used because it was expected to gather a lot of tweets as it would be a commonly used word with 'Chesapeake Bay'. It did gather more tweets than the other keywords used. However, it appears to be very similar to the 'Chesapeake Bay' wordcloud above. 
+                </p>
+            </div>
+            <div >
+                <figure>
+                    <figcaption>
+                        Wordcloud of Tweets with Keyword 'Tributary'
+                    </figcaption>
+                    <img src="http://mharding.georgetown.domains/ANLY_501/DataExploration/tributaries_wordcloud.png" class = "exp_img_box" >
+                    
+                </figure>
+                
+            </div>
+            <div class = "exp_txt_box" >
+                <p>
+                    A tributary is an offshoot of a main body of water such as a river or creek. This word was chosen as a keyword because it is often used in a more scientific or academic context and therefore associated tweets may have more insight into the health of the Bay. And while that appears to be true in this wordcloud, the words in this word cloud do not tell much about the health of the Bay.  
+                </p>
+            </div>
+            <div >
+                <figure>
+                    <figcaption>
+                        Wordcloud of Tweets with Keyword 'Environment'
+                    </figcaption>
+                    <img src="http://mharding.georgetown.domains/ANLY_501/DataExploration/environment_wordcloud.png" class = "exp_img_box" >
+                    
+                </figure>
+                
+            </div>
+            <div class = "exp_txt_box" >
+                <p>
+                    The final keyword tried was environment. It seemed like it would be useful to exploring the health of the Chesapeake Bay because it is also a word that is associated with scientific and academic communities. This keyword does appear to be helpful in studying the health of the Bay. Words like 'soil', 'legislation', 'livestock', and 'grazing' are all associated with topics relating to the health of the Bay. 
+                </p>
+            </div>
+        </div>
+        
+
+    </body>
+    
+</html>

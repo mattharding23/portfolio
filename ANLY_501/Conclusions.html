@@ -1,0 +1,110 @@
+<html>
+    <head>
+        <link rel="stylesheet" type="text/css" href="https://mharding.georgetown.domains/style.css"/>
+
+        <script type="text/javascript" src="https://mharding.georgetown.domains/portfolio_java.js"></script>
+    </head>
+    <body>
+  
+        <div class = "top_image_box">
+            <img src="http://mharding.georgetown.domains/chesapeake_bay_img1.jpg" width = "1640"/>
+        </div>
+        
+        <div id="mySidebar" class="sidebar">
+            <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+            <a href="https://mharding.georgetown.domains/">Home</a>
+            <a href="https://mharding.georgetown.domains/ANLY_501/Introduction.html">Introduction</a>
+            <a href="https://mharding.georgetown.domains/ANLY_501/DataGathering.html">Data Gathering</a>
+            <a href="https://mharding.georgetown.domains/ANLY_501/DataCleaning.html">Data Cleaning</a>
+            <a href="https://mharding.georgetown.domains/ANLY_501/DataExploration.html">Exploring Data</a>
+            <a href="https://mharding.georgetown.domains/ANLY_501/Clustering.html">Clustering</a>
+            <a href="https://mharding.georgetown.domains/ANLY_501/ARMandNetworking.html">ARM & Networking</a>
+            <a href="https://mharding.georgetown.domains/ANLY_501/DecisionTrees.html">Decision Trees</a>
+            <a href="https://mharding.georgetown.domains/ANLY_501/NaiveBayes.html">NaiveBayes</a>
+            <a href="https://mharding.georgetown.domains/ANLY_501/SVM.html">SVM</a>
+            <a href="https://mharding.georgetown.domains/ANLY_501/Conclusions.html">Conclusions</a>
+
+
+        </div>
+    
+        <div id="intro_title">
+            Conclusions
+        </div>
+
+        <div id="main">
+            <button class="openbtn" onclick="openNav()">&#9776;</button>
+        </div>
+        
+        <div id = "con_block">
+            <figure id = "con_fig1">
+                <img src="http://mharding.georgetown.domains/ANLY_501/Conclusions/fish_kill.jpeg"  id = "con_img_left">
+                <figcaption>
+                    Figure 1: Over 10,000 dead fish from a fish kill on the Severn River
+                    <br />
+                    <a href = "https://chesapeakebaymagazine.com/wp-content/uploads/2020/08/isaias-fish-kill-severn-Nini-Goodwin-photo-scaled.jpg">Link to original photo
+                    </a>
+                </figcaption>
+            </figure>
+            <p class = 'wrapping_p'>
+                The Chesapeake Bay ecosystem is experiencing significant stresses due to changes in agricultural practices over the last half century. Many species in the Bay are struggling to survive in the changing conditions. While stresses are nothing new to this ecosystem, this new version of it poses a complicated problem. Unlike issues of the past which simply had to do with pollution practices and have mostly been diminished by laws and regulations, this newest problem is much more difficult to regulate. Fertilizers, pesticides, and animal waste run off agricultural land and find their way into one of the many rivers and streams in the Chesapeake Bay network. These products lead to an excess of nitrogen and phosphorus in the water. Ultimately this causes algae blooms which can lead to the deaths of significant amounts of the plants and animals in the area due to insufficient oxygen in the water. As a result of the pollution being runoff as opposed to deliberate dumping of waste, it is difficult to provide enough evidence of cause and intention for regulators to do much of anything to prevent occurrences such as can be seen in <i>Figure 1</i>. The purpose of this analysis is to approach the problem in a different way. If it is not possible to properly regulate agricultural practices, it may instead be possible to enforce wildlife protection regulations provided sufficient evidence that such enforcement is necessary and will significantly improve the health of the species in the area. 
+            </p>
+            
+            <figure id = "con_fig2">
+                <img src="http://mharding.georgetown.domains/ANLY_501/Conclusions/Do_hist.png"  id = "con_img_right">
+                <figcaption>
+                    Figure 2: Frequency of dissolved oxygen events <a href = "http://mharding.georgetown.domains/ANLY_501/DecisionTrees/1.R" download="1.R" role = "button">Code</a>
+                </figcaption>
+            </figure>
+            
+            <p class = 'wrapping_p'>
+                The approach taken in this analysis is to attempt to understand and predict patterns of water quality that lead to the catastrophic events such as fish kills. To do this, water quality measurements spanning from 2007-2020, recorded in several locations in the Chesapeake Bay, were analyzed in an attempt to find results that would provide sufficient evidence that certain preventative actions could result in a better outcome of wildlife populations in the Bay. <i>Figure 2</i> on the right shows the frequency of recorded levels of dissolved oxygen in the water over this time period. As levels of saturated dissolved oxygen drop below 70%, they are known to start becoming dangerous to the wildlife in the surrounding area. The figure shows that such occurrences of low oxygen events are not the norm but are also not uncommon, with just under 20% of recorded oxygen levels classified as low. This is a significant amount of time for wildlife in this region to be with reduced oxygen, something that they require for survival. During the course of analysis, it became apparent that dissolved oxygen levels were more likely to be low during the warmer months of the year. A predictive model showed that the months of May through October are likely to account for over 90% of low oxygen level occurrences as is displayed in <i>Figure 3</i>. During these months, over 27% of recorded oxygen levels would be classified as low. That means that wildlife is struggling to breathe more than a quarter of the time during the warmer months of the year. <i>Figure 4</i> shows the frequency of recorded levels of dissolved oxygen in the water during only these months. There is an obvious increase in the amount of low oxygen events. This makes sense for several reasons. First, most of the farming in the area takes place during the warmer months. In the winter it is too cold to grow crops. Second, the warmer temperatures are a more desirable climate for algae blooms so they are also more likely to occur during these months.   
+            </p>
+            <div id = "con_fig_line">
+                <figure id = "con_fig" >
+                    <img src="http://mharding.georgetown.domains/ANLY_501/Conclusions/prop_low_ox.png"  width  = 100%>
+                    <figcaption>
+                        Figure 3: Proportion of liklihood of low dissolved oxygen events 
+                    </figcaption>
+                </figure>
+                <figure id = "con_fig" >
+                    <img src="http://mharding.georgetown.domains/ANLY_501/Conclusions/Do_hist_summer.png" width = 100% >
+                    <figcaption>
+                        Figure 4: Frequency of dissolved oxygen events in warm months <a href = "http://mharding.georgetown.domains/ANLY_501/DecisionTrees/2.R" download="2.R" role = "button">Code</a>
+                    </figcaption>
+                </figure>
+            </div>
+            
+            <figure id = "con_fig3">
+                <img src="http://mharding.georgetown.domains/ANLY_501/Conclusions/do_vs_ph.png"  id = "con_img_left">
+                <figcaption>
+                    Figure 5: Relationship between pH and dissolved oxygen <a href = "http://mharding.georgetown.domains/ANLY_501/DecisionTrees/3.R" download="3.R" role = "button">Code</a>
+                </figcaption>
+            </figure>
+            
+            <p class = 'wrapping_p'>
+                Understanding that low oxygen events occur mostly during the warmer month is a good start to trying to get in front of the events. However, this alone is too broad of a range to accurately pinpoint when low oxygen levels are going to occur. Through some data exploration, there was one relationship between dissolved oxygen and another water quality measurement that stuck out more so than any of the others, which was the pH of the water. <i>Figure 5</i> shows the linear relationship between dissolved oxygen values and pH levels. pH refers to the acidity or alkalinity of the water. It is measured on a scale of 1 to 14 with the lowest number being the most acidic, and the highest being the most basic. 7 is referred to as a neutral pH. The relationship in <i>Figure 5</i> shows that as the pH in the water becomes more acidic, the oxygen levels in the water drop. Additionally, it can be noted that the acidic pH had the largest percentage of its dissolved oxygen values below the danger line.
+                </p>
+                <p class = 'wrapping_p'>
+                    As it turned out, pH levels were the most important factor of water quality in predicting low oxygen levels for each of the predictive models that were created. This is important for a couple of reasons. First, pH is not really a cyclical aspect of water quality. While pH levels tend to be more neutral in the coldest months, most of the year all levels of pH are relatively evenly distributed as can be seen in <i>Figure 6</i>. Given this, pH and time of the year are each a predictor of oxygen levels and are mostly independent of each other. pH is also a quality of water that changes gradually, assuming no unusual events or weather occurrences. So, following trends of pH levels could help in predicting low oxygen events. Finally, rain tends to be acidic so when it rains, the water in the Bay will become more acidic. Knowing that acidity is related to low oxygen levels, the relationship between rain and dissolved oxygen levels would be an interesting topic to explore further in the future. 
+
+            </p>
+            
+            <figure id = "con_fig4">
+                <img src="http://mharding.georgetown.domains/ANLY_501/Conclusions/pH_over_time.png"  id = "con_img_right">
+                <figcaption>
+                    Figure 6: pH levels in relation to time <a href = "http://mharding.georgetown.domains/ANLY_501/DecisionTrees/4.R" download="4.R" role = "button">Code</a>
+                </figcaption>
+            </figure>
+            
+        	<p class = 'wrapping_p'>
+        	    Ultimately in the analysis, the time of year and pH levels in the water were by far the most predictive factors of low oxygen levels in the water. That being said, each of the other aspects of water quality were also considered in the models that were created to predict low oxygen level events. Many less successful models were created before the model which would be considered the final product of this analysis. This model takes in a set of water quality aspects - - and returns whether or not that set is a low oxygen level event. This model was able to predict low oxygen levels with a 92% accuracy which is extremely accurate. It would be of note that this model should be validated many more times and with new data as it emerges to confirm its robustness. 
+
+	        </p>
+	        <p class = 'wrapping_p'>
+	            This analysis studied relationships between many different water quality factors as well as factors such as time of year and location of measurement in an attempt to further understand low dissolved oxygen levels in the water of the Chesapeake Bay and, ultimately, a few strong conclusions were developed. First, low oxygen events are most likely to occur during the warmer months of the year. It is more than 90% likely that a low dissolved oxygen level measurement will have been taken between the months of May and October. Second, there is a relationship between pH and dissolved oxygen levels. The lower the pH, the lower the oxygen level and vice versa. Finally, using this knowledge in combination with other aspects of water quality, a model could be developed that accurately predicts when low oxygen level events may occur. This analysis alone is likely not enough to act on, however if built upon it could be useful as a tool to organizations such as the department of natural resources who control things such as fishing regulations. Understanding when a low oxygen event is coming would possibly allow them to impose a fishing moratorium in certain areas to prevent fish from overexerting themselves. At minimum, they may be able to suggest areas to avoid fishing because the fishing in those areas likely would not be very good anyway. In addition to that, analysis like this may help to persuade the agricultural industry to change some of its practices to more environmentally friendly ones which result in less chemicals and waste flowing into rivers and streams. 
+        	    
+
+	        </p>
+
+        
+        </div>
