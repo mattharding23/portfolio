@@ -1,0 +1,727 @@
+/* Sets position of top picture*/
+body{
+    font-family: optima;
+}
+figure{
+    display:inline-block;
+}
+figcaption {
+
+  font-style: italic;
+  padding: 2px;
+  text-align: center;
+}
+
+
+.top_image_box{
+    width: 100%;  
+    height: auto;
+    text-align: center;
+    top:-65px;
+    overflow:hidden;
+    }
+#home_title{
+    display:inline-block;
+    position: absolute;
+    top:385px;
+    font-size:55px;
+    text-align: center;
+    width: 100%;
+    margin: auto;
+
+}
+#home_align_right{
+    margin-left:auto;
+}
+#home_align_left{
+    margin-right:auto;
+}
+#home_cite{
+    font-size:10px;
+}
+#home_table{
+    position: absolute;
+    top:500px;
+    height: auto;
+    width: 75%;
+    margin-left:12.5%;
+    margin-right:12.5%;
+    
+    
+}
+.home_row{
+    width:50%;
+    display: block;
+    text-align:center;
+    
+    padding: 25px;
+    margin-top:20px;
+    
+    
+}
+.home_desc{
+    display: inline-block;
+    width: 29%;
+    height: auto;
+    
+}
+.home_pic{
+    display: inline-block;
+    width: 69%;
+    height: auto;
+}
+
+
+/* Avatar picture of me*/
+#avatar{
+    position: absolute;
+    top:280px;
+    left:120px;
+    border: 1px white solid;
+    border-radius:50%;
+    width:150px;
+}
+#name_bar{
+    display:block;
+    position: absolute;
+    top:335px;
+    left:300px;
+    font-size: 50px;
+}
+#contact_block{
+    display: inline-block;
+    position: absolute;
+    top: 450;
+    left: 17px;
+    width: 20%;
+
+    text-align: center;
+    padding: 5px;
+
+}
+#contact_heading{
+    font-size: 28px;
+    text-align:center;
+    
+}
+#contact_email{
+    margin-top: 3px;
+}
+
+#aboutme_block{
+    display: inline-block;
+    position: absolute;
+    top: 425px;
+    left: 350px;
+    width: 50%;
+    height: auto;
+    
+}
+#aboutme{
+    font-size:20px;
+    padding:10px;
+}
+#intro_title{
+    display:block;
+    position: absolute;
+    top:335px;
+    left:125px;
+    font-size: 50px;
+ 
+
+}
+.clean{
+    display: block;
+    padding-top:30px;
+    width: 75%;
+    margin:auto;
+    margin-bottom: 150px;
+}
+#intro_block{
+    display: block;
+    padding-top:30px;
+    width: 75%;
+    margin:auto;
+    margin-bottom: 150px;
+}
+
+#intro{
+    font-size:20px;
+    padding:20px;
+}
+#intro_img_left{
+    display:block;
+    width:95%; 
+    float: left;
+    margin: 6px;
+
+}
+#intro_img_right{
+    display:block;
+    width:95%; 
+    float: right;
+    margin: 6px;
+
+}
+#intro_fig1{
+    width:30%; 
+    float: left;
+    margin: 10px;
+}
+
+#intro_fig2{
+    width:40%; 
+    float: right;
+    margin: 10px;
+}
+#intro_fig3{
+    width:40%; 
+    float: left;
+    margin: 10px;
+}
+
+#intro_fig4{
+    width:40%; 
+    float: right;
+    margin: 10px;
+}
+
+#intro_fig5{
+    width:40%; 
+    float: left;
+    margin: 10px;
+}
+/* The sidebar menu */
+.sidebar {
+    height: 100%; /* 100% Full-height */
+    width: 0; /* 0 width - change this with JavaScript */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Stay on top */
+    top: 0;
+    left: 0;
+    background-color: #444; /*grey*/
+    opacity: .8; /* slightly opaque*/
+    overflow-x: hidden; /* Disable horizontal scroll */
+    padding-top: 80px; /* Place content 80px from the top */
+    transition: 0.5s; /* 0.5 second transition effect to slide in the sidebar */
+}
+
+/* The sidebar links */
+.sidebar a {
+    padding: 8px 8px 8px 32px;
+    text-decoration: none;
+    font-size: 25px;
+    color: white;
+    display: block;
+    transition: 0.3s;
+}
+
+/* When you mouse over the navigation links, change their color */
+.sidebar a:hover {
+    display: block;
+    background-color: #999;
+}
+
+/* Position and style the close button (top right corner) */
+.sidebar .closebtn {
+    position: absolute;
+    top: 0;
+    right: 25px;
+    font-size: 36px;
+    margin-left: 50px;
+}
+
+/* The button used to open the sidebar */
+.openbtn {
+    font-size: 20px;
+    cursor: pointer;
+    background-color: #555;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+}
+
+.openbtn:hover {
+    background-color: #444;
+}
+
+/* Style page content - use this if you want to push the page content to the right when you open the side navigation */
+#main {
+    transition: margin-left .5s; /* If you want a transition effect */
+    padding: 20px;
+}
+
+/* On smaller screens, where height is less than 450px, change the style of the sidenav (less padding and a smaller font size) */
+@media screen and (max-height: 450px) {
+    .sidebar {padding-top: 15px;}
+    .sidebar a {font-size: 18px;}
+}
+
+#data_gather_box{
+    display: block;
+    height: auto;
+    width: 90%;
+    border-radius: 6px;
+    margin: auto;
+    margin-top: 50px;
+    border-collapse:collapse;
+    
+}
+#data_gather_row{
+    
+    margin:5px;
+    border: 1px #555 solid;
+    
+}
+#data_gather_text{
+    display: inline-block;
+    height:auto;
+    width: 30%;
+    text-align: center;
+    border-right: 1px #555 solid;
+    padding: 25px;
+    
+}
+#data_gather_image{
+    display: inline-block;
+    text-align: center;
+    height: auto;
+    margin: auto;
+    padding: 25px;
+    width: 65%;
+    
+}
+#data_gather_buttons{
+    display:inline-block;
+    padding: 10px;
+}
+
+/* Data Cleaning Css */
+.wrapping_p{
+
+    text-align: justify;
+    font-size: 20px;
+
+}
+.clean{
+    display: block;
+    padding-top:30px;
+    width: 75%;
+    margin:auto;
+    margin-bottom: 150px;
+}
+.clean_head{
+    display:block;
+    padding: 10px;
+    text-align: left;
+}
+
+#clean_img_left{
+    display:block;
+    width:95%; 
+    float: left;
+    margin: 6px;
+
+}
+#clean_img_right{
+    display:block;
+    width:95%; 
+    float: right;
+    margin: 6px;
+
+}
+
+
+#fig1{
+    width:50%; 
+    float: left;
+    margin: 10px;
+}
+
+#fig2{
+    width:50%; 
+    float: right;
+    margin: 10px;
+}
+#fig3{
+    width:49%; 
+    float: left;
+    margin: 10px;
+}
+#fig4{
+    width:45%; 
+    float: left;
+    margin: 10px;
+}
+
+#fig5{
+    width:49%; 
+    float: right;
+    margin: 10px;
+}
+
+#fig6{
+    width:50%; 
+    float: left;
+    margin: 10px;
+}
+#fig7{
+    width:50%; 
+    float: right;
+    margin: 10px;
+}
+
+#fig8{
+    width:60%; 
+    float: left;
+    margin: 10px;
+}
+#fig9{
+    width:50%; 
+    float: right;
+    margin: 10px;
+}
+
+#fig10{
+    width:50%; 
+    float: left;
+    margin: 10px;
+}
+
+#fig11{
+    width:50%; 
+    float: right;
+    margin: 10px;
+}
+
+.info_img_box{
+    display: block;
+    margin: auto;
+    width: 65%;
+    text-align: center;
+    margin-top: 30px;
+}
+/* Data Exploration Css */
+
+.explore{
+    display: block;
+    padding-top:30px;
+    width: 60%;
+    margin:auto;
+    margin-bottom: 120px;
+    text-align: center;
+    font-size: 18px;
+}
+.exp_img_box{
+    margin: 10px;
+    width: 95%;
+}
+.exp_txt_box{
+    width:70%;
+    margin: auto;
+    margin-bottom: 70px;
+}
+
+/* Clustering CSS */
+.clust{
+    display: block;
+    padding-top:30px;
+    width: 70%;
+    margin:auto;
+    margin-bottom: 120px;
+    text-align: justify;
+    font-size: 18px;
+}
+.clust_head{
+    display:block;
+    padding: 10px;
+    text-align: left;
+}
+
+.clust_img_box{
+    margin: 10px;
+    width: 85%;
+    margin-bottom: 3px;
+}
+.clust_txt_box{
+    width:95%;
+    margin: auto;
+    margin-bottom: 20px;
+    margin-top: 40px;
+}
+#clus_wc{
+    display: inline-block;
+    width:45%;
+    padding: 1%;
+    
+}
+
+#clus_wc_line{
+    display: block;
+    width: 95%;
+    margin:auto;
+}
+
+/* ARM CSS */
+.arm{
+    display: block;
+    padding-top:30px;
+    width: 70%;
+    margin:auto;
+    margin-bottom: 120px;
+    text-align: justify;
+    font-size: 18px;
+}
+.arm_head{
+    display:block;
+    padding: 10px;
+    text-align: left;
+}
+
+.arm_img_box{
+    display:block;
+    padding-top: 60px;
+    margin: auto;
+    width: 85%;
+    margin-bottom: 3px;
+    text-align: center;
+}
+.arm_txt_box{
+    width:95%;
+    margin: auto;
+    margin-bottom: 20px;
+    margin-top: 40px;
+}
+/* DT CSS */
+.dt{
+    display: block;
+    padding-top:30px;
+    width: 70%;
+    margin:auto;
+    margin-bottom: 120px;
+    text-align: justify;
+    font-size: 18px;
+}
+.dt_head{
+    display:block;
+    padding: 10px;
+    text-align: left;
+}
+
+.dt_img_box{
+    display:block;
+    padding-top: 60px;
+    margin: auto;
+    width: 85%;
+    margin-bottom: 3px;
+    text-align: center;
+}
+.dt_txt_box{
+    width:95%;
+    margin: auto;
+    margin-bottom: 20px;
+    margin-top: 40px;
+}
+.dt_comb_img_box{
+    display:block;
+    padding-top: 60px;
+    margin: auto;
+    width: 100%;
+    margin-bottom: 3px;
+    text-align: center;
+}
+.dt_mat{
+    display: inline-block;
+    width: 58%;
+    margin-right: 5px;
+}
+.dt_stat{
+    display:inline-block;
+    width:38%;
+    margin-left: 5px;
+    
+}
+/* NB CSS */
+.nb{
+    display: block;
+    padding-top:30px;
+    width: 70%;
+    margin:auto;
+    margin-bottom: 120px;
+    text-align: justify;
+    font-size: 18px;
+}
+.nb_head{
+    display:block;
+    padding: 10px;
+    text-align: left;
+}
+
+.nb_img_box{
+    display:block;
+    padding-top: 60px;
+    margin: auto;
+    width: 75%;
+    margin-bottom: 3px;
+    text-align: center;
+}
+.nb_txt_box{
+    width:95%;
+    margin: auto;
+    margin-bottom: 20px;
+    margin-top: 40px;
+}
+.nb_comb_img_box{
+    display:block;
+    padding-top: 60px;
+    margin: auto;
+    width: 100%;
+    margin-bottom: 3px;
+    text-align: center;
+}
+.nb_mat{
+    display: inline-block;
+    width: 58%;
+    margin-right: 5px;
+}
+.nb_stat{
+    display:inline-block;
+    width:38%;
+    margin-left: 5px;
+    
+}
+
+/* SVM CSS */
+.svm{
+    display: block;
+    padding-top:30px;
+    width: 70%;
+    margin:auto;
+    margin-bottom: 120px;
+    text-align: justify;
+    font-size: 18px;
+}
+.svm_head{
+    display:block;
+    padding: 10px;
+    text-align: left;
+}
+
+.svm_img_box{
+    display:block;
+    padding-top: 60px;
+    margin: auto;
+    width: 75%;
+    margin-bottom: 3px;
+    text-align: center;
+}
+.svm_txt_box{
+    width:95%;
+    margin: auto;
+    margin-bottom: 20px;
+    margin-top: 40px;
+}
+.svm_comb_img_box{
+    display:block;
+    padding-top: 60px;
+    margin: auto;
+    width: 100%;
+    margin-bottom: 3px;
+    text-align: center;
+}
+.svm_mat{
+    display: inline-block;
+    width: 58%;
+    margin-right: 5px;
+}
+.svm_stat{
+    display:inline-block;
+    width:38%;
+    margin-left: 5px;
+    
+}
+
+#intro_title{
+    display:block;
+    position: absolute;
+    top:335px;
+    left:125px;
+    font-size: 50px;
+ 
+
+}
+.clean{
+    display: block;
+    padding-top:30px;
+    width: 75%;
+    margin:auto;
+    margin-bottom: 150px;
+}
+#con_block{
+    display: block;
+    padding-top:30px;
+    width: 75%;
+    margin:auto;
+    margin-bottom: 150px;
+}
+
+#con{
+    font-size:20px;
+    padding:20px;
+}
+#con_img_left{
+    display:block;
+    width:95%; 
+    float: left;
+    margin: 6px;
+
+}
+#con_img_right{
+    display:block;
+    width:95%; 
+    float: right;
+    margin: 6px;
+
+}
+#con_fig1{
+    width:40%; 
+    float: left;
+    margin: 10px;
+}
+
+#con_fig2{
+    width:45%; 
+    float: right;
+    margin: 10px;
+}
+#con_fig3{
+    width:40%; 
+    float: left;
+    margin: 10px;
+}
+
+#con_fig4{
+    width:40%; 
+    float: right;
+    margin: 10px;
+}
+
+#con_fig5{
+    width:40%; 
+    float: left;
+    margin: 10px;
+}
+
+
+#con_fig{
+    display: inline-block;
+    width:40%;
+    padding: 1%;
+    
+}
+
+#con_fig_line{
+    display: block;
+    width: 100%;
+    margin:auto;
+}
