@@ -1,0 +1,329 @@
+<html>
+    <head>
+        <link rel="stylesheet" type="text/css" href="https://mharding.georgetown.domains/style.css"/>
+        
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+        <script type="text/javascript" src="https://mharding.georgetown.domains/portfolio_java.js"></script>
+    </head>
+    <body>
+  
+        <div class = "top_image_box">
+            <img src="http://mharding.georgetown.domains/chesapeake_bay_img1.jpg" width = "1640"/>
+        </div>
+        
+        <div id="mySidebar" class="sidebar">
+            <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+            <a href="https://mharding.georgetown.domains/">Home</a>
+            <a href="https://mharding.georgetown.domains/ANLY_501/Introduction.html">Introduction</a>
+            <a href="https://mharding.georgetown.domains/ANLY_501/DataGathering.html">Data Gathering</a>
+            <a href="https://mharding.georgetown.domains/ANLY_501/DataCleaning.html">Data Cleaning</a>
+            <a href="https://mharding.georgetown.domains/ANLY_501/DataExploration.html">Exploring Data</a>
+            <a href="https://mharding.georgetown.domains/ANLY_501/Clustering.html">Clustering</a>
+            <a href="https://mharding.georgetown.domains/ANLY_501/ARMandNetworking.html">ARM & Networking</a>
+            <a href="https://mharding.georgetown.domains/ANLY_501/DecisionTrees.html">Decision Trees</a>
+            <a href="https://mharding.georgetown.domains/ANLY_501/NaiveBayes.html">NaiveBayes</a>
+            <a href="https://mharding.georgetown.domains/ANLY_501/SVM.html">SVM</a>
+            <a href="https://mharding.georgetown.domains/ANLY_501/Conclusions.html">Conclusions</a>
+
+
+        </div>
+    
+        <div id="main">
+            <button class="openbtn" onclick="openNav()">&#9776;</button>
+        </div>
+        <div id="intro_title">
+            Clustering
+        </div>
+        <div class = "clust">
+            <div>
+                <h2 class = "clust_head">
+                    "Eyes on the Bay" Clustering
+                </h2>
+            </div>
+            <div>
+                <div id = "data_gather_buttons" text-align = "left">
+
+                        <a class="btn btn-outline-secondary btn-sm" href = "http://mharding.georgetown.domains/ANLY_501/DataCleaning/EOTB_Cleaned.csv" download="EOTB_Cleaned.csv" role = "button">Data</a>
+                        
+                        <a class="btn btn-outline-secondary btn-sm" href = "http://mharding.georgetown.domains/ANLY_501/Clustering/EoTB_Data_Clustering.Rmd" download="EOTB_data_cleaning.Rmd" role = "button">R Code</a>
+                </div>
+                    
+            </div>
+            <div class = "clust_txt_box">
+                <p>
+                    The "Eyes on the Bay" data is a very large dataset consisting of record data measuring the water quality of the Chesapeake Bay. The data consists of both numeric and text data and can be downloaded via the link at the top of this section. Given this dataset is so large, it is nearly impossible to find anything interesting in the data by just looking at the rows in the table. A good way to begin to understand the data and find insights is to try to cluster the data. In other words, put each row of the data into a specified number of groups based on their similarity. Due to the size of this dataset, running clustering algorithms on the entire set of data is very time and memory consuming. A subset of the data was used in order to avoid very long run times and failures due to memory limits. The subset chosen was all of the data recorded in they year 2019. This subset was used for all k-means clustering on this dataset.
+                </p>
+                <p>
+                    To begin exploring, it made sense to first try to cluster the entire dataset. One could hypothesize that the data may cluster nicely into 4,7, or 12 clusters. These numbers would be based on clusters of seasons throughout the year, the number of stations the data was recorded at, and the number of months in a year. An elbow plot can be used to determine the actual optimal number of clusters. An elbow plot shows the number of clusters on the x-axis and the sum of squares error on the y-axis. It gets its name because the optimal number of clusters can be found at the point where the plot joins a steep line from the left to a close to horizontal line on the right, making the shape of an elbow. This process is not perfect and ofen times multiple numbers of clusters may appear to be optimal. Sometimes it makes sense to visualize with different numbers of clusters to determine which makes the most sense. At this point, the record data is still text and numeric data. However, with clustering, the data can only be numeric so the text data columns need to be removed. After that, the data needs to be normalized. This is not always the case, however, the ranges of numbers in each column are very different and if the data is not normalized, the clustering will skew to the columns that have larger numbers and will ultimately be incorrect. Now that the data is normalized, it can be run through an algorithm that outputs the sum of squares error for a range of k's, where k = the number of clusters. Given the hypothesis of up to 12 clusters, it made sense to view k from 2-15 to be able to view k = 12 with some context to the right of it. <i>Figure 1</i> shows the elbow plot that was created for the subset of data recorded in 2019.   
+                </p>
+            </div>
+            <div>
+                <figure>
+                    <img src="http://mharding.georgetown.domains/ANLY_501/Clustering/Elbow_all_data.png" class = "clust_img_box" >
+                    <figcaption>
+                        Figure 1: Elbow plot of all 2019 water quality data <a href = "http://mharding.georgetown.domains/ANLY_501/Clustering/1_elbow1.R" download="1_elbow1.R" role = "button">Code</a>
+                    </figcaption>
+                </figure>
+            </div>
+         
+            <div class = "clust_txt_box">
+                
+                <p>
+                    <i>Figure 1</i> shows that there are a few options to use for k to create the optimal amount of clusters, k = 5 and k = 8. Given the hypothesis, it also is reasonable to look at k = 7. While k = 2 takes a large jump down, there is still a large amount of sum of squares error and any k past 8 does not make a significant jump in sum of squares error. The next step is to perform a k-means method on the data with k being the number of clusters that are formed. K-means clustering calculates the distances of each point from the cluster center and categorizes the point according to whcih cluster center it is closest to. <i>Figures 2-4</i> show the different clusters created from the k-means algorithm with clusters k = 5, 7, and 8. 
+                   
+                </p>
+            </div>
+            <div>
+                <figure>
+                    <img src="http://mharding.georgetown.domains/ANLY_501/Clustering/All_data_2019_clustk5.png" class = "clust_img_box" >
+                    <figcaption>
+                        Figure 2: Clustering of 2019 water quality data with k = 5 <a href = "http://mharding.georgetown.domains/ANLY_501/Clustering/2_clus1.R" download="2_clus1.R" role = "button">Code</a>
+                    </figcaption>
+                </figure>
+            </div>
+            <div>
+                <figure>
+                    <img src="http://mharding.georgetown.domains/ANLY_501/Clustering/All_data_2019_clustk7.png" class = "clust_img_box" >
+                    <figcaption>
+                        Figure 3: Clustering of 2019 water quality data with k = 7
+                    </figcaption>
+                </figure>
+            </div>
+            <div>
+                <figure>
+                    <img src="http://mharding.georgetown.domains/ANLY_501/Clustering/All_data_2019_clustk8.png" class = "clust_img_box" >
+                    <figcaption>
+                        Figure 4: Clustering of 2019 water quality data with k = 8
+                    </figcaption>
+                </figure>
+            </div>
+            <div class = "clust_txt_box">
+                <p>
+                    These figures each show that this data does not cluster well in two dimensions. Most of the data is grouped together with a few clusters covering some of the outliers in the data. Additionally, many of the clusters overlap each other. The clusters also do not change that much when more clusters are added from 5 to 8. This all makes sense as there are six dimensions of data and the data may cluster better if it was possible to view it in 6 dimensions. Another way to try and cluster this data would be to choose three of the dimensions that might be interesting to view together, and then cluster that and view it in a three dimensional plot. This process is the same as the k-means clustering in the figures above. The difference will be that the figure will be a plot of 3 dimensions, each dimension being one of the selected variables and each point will be colored according to it's cluster. The data columns selected for this first cluster of three variables were Temperature, Salinity, and pH. These are interesting variables to study together because salinity and pH have a somewhat strong correlation while the other combinations of variables do not have any strong correlations. With this subset of data, it can be seen in the elbow plot in <i> Figure 5</i>, the optimal amount of clusters is clearly k = 4. So the k means algorithm is run with k = 4 and a 3D plot is created with Temperature on the x-axis, Salinity on the y-axis, and pH on the z-axis. This plot can be seen in <i>Figure 6</i>.
+                </p>
+            </div>
+            <div>
+                <figure>
+                    <img src="http://mharding.georgetown.domains/ANLY_501/Clustering/Elbow_sub_1.png" class = "clust_img_box" >
+                    <figcaption>
+                        Figure 5: Elbow plot of water quality data subset- temperature, salinity, & pH <a href = "http://mharding.georgetown.domains/ANLY_501/Clustering/3_elbow2.R" download="3_elbow2.R" role = "button">Code</a>
+                    </figcaption>
+                </figure>
+            </div>
+            <div>
+                <figure class = "clust_img_box">
+                    <iframe id="igraph" scrolling="no" style="border:none;" seamless="seamless" src="https://mattharding23.github.io/501cluster1/" height="525" width="75%"></iframe>
+                    <figcaption>
+                        Figure 6: 3D clusters of temperature, salinity, and pH of water quailty data set k = 4. <a href = "http://mharding.georgetown.domains/ANLY_501/Clustering/4_3d_clus1.R" download="4_3d_clus1.R" role = "button">Code</a>
+                    </figcaption>
+                </figure>
+            </div>
+            <div class = "clust_txt_box">
+                <p>
+                    As can be seen in <i>Figure 6</i>, adding a third dimension can add more context to the clusters. The figure is rotatable and by rotating it, it can be seen that some clusters are mostly confined to a 2D plane while other clusters make more use of all three dimensions. It appears there is one cluster that is located near the center of all three planes while another is in the middle of the pH and temperature plane but on the lower end of the salinity plane. The other two clusters appear to mostly be located in different portions of the pH and Temperature plane. With this information, it appears that most of the data points have a small salinity value but it could be interesting to study those points that have larger salinity values in the future. 
+                </p>
+                <p>
+                    This 3D k-means clustering was repeated on different variables - turbidity, dissolved oxygen, and pH. Similarly to the last set of variables, one couple of the variables, pH and dissolved oxygen, were strongly correlated while the other combinations of couples had very little correlation. <i>Figure 7</i> shows the elbow plot for this subset of the data. Both k = 4 and k = 6 appear to be good choices for cluster numbers and after experimenting with both, the plot with 4 clusters yielded better clustering results. This plot can be seen in <i>Figure 8</i>.
+                </p>
+            </div>
+            <div>
+                <figure>
+                    <img src="http://mharding.georgetown.domains/ANLY_501/Clustering/Elbow_sub_2.png" class = "clust_img_box" >
+                    <figcaption>
+                        Figure 7: Elbow plot of water quality data subset- turbidity, dissolved oxygen, & pH
+                        <a href = "http://mharding.georgetown.domains/ANLY_501/Clustering/5_elbow3.R" download="5_elbow3.R" role = "button">Code</a>
+                    </figcaption>
+                </figure>
+            </div>
+            <div>
+                <figure class = "clust_img_box">
+                    <iframe id="igraph" scrolling="no" style="border:none;" seamless="seamless" src="https://mattharding23.github.io/501cluster2/" height="525" width="75%"></iframe>
+                    <figcaption>
+                        Figure 8: 3D clusters of turbidity, dissolved oxygen, and pH of water quailty data set k = 4. <a href = "http://mharding.georgetown.domains/ANLY_501/Clustering/6_3d_clus2.R" download="6_3d_clus2.R" role = "button">Code</a>
+                    </figcaption>
+                </figure>
+            </div>
+            <div class = "clust_txt_box">
+                <p>
+                    The results in <i>Figure 8</i> appear to be similar to those of <i>Figure 6</i> in that one of the 2D planes dominates most of the clusters. In this case, that plane is the dissolved oxygen and pH plane. Also, there again appears to be one cluster that may be more interesting than the others in that it includes the turbidity values which are not small and reaches further out into three dimensions.  
+                </p>
+                <p>
+                    Another method for clustering is called hierarchical clustering which also uses distances from points in order to cluster data. It is also advantageous in that its an option for its output allows the user to view how the algorithm clustered the data and which points were closest together. This method was a great way to visualize how water quality data can be grouped my month of the year. It makes sense that water quality may differ based on seasonal changes, and hierarchical clustering is a great way to visualize this because it shows how closely related each month is. To do this, the data was first summarized by month by taking the mean of each numeric column according to each month. The data was then normalized in order to prevent a skewed clustering. Then, in order to visualize how different distance methods would change the clustering, three different distance methods were initiated. The first, euclidean distance measures the direct distance between points. The second, manhattan distance, measures the distance between points by connecting a vertical and horizontal line creating a 90 degree angle between each point. Lastly, the cosine similarity method measures the angles between different points in order to cluseer into groups. Each of the method's results can be seen in <i>Figure 9</i>, <i>Figure 10</i>, and <i>Figure 11</i> respectively. These figures are called dendograms and show how closely related one point is from another. 
+                    </p>
+                    <p>
+                        Both Euclidean and Manhattan distance methods yielded similar results. They clustered into three clusters - summer, winter, and spring and fall. This makes sense as temperatures are similar during spring and fall. The main differences between the two methods were that the euclidean distance method made a two subclusters in the winter cluster that chrologically do not make sense - January and March as one subcluster and November, December, and February as another. The Manhattan distance method did not create subclusters in winter and made all the months one larger cluster. 
+                </p>
+                <p>
+                    The cosine similarity method broke the months into a different set of groups. There does not seem to be a logical order to the grouping for this dendogram. The otehr distance methods seem to make more sense for this dataset. 
+                </p>
+            </div>
+            <div>
+                <figure>
+                    <img src="http://mharding.georgetown.domains/ANLY_501/Clustering/Euc_dist_dendo.png" class = "clust_img_box" >
+                    <figcaption>
+                        Figure 9: Dendogram of water quality data by months - Euclidean Distance Method <a href = "http://mharding.georgetown.domains/ANLY_501/Clustering/7_den_euc.R" download="7_den_euc.R" role = "button">Code</a>
+                    </figcaption>
+                </figure>
+            </div>
+            <div>
+                <figure>
+                    <img src="http://mharding.georgetown.domains/ANLY_501/Clustering/Man_dist_dendo.png" class = "clust_img_box" >
+                    <figcaption>
+                        Figure 10: Dendogram of water quality data by months - Manhattan Distance Method <a href = "http://mharding.georgetown.domains/ANLY_501/Clustering/8_den_man.R" download="8_den_man.R" role = "button">Code</a>
+                    </figcaption>
+                </figure>
+            </div>
+            <div>
+                <figure>
+                    <img src="http://mharding.georgetown.domains/ANLY_501/Clustering/Cos_dist_dendo.png" class = "clust_img_box" >
+                    <figcaption>
+                        Figure 11: Dendogram of water quality data by months - Cosine Similarity Method <a href = "http://mharding.georgetown.domains/ANLY_501/Clustering/9_den_cos.R" download="9_den_cos.R" role = "button">Code</a>
+                    </figcaption>
+                </figure>
+            </div>
+                
+        </div>
+        <div class = "clust">
+            <div>
+                <h2 class = "clust_head">
+                    Twitter Text Data Clustering
+                </h2>
+            </div>
+            <div>
+                <div id = "data_gather_buttons" text-align = "left">
+
+                        <a class="btn btn-outline-secondary btn-sm" href = "http://mharding.georgetown.domains/ANLY_501/DataCleaning/tweets_corpus.zip" download="tweets_corpus.zip" role = "button">Download Corpus</a>
+                        
+                        <a class="btn btn-outline-secondary btn-sm" href = "http://mharding.georgetown.domains/ANLY_501/Clustering/Clustering.py" download="EOTB_data_cleaning.Rmd" role = "button">Python Code</a>
+                </div>
+                    
+            </div>
+            <div class = "clust_txt_box">
+                <p>
+                    The tweets gathered in the corpus of tweets linked above are labeled by keywords that were searched for in order to obtain the tweets. Given that, these tweets likely should cluster into groups similar to their labels. In order to test this, the tweets were run through a count vectorizer as well as a TD-IDF vectorizer to obtain numeric data from the text data. These vectorizers are similar but slightly different. The count vectorizer simply counts the number of times a word is used in each row of data and stores that number. The TD-IDF vectorizer does this as well but it uses an algorithm to factor in the weight of words in each tweet. Using both of these methods could possibly create some interesting results. 
+                </p>
+                <p>
+                    Before beginning k-means clustering, it made sense to look at an elbow plot to determine the optimal amount of clusters despite knowing how many labels there are. Additionally, since there are two methods being used, it is possible that each method could identify a different optimal number of clusters. The elbow plots can be seen in <i>Figure 11</i> and <i>Figure 12</i>.
+                </p>
+            </div>
+            <div>
+                <figure>
+                    <img src="http://mharding.georgetown.domains/ANLY_501/Clustering/cv.png" class = "clust_img_box" >
+                    <figcaption>
+                        Figure 11: Elbow plot of tweet data using the Count Vectorizer <a href = "http://mharding.georgetown.domains/ANLY_501/Clustering/10_elbow1.py" download="10_elbow1.py" role = "button">Code</a>
+                    </figcaption>
+                </figure>
+            </div>
+            <div>
+                <figure>
+                    <img src="http://mharding.georgetown.domains/ANLY_501/Clustering/tv.png" class = "clust_img_box" >
+                    <figcaption>
+                        Figure 12: Elbow plot of tweet data using the TD-IDF Vectorizer <a href = "http://mharding.georgetown.domains/ANLY_501/Clustering/11_elbow2.py" download="11_elbow2.py" role = "button">Code</a>
+                    </figcaption>
+                </figure>
+            </div>
+         
+            <div class = "clust_txt_box">
+                <p>
+                    It can be seen from the respective elbow plots that there are two ideal k values for the count vectorizer - 4 and 6, while only one for the TD-IDF vectorizer - 4. The k-means algorithm was run with these k values for each set of data and then each cluster can be visualized with wordclouds. These clusters of word clouds can be seen in <i>Figures 13-15</i>.
+                </p>
+            </div>
+            <div>
+                <figure>
+                    <div id = "clus_wc_line">
+                        <img src="http://mharding.georgetown.domains/ANLY_501/Clustering/cv_k4_wordclouds/clust_0.png" id = "clus_wc" >
+                        <img src="http://mharding.georgetown.domains/ANLY_501/Clustering/cv_k4_wordclouds/clust_1.png" id = "clus_wc" >
+                    </div>
+                    <div id = "clus_wc_line">
+                        <img src="http://mharding.georgetown.domains/ANLY_501/Clustering/cv_k4_wordclouds/clust_2.png" id = "clus_wc" >
+                        <img src="http://mharding.georgetown.domains/ANLY_501/Clustering/cv_k4_wordclouds/clust_3.png" id = "clus_wc" >
+                    </div>
+                    
+                    
+                    <figcaption>
+                        Figure 13: Wordclouds generated by clusters from the count vectorizer with k = 4 <a href = "http://mharding.georgetown.domains/ANLY_501/Clustering/12_wc_1.py" download="12_wc_1.py" role = "button">Code</a>
+                    </figcaption>
+                </figure>
+            </div>
+            <div class = "clust_txt_box">
+                <p>
+                    <i>Figure 13</i> shows that some clusters may be more useful to the topic than others. Additionally, the clusters did not cluster into the labels of the original data. However, it does appear based on the words used in the cluster on the bottom left, that the clustering did possibly separate the tweets that would be useful in studying the health and environment of the Chesapeake Bay from the tweets that will not be useful. 
+                </p>
+            </div>
+            <div>
+                <figure>
+                    <div id = "clus_wc_line">
+                        <img src="http://mharding.georgetown.domains/ANLY_501/Clustering/cv_k6_wordclouds/clust_0.png" id = "clus_wc" >
+                        <img src="http://mharding.georgetown.domains/ANLY_501/Clustering/cv_k6_wordclouds/clust_1.png" id = "clus_wc" >
+                    </div>
+                    <div id = "clus_wc_line">
+                        <img src="http://mharding.georgetown.domains/ANLY_501/Clustering/cv_k6_wordclouds/clust_2.png" id = "clus_wc" >
+                        <img src="http://mharding.georgetown.domains/ANLY_501/Clustering/cv_k6_wordclouds/clust_3.png" id = "clus_wc" >
+                    </div>
+                    <div id = "clus_wc_line">
+                        <img src="http://mharding.georgetown.domains/ANLY_501/Clustering/cv_k6_wordclouds/clust_4.png" id = "clus_wc" >
+                        <img src="http://mharding.georgetown.domains/ANLY_501/Clustering/cv_k6_wordclouds/clust_5.png" id = "clus_wc" >
+                    </div>
+                    
+                    
+                    <figcaption>
+                        Figure 14: Wordclouds generated by clusters from the count vectorizer with k = 6 <a href = "http://mharding.georgetown.domains/ANLY_501/Clustering/13_wc_2.py" download="13_wc_2.py" role = "button">Code</a>
+                    </figcaption>
+                </figure>
+            </div>
+            <div class = "clust_txt_box">
+                <p>
+                    For the count vectorizer data, it appears that the k = 6 clusters did a better job of properly clustering the data. There are clear subjects in the majority of the clusters in <i>Figure 14</i>.
+                </p>
+            </div>
+            <div>
+                <figure>
+                    <div id = "clus_wc_line">
+                        <img src="http://mharding.georgetown.domains/ANLY_501/Clustering/tv_k4_wordclouds/clust_0.png" id = "clus_wc" >
+                        <img src="http://mharding.georgetown.domains/ANLY_501/Clustering/tv_k4_wordclouds/clust_1.png" id = "clus_wc" >
+                    </div>
+                    <div id = "clus_wc_line">
+                        <img src="http://mharding.georgetown.domains/ANLY_501/Clustering/tv_k4_wordclouds/clust_2.png" id = "clus_wc" >
+                        <img src="http://mharding.georgetown.domains/ANLY_501/Clustering/tv_k4_wordclouds/clust_3.png" id = "clus_wc" >
+                    </div>
+                    
+                    
+                    <figcaption>
+                        Figure 15: Wordclouds generated by clusters from the TD_IDF vectorizer with k = 4 <a href = "http://mharding.georgetown.domains/ANLY_501/Clustering/14_wc_3.py" download="14_wc_3.py" role = "button">Code</a>
+                    </figcaption>
+                </figure>
+            </div>
+            <div class = "clust_txt_box">
+                <p>
+                    With a clustering of k = 4, the TD-IFD vectorizer did a better job of clustering the data based on the labels. It correctly identified the environment label and also grouped rivers and tributaries together which makes sense because they are similar words. It also appears to have helped in creating clusters that would not be all that useful in what is being studied here and which could eventually be thrown out. 
+                </p>
+                <p>
+                    Another way of visualizing this data in clusters given that it has labels already is to view the centers of a k-means cluster where k = 3 on a 3D plot where each axis corresponds to a label. This was done with the TD_IFD vectorizer data and can be seen in <i>Figure 16</i> below. From this figure, it is clear that the algorithm was able to differentiate the labels as each center is far away from the others. 
+                </p>
+            </div>
+            <div>
+                <figure>
+                    <img src="http://mharding.georgetown.domains/ANLY_501/Clustering/Label_centers.png" class = "clust_img_box" >
+                    <figcaption>
+                        Figure 16: 3D plot of cluster centers, k = 3, where axes correspond to labels of data <a href = "http://mharding.georgetown.domains/ANLY_501/Clustering/15_3d.py" download="15_3d.py" role = "button">Code</a>  
+                    </figcaption>
+                </figure>
+            </div>
+            
+                
+        </div>
+        
+            
+            
+            
+            
+            
+        
+            
+        
+        
+
+    </body>
+    
+</html>

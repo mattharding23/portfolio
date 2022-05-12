@@ -1,0 +1,366 @@
+<html>
+    <head>
+        <link rel="stylesheet" type="text/css" href="https://mharding.georgetown.domains/style.css"/>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+        <script type="text/javascript" src="https://mharding.georgetown.domains/portfolio_java.js"></script>
+    </head>
+    <body>
+  
+        <div class = "top_image_box">
+            <img src="http://mharding.georgetown.domains/chesapeake_bay_img1.jpg" width = "1640"/>
+        </div>
+        
+        <div id="mySidebar" class="sidebar">
+            <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+            <a href="https://mharding.georgetown.domains/">Home</a>
+            <a href="https://mharding.georgetown.domains/ANLY_501/Introduction.html">Introduction</a>
+            <a href="https://mharding.georgetown.domains/ANLY_501/DataGathering.html">Data Gathering</a>
+            <a href="https://mharding.georgetown.domains/ANLY_501/DataCleaning.html">Data Cleaning</a>
+            <a href="https://mharding.georgetown.domains/ANLY_501/DataExploration.html">Exploring Data</a>
+            <a href="https://mharding.georgetown.domains/ANLY_501/Clustering.html">Clustering</a>
+            <a href="https://mharding.georgetown.domains/ANLY_501/ARMandNetworking.html">ARM & Networking</a>
+            <a href="https://mharding.georgetown.domains/ANLY_501/DecisionTrees.html">Decision Trees</a>
+            <a href="https://mharding.georgetown.domains/ANLY_501/NaiveBayes.html">NaiveBayes</a>
+            <a href="https://mharding.georgetown.domains/ANLY_501/SVM.html">SVM</a>
+            <a href="https://mharding.georgetown.domains/ANLY_501/Conclusions.html">Conclusions</a>
+
+
+        </div>
+
+        <div id="main">
+            <button class="openbtn" onclick="openNav()">&#9776;</button>
+        </div>
+        <div id="intro_title">
+            Decision Trees
+        </div>
+        <div class = "dt">
+            <div>
+                <h2 class = "dt_head">
+                    "Eyes on the Bay" Data Decision Trees
+                </h2>
+            </div>
+            <div>
+                <div id = "data_gather_buttons" text-align = "left">
+
+                        <a class="btn btn-outline-secondary btn-sm" href = "http://mharding.georgetown.domains/ANLY_501/DataCleaning/EOTB_Cleaned.csv" download="EOTB_Cleaned.csv" role = "button">Record Data</a>
+                        
+                        <a class="btn btn-outline-secondary btn-sm" href = "http://mharding.georgetown.domains/ANLY_501/DecisionTrees/eotb_decision_trees.Rmd" download="EOTB_DT.Rmd" role = "button">R Code</a>
+                </div>
+                    
+            </div>
+            <div class = "dt_txt_box">
+                <p>
+                    An application of the analysis of this dataset might be to create a predictive model that can alert a person or team water quality conditions that may be unusual or harmful. One way to do this is by using decision trees. Decision trees suit this dataset well because it is mixed with numerical and categorical data, each having relevancy for predictions. As was stated in the introduction, one of the important factors in water quality is the dissolved oxygen levels. When the saturation levels get below around 70%, this can start to be dangerous for some of the wildlife which depend on the oxygen for their survival. Given this, it would be extremely useful to know if there are certain factors that may help predict when oxygen levels will be low in the water. <i>Figure 1</i> shows a decision tree of how oxygen levels in the water may be predicted. Additionally, <i>Figure 2</i> and <i>Table 1</i> show the confusion matrix and some statistics about the matrix.
+                </p>
+
+            </div>
+            <div>
+                <figure>
+                    <img src="http://mharding.georgetown.domains/ANLY_501/DecisionTrees/dt_ox1.png" class = "dt_img_box" >
+                    <figcaption>
+                        Figure 1: Decision tree for oxygen levels <a href = "http://mharding.georgetown.domains/ANLY_501/DecisionTrees/01_Dt_ox1.R" download="01_Dt_ox1.R" role = "button">Code</a>
+                    </figcaption>
+                </figure>
+            </div>
+            <div>
+                <figure>
+                    <img src="http://mharding.georgetown.domains/ANLY_501/DecisionTrees/dt_ox1_cm.png" class = "dt_img_box" >
+                    <figcaption>
+                        Figure 2: Confusion matrix for oxygen levels <a href = "http://mharding.georgetown.domains/ANLY_501/DecisionTrees/02_cm_ox1.R" download="02_cm_ox1.R" role = "button">Code</a>
+                    </figcaption>
+                </figure>
+            </div>
+            <div>
+                <figure class = "dt_img_box">
+                    <iframe id="igraph" scrolling="no" style="border:none;" seamless="seamless" src="https://mattharding23.github.io/DecisionTrees/dt_ox1_cm_stats.html" height="250" width="100%"></iframe>
+                    <figcaption>
+                        Table 1
+                    </figcaption>
+                </figure>
+            </div>
+            <div class = "dt_txt_box">
+                <p>
+                    The decision tree shows how the model would go about classifying the oxygen level of a new entry of data if the oxygen level was unknown. Some useful things to note about the decision tree are that the model identified that oxygen levels are most likely to be low when pH levels are acidic and during the warmer months of the year. However, the confusion matrix shows how likely the model is to predict the oxygen levels and unfortunately, the model is not very good at predicting the low oxygen levels, with an accuracy of less than 50%. To further explore the data for predicability of low oxygen levels, the data can be subset to cut out the variables that are of lesser importance as shown by the original decision tree. The next model will include only pH levels, months of the year, and salinity levels in attempt to better predict low oxygen levels. <i>Figure 3</i> shows the decision tree created by this model while <i>Figure 4</i> and <i>Table 2</i> show the confusion matrix and its statistics. 
+                    
+                </p>
+
+            </div>
+            <div>
+                <figure>
+                    <img src="http://mharding.georgetown.domains/ANLY_501/DecisionTrees/dt_ox2.png" class = "dt_img_box" >
+                    <figcaption>
+                        Figure 3: Decision tree for oxygen levels with subsetted data <a href = "http://mharding.georgetown.domains/ANLY_501/DecisionTrees/03_Dt_ox2.R" download="03_Dt_ox2.R" role = "button">Code</a>
+                    </figcaption>
+                </figure>
+            </div>
+            <div>
+                <figure>
+                    <img src="http://mharding.georgetown.domains/ANLY_501/DecisionTrees/dt_ox2_cm.png" class = "dt_img_box" >
+                    <figcaption>
+                        Figure 4: Confusion matrix for oxygen levels with subsetted data <a href = "http://mharding.georgetown.domains/ANLY_501/DecisionTrees/04_cm_ox2.R" download="04_cm_ox2.R" role = "button">Code</a>
+                    </figcaption>
+                </figure>
+            </div>
+            <div>
+                <figure class = "dt_img_box">
+                    <iframe id="igraph" scrolling="no" style="border:none;" seamless="seamless" src="https://mattharding23.github.io/DecisionTrees/dt_ox2_cm_stats.html" height="250" width="100%"></iframe>
+                    <figcaption>
+                        Table 2
+                    </figcaption>
+                </figure>
+            </div>
+            <div class = "dt_txt_box">
+                <p>
+                    The decision tree in <i>Figure 3</i> looks similar to the the one in <i>Figure 1</i> with only some minor differences. Additionally, while the overall accuracy of the model improves slightly, the confusion matrix shows there was actually a reduction in accuracy in the model when specifically aiming to measure low oxygen levels. Given that the best predictor of low oxygen levels appears to be pH level, it could be useful to model the data in order to predict pH levels.
+                </p>
+                <p>
+                    In order to do this, pH levels were split into two labels - "acidic" and "not acidic" because acidic levels were most often used to predict low oxygen levels. Additionally, the model will start out by using the entire dataset and may eventually be refined to a subset of the data based on the output of the first model. The decision tree from the model can be seen in <i>Figure 5</i> while the confusion matrix and its statistics can be found in <i>Figure 6</i> and <i>Table 3</i>.
+                </p>
+            </div>
+            <div>
+                <figure>
+                    <img src="http://mharding.georgetown.domains/ANLY_501/DecisionTrees/dt_ph.png" class = "dt_img_box" >
+                    <figcaption>
+                        Figure 5: Decision tree for pH levels <a href = "http://mharding.georgetown.domains/ANLY_501/DecisionTrees/05_Dt_ph1.R" download="05_Dt_ph1.R" role = "button">Code</a>
+                    </figcaption>
+                </figure>
+            </div>
+            <div>
+                <figure>
+                    <img src="http://mharding.georgetown.domains/ANLY_501/DecisionTrees/dt_ph_cm.png" class = "dt_img_box" >
+                    <figcaption>
+                        Figure 6: Confusion matrix for pH levels <a href = "http://mharding.georgetown.domains/ANLY_501/DecisionTrees/06_cm_ph1.R" download="06_cm_ph1.R" role = "button">Code</a>
+                    </figcaption>
+                </figure>
+            </div>
+            <div>
+                <figure class = "dt_img_box">
+                    <iframe id="igraph" scrolling="no" style="border:none;" seamless="seamless" src="https://mattharding23.github.io/DecisionTrees/dt_ph_cm_stats.html" height="250" width="100%"></iframe>
+                    <figcaption>
+                        Table 3
+                    </figcaption>
+                </figure>
+            </div>
+            <div class = "dt_txt_box">
+                <p>
+                    Immeadiately it can be seen from the confusion matrix that this model is more predictive than the dissolved oxygen models. However, the main target of predicting, acidity, is less accurate than its counterpart, not acidic. Additionally, previous data exploration showed that different station locations have different pH levels and given that the root node is split by whether or not the measurement was taken at a certain station, this may not be the best way to model the acidity of the water. In order to make the model better, the station location variable needs to be removed because while it is good to know the pH in certain locations is usually a certain value, it is not a good predictor of water quality in general. Removing this variable another model can be run and the decision tree can be seen in <i>Figure 7</i>. The confusion matrix and statistics regarding the matrix ca be found in <i>Figure 8</i> and <i>Table 4</i>.
+                </p>
+                
+            </div>
+            <div>
+                <figure>
+                    <img src="http://mharding.georgetown.domains/ANLY_501/DecisionTrees/dt_ph2.png" class = "dt_img_box" >
+                    <figcaption>
+                        Figure 7: Decision tree for pH levels independent of station location <a href = "http://mharding.georgetown.domains/ANLY_501/DecisionTrees/07_Dt_ph2.R" download="07_Dt_ph2.R" role = "button">Code</a>
+                    </figcaption>
+                </figure>
+            </div>
+            <div>
+                <figure>
+                    <img src="http://mharding.georgetown.domains/ANLY_501/DecisionTrees/dt_ph_cm2.png" class = "dt_img_box" >
+                    <figcaption>
+                        Figure 8: Confusion matrix for pH levels independent of station location <a href = "http://mharding.georgetown.domains/ANLY_501/DecisionTrees/08_cm_ph2.R" download="08_cm_ph2.R" role = "button">Code</a>
+                    </figcaption>
+                </figure>
+            </div>
+            <div>
+                <figure class = "dt_img_box">
+                    <iframe id="igraph" scrolling="no" style="border:none;" seamless="seamless" src="https://mattharding23.github.io/DecisionTrees/dt_ph_cm_stats2.html" height="250" width="100%"></iframe>
+                    <figcaption>
+                        Table 4
+                    </figcaption>
+                </figure>
+            </div>
+            <div class = "dt_txt_box">
+                <p>
+                    This model is interesting because it is slightly less accurate in predicting the acidity of the water than the previous model. However, the predictors used in this model can be used to predict water quality independent of location. The root node is split by the salinity parameter and then the node below that is split by dissolved oxygen. This second node also confirms that there is a link between acidity and low dissolved oxygen because the node is split such that if dissolved oxygen is low (below 65%), then the water is most likely acidic. This model and the others that were discussed previously are not accurate enough to be used to consistently predict the acidity or amount dissolved oxygen in the water. However, they do show a clear connection between acidity and low amounts of dissolved oxygen in the water which can be studied more to find a better way to make predictions for low amounts of dissolved oxygen.
+                </p>
+                <p>
+                    Another important aspect of water quality in the Chesapeake Bay is the level of chlorophyll. As mentioned in the introduction section, measure also relates to dissolved oxygen in that chlorophyll is the food for aquatic plants and when the water is over saturated with chlorphyll it can lead to algae blooms which take up a significant of oxygen in the water. These algae blooms are known to produce fish kills because the fish are not able to get enough oxygen out of the water. It would be useful to be able to predict when levels of cholorphyll will be high in the water because of the relationship between chlorphyll and dissolved oxygen. A model was created to study dangerous cholorphyll levels versus not dangerous chlorophyll levels which takes in all variables in the dataset. The decision tree in <i>Figure 9 </i> shows how the model predicts chlorophyll levels while <i>Figure 10</i> and <i>Table 5</i> show the confusion matrix its statistics. 
+                </p>
+                
+            </div>
+            <div>
+                <figure>
+                    <img src="http://mharding.georgetown.domains/ANLY_501/DecisionTrees/dt_cl.png" class = "dt_img_box" >
+                    <figcaption>
+                        Figure 9: Decision tree for Chlorophyll levels <a href = "http://mharding.georgetown.domains/ANLY_501/DecisionTrees/09_Dt_cl1.R" download="09_Dt_cl1.R" role = "button">Code</a> 
+                    </figcaption>
+                </figure>
+            </div>
+            <div>
+                <figure>
+                    <img src="http://mharding.georgetown.domains/ANLY_501/DecisionTrees/dt_cl_cm.png" class = "dt_img_box" >
+                    <figcaption>
+                        Figure 10: Confusion matrix for Chlorophyll levels <a href = "http://mharding.georgetown.domains/ANLY_501/DecisionTrees/10_cm_cl1.R" download="10_cm_cl1.R" role = "button">Code</a> 
+                    </figcaption>
+                </figure>
+            </div>
+            <div>
+                <figure class = "dt_img_box">
+                    <iframe id="igraph" scrolling="no" style="border:none;" seamless="seamless" src="https://mattharding23.github.io/DecisionTrees/dt_cl_cm_stats.html" height="250" width="100%"></iframe>
+                    <figcaption>
+                        Table 5
+                    </figcaption>
+                </figure>
+            </div>
+            <div class = "dt_txt_box">
+                <p>
+                    As can be seen in <i>Figure 10</i>, the model is not very good at predicting harmful chlorophyll levels as it does it at less than a 50% rate. It was accurate at predicting non-harmful levels of chlorophyll but this is less useful for water quality monitoring. Additionally, the root node for this decision tree is a data station location which, similarly to pH levels, is not helpful in predicting water quality. With this being the root node its hard to even find the best water quality variable for predicting chlorophyll levels. In order to try to find a better root node, the model can use a subset of the data not including the station variable. THe decision tree for that model can be seen in <i>Figure 11</i> as well as the confusion matrix and its statistics in <i>Figure 12</i> and <i>Table 6</i>.
+                </p>
+                
+            </div>
+            <div>
+                <figure>
+                    <img src="http://mharding.georgetown.domains/ANLY_501/DecisionTrees/dt_cl2.png" class = "dt_img_box" >
+                    <figcaption>
+                        Figure 11: Decision tree for Chlorophyll levels <a href = "http://mharding.georgetown.domains/ANLY_501/DecisionTrees/11_Dt_cl2.R" download="11_Dt_cl2.R" role = "button">Code</a> 
+                    </figcaption>
+                </figure>
+            </div>
+            <div>
+                <figure>
+                    <img src="http://mharding.georgetown.domains/ANLY_501/DecisionTrees/dt_cl_cm2.png" class = "dt_img_box" >
+                    <figcaption>
+                        Figure 12: Confusion matrix for Chlorophyll levels <a href = "http://mharding.georgetown.domains/ANLY_501/DecisionTrees/12_cm_cl2.R" download="12_cm_cl2.R" role = "button">Code</a> 
+                    </figcaption>
+                </figure>
+            </div>
+            <div>
+                <figure class = "dt_img_box">
+                    <iframe id="igraph" scrolling="no" style="border:none;" seamless="seamless" src="https://mattharding23.github.io/DecisionTrees/dt_cl_cm_stats2.html" height="250" width="100%"></iframe>
+                    <figcaption>
+                        Table 6
+                    </figcaption>
+                </figure>
+            </div>
+            <div class = "dt_txt_box">
+                <p>
+                    Unfortunately, this model is significantly worse than the previous model at predicting harmful chlorophyll levels. Additionally, none of the top nodes use split harmful chlorophyll levels. Unfortunately these models for harmful chlorophyll levels did not produce any useful results. However, the models for dissolved oxygen and pH levels were useful in that they showed a predicitive relationship between the two variables that can be explored further. 
+                </p>
+                
+            </div>
+            
+            
+        </div>
+        
+        
+        <div class = "dt">
+            <div>
+                <h2 class = "dt_head">
+                    Twitter Data Decision Trees
+                </h2>
+            </div>
+            <div>
+                <div id = "data_gather_buttons" text-align = "left">
+
+                         <a class="btn btn-outline-secondary btn-sm" href = "http://mharding.georgetown.domains/ANLY_501/DataCleaning/tweet_csvs.zip" download="tweets_csv.zip" role = "button">Download Tweets</a>
+                        
+                        <a class="btn btn-outline-secondary btn-sm" href = "http://mharding.georgetown.domains/ANLY_501/DecisionTrees/twit_DT.py" download="twit_DT.py" role = "button">Python Code</a>
+                </div>
+                    
+            </div>
+            <div class = "dt_txt_box">
+                <p>
+                    As has been seen though the data analysis of the twitter data so far, the tweets that use the key word "environment" in addition to "Chesapeake Bay" have contained relevant information the health of the Chesapeake Bay. Given this it may be useful to be able to predict the labels of tweets gathered related to the Chesapeake Bay. One way to do this is to use a decision tree to model a set of tweets that have been run through a count vectorizer. This was done for the tweets that were gathered in relation to the Chespeake Bay and the decision tree can be seen in <i>Figure 13</i> with it's corresponding correlation matrix in <i>Figure 14</i> and a table of the most important features in <i>Table 7</i>  
+                </p>
+
+            </div>
+            <div>
+                <figure>
+                    <img src="http://mharding.georgetown.domains/ANLY_501/DecisionTrees/tweet_tree_all.png" class = "dt_img_box" >
+                    <figcaption>
+                        Figure 13: Decision tree for tweets using count vectorized data <a href = "http://mharding.georgetown.domains/ANLY_501/DecisionTrees/13_dt1.py" download="13_dt1.py" role = "button">Code</a> 
+                    </figcaption>
+                </figure>
+            </div>
+            <div>
+                <figure class = "dt_img_box">
+                    <iframe id="igraph" scrolling="no" style="border:none;" seamless="seamless" src="https://mattharding23.github.io/DecisionTrees/all_cm.html" height="245" width="100%"></iframe>
+                    <figcaption>
+                        Figure 14: Confusion matrix for tweets using count vectorized data
+                    </figcaption>
+                </figure>
+            </div>
+            <div>
+                <figure class = "dt_img_box">
+                    <iframe id="igraph" scrolling="no" style="border:none;" seamless="seamless" src="https://mattharding23.github.io/DecisionTrees/all_feat.html" height="425" width="100%"></iframe>
+                    <figcaption>
+                        Table 7: Top features of importance in the decision tree for tweets using count vectorized data
+                    </figcaption>
+                </figure>
+            </div>
+            <div class = "dt_txt_box">
+                <p>
+                    As can be seen from the confusion matrix in <i>Figure 14</i>, while the model is good at predicting the "Chesapeake Bay" label, it is not good at predicting any of the other labels. This actually makes sense for multiple reasons. First, there are many more data points with that label than the other labels so the model may be overtraining toward that label. Secondly, "Chesapeake Bay" was a key word that was queried by itself as well as with all the other labels. So it makes sense that the model may confuse some of the other labels to fall under the "Chesapeake Bay" label. In order to fix this, all of the tweets corresponding to the "Chespeake Bay" label need to be removed. Then the model for the decision tree can be run again, this time trying to predict three labels instead of four. <i>Figure 15</i> shows the decision tree from this model with its confusion matrix in <i>Figure 16</i> and table of most important features in <i>Table 8</i>.
+                    
+                </p>
+
+            </div>
+            <div>
+                <figure>
+                    <img src="http://mharding.georgetown.domains/ANLY_501/DecisionTrees/tweet_tree_cv.png" class = "dt_img_box" >
+                    <figcaption>
+                        Figure 15: Decision tree for tweets using count vectorized data without "Chesapeake Bay" label <a href = "http://mharding.georgetown.domains/ANLY_501/DecisionTrees/14_dt2.py" download="14_dt2.py" role = "button">Code</a>
+                    </figcaption>
+                </figure>
+            </div>
+            <div>
+                <figure class = "dt_img_box">
+                    <iframe id="igraph" scrolling="no" style="border:none;" seamless="seamless" src="https://mattharding23.github.io/DecisionTrees/cv_cm.html" height="225" width="100%"></iframe>
+                    <figcaption>
+                        Figure 16: Confusion matrix for tweets using count vectorized data without "Chesapeake Bay" label
+                    </figcaption>
+                </figure>
+            </div>
+            <div>
+                <figure class = "dt_img_box">
+                    <iframe id="igraph" scrolling="no" style="border:none;" seamless="seamless" src="https://mattharding23.github.io/DecisionTrees/cv_feat.html" height="400" width="100%"></iframe>
+                    <figcaption>
+                        Table 8: Top features of importance in the decision tree for tweets using count vectorized data without "Chesapeake Bay" label
+                    </figcaption>
+                </figure>
+            </div>
+            <div class = "dt_txt_box">
+                <p>
+                    By looking at the confusion matrix in <i>Figure 16</i>, it appears that this model is much better at predicting the labels for these tweets than the previous model. And while it is better, it is clear that it still may not be a great model based on the top features of importance. Of the features, only two of the eight show true relation to one of the labels. It is possible that the subsetted data may be too small to create a good model. However, there is another way to check this. Another, a TFIDF vectorizer weighs the counts of words in tweets differently than a count vectorizer and may therefore yield better results than the count vectorizer did. The model for the TFIDF vectorizer will use the same tweets - those that do not have the "Chesapeake Bay" label. The decision tree for this model can be seen in <i>Figure 17</i> and its corresponding confusion matrix and features of importance are in <i>Figure 18</i> and <i>Table 9</i> respectively. 
+                    
+                </p>
+
+            </div>
+            <div>
+                <figure>
+                    <img src="http://mharding.georgetown.domains/ANLY_501/DecisionTrees/tweet_tree_tv.png" class = "dt_img_box" >
+                    <figcaption>
+                        Figure 17: Decision tree for tweets using TFIDF vectorized data without "Chesapeake Bay" label <a href = "http://mharding.georgetown.domains/ANLY_501/DecisionTrees/15_dt3.py" download="15_dt3.py" role = "button">Code</a>
+                    </figcaption>
+                </figure>
+            </div>
+            <div>
+                <figure class = "dt_img_box">
+                    <iframe id="igraph" scrolling="no" style="border:none;" seamless="seamless" src="https://mattharding23.github.io/DecisionTrees/tv_cm.html" height="225" width="100%"></iframe>
+                    <figcaption>
+                        Figure 18: Confusion matrix for tweets using TFIDF vectorized data without "Chesapeake Bay" label
+                    </figcaption>
+                </figure>
+            </div>
+            <div>
+                <figure class = "dt_img_box">
+                    <iframe id="igraph" scrolling="no" style="border:none;" seamless="seamless" src="https://mattharding23.github.io/DecisionTrees/tv_feat.html" height="400" width="100%"></iframe>
+                    <figcaption>
+                        Table 9: Top features of importance in the decision tree for tweets using TFIDF vectorized data without "Chesapeake Bay" label
+                    </figcaption>
+                </figure>
+            </div>
+            <div class = "dt_txt_box">
+                <p>
+                    This model clearly also works well based on its confusion matrix, with all labels being predicted correctly at above an 85% rate. Additionally, it appears based on the feature importance that this model works better in actually identifying the different labels, finding more useful words such as 'bay', 'efforts', 'inspired', and 'envi'. However, the root node for this tree is 'festival' which really is not directly related to any of the labels. This could again be an issue of the data being too small to completely train the model. That being said, the TFIDF vectorizer data definitely trained the model better than the count vectorizer. 
+                    
+                </p>
+
+            </div>
+            
+        </div>
+    </body>
+</html>
