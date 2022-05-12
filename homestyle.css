@@ -1,3 +1,4 @@
+/* -------------- General Styling -------------- */
 body{
     font-family: optima;
 }
@@ -12,6 +13,7 @@ figcaption {
     
 }
 
+/* ------------- Header Area -------------- */
 .top_image_box{
     width: 100%;  
     height: auto;
@@ -52,23 +54,7 @@ figcaption {
     font-size: 50px;
     margin-left:3%;
 }
-#port_bar{
-    display:block;
-    margin-left:27.5%;
-    width: 25%;
-    text-align: left;
-    margin-top: 10px;
-    font-size: 50px;
 
-    
-}
-#intro_block{
-    display:block;
-    margin:auto;
-    margin-top:15px;
-    width: 55%;
-    text-align: center;
-}
 #contact_block{
     display: inline-block;
     width: auto;
@@ -89,6 +75,16 @@ figcaption {
     margin-top: 3px;
 }
 
+/* ------------- Intro/Bio --------------*/
+#intro_block{
+    display:block;
+    margin:auto;
+    margin-top:15px;
+    width: 55%;
+    text-align: center;
+}
+
+
 #aboutme_block{
     display: inline-block;
     width: 100%;
@@ -103,6 +99,18 @@ figcaption {
     padding:10px;
     text-align:justify;
 
+}
+
+
+/* -------------- Portfolio Area ---------------- */
+
+#port_bar{
+    display:block;
+    margin-left:27.5%;
+    width: 25%;
+    text-align: left;
+    margin-top: 10px;
+    font-size: 50px;
 }
 
 #projects_block{
@@ -159,4 +167,112 @@ figcaption {
 }
 
 
-/* End About Me */
+/* --------- Scrolly Stuff ---------- */
+
+#overview{
+        width: 75%;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    #scrolly {
+      position: relative;
+      display: -webkit-box;
+      display: -ms-flexbox;
+      display: flex;    
+      padding: 1rem;
+    }
+
+    #scrolly > * {
+      -webkit-box-flex: 1;
+      -ms-flex: 1;
+      flex: 1;
+    }
+
+    article {
+      position: relative;
+      padding: 0 1rem;
+      width: 800px;
+    }
+
+    .sticky-thing {
+      position: -webkit-sticky;
+      position: sticky;
+      width: 100%;
+      margin: 0;
+      z-index: 0;
+      top: 12.5vh;
+      height: 75vh;
+      /* Center everything inside */
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+    }
+
+    .sticky-thing figure {
+      display: flex;
+      flex-direction: column;
+      margin: 10px;
+      width: 415px;
+      height: 575px;
+    }
+
+    .sticky-thing figcaption {
+      align-self: flex-end;
+      text-align: center;
+      font-size: 15px;
+      font-style: italic;
+      line-height: 1.5;
+      margin: auto;
+    }
+
+    .sticky-thing iframe {
+      width: 415px;
+      height: 575px;
+      margin-left: auto;
+      margin-right: auto;
+      margin-top: 0px;
+      margin-bottom: 10px;
+      border: none;
+      
+    }
+
+    .step {
+      margin: 0 auto 2rem auto;  
+      color: #FAF0E6;
+      margin-bottom: 500px;
+    }
+
+    .step:last-child {
+      margin-bottom: 0;
+    }
+
+    .step.is-active {
+      color: #3b3b3b;
+    }
+
+    .step p {
+      text-align: justify;
+      padding: 1rem;
+      font-size: 1.5rem;
+      font-size: 15px;
+
+    }
+a,
+a:visited,
+a:hover {
+  color: teal;
+  text-decoration: none;
+  border-bottom: 2px solid currentColor;
+}
+
+#outro {
+  height: 300px;
+}
+
+@media (min-width: 840px) {
+  .nav__examples {
+    margin-top: 0;
+    margin-left: 2rem;
+  }
+}
