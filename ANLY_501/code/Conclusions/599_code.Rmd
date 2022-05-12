@@ -1,0 +1,94 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+```{r}
+library(tidyverse)
+dat = read_csv("EOTB_Cleaned.csv")
+#dat = dataset#[1:100000,]
+dat$cond = 'Neutral'
+dat$cond[dat$pH < 6.5] = 'Acidic'
+dat$cond[dat$pH > 7.5] = 'Basic'
+
+ggplot(data = dat) +
+  geom_point(aes(x = pH, y = DO_pctSat, color = cond),size = .1)+
+  geom_hline(yintercept=70, color = "black",size=1.5, linetype = "dashed")+
+  geom_smooth(aes(x = pH, y = DO_pctSat),method = "lm", se = F,color = "darkblue") +
+  geom_text(aes(8.7, 70, label = 'Dangerous Oxygen Line', vjust = - 1))+
+  geom_text(aes(8.8, 110, label = 'Trend Line', vjust = - 1, angle = 12))+
+  scale_color_brewer(type = "div",palette = "Spectral")+
+  theme(plot.title = element_text(
+      size = 25, # Enlarge & center title
+      margin = margin(10, 0, 10, 0), hjust = .5
+    ),
+    axis.title = element_text(size = 16),
+    plot.caption = element_text(
+      size = 20,
+      margin = margin(10, 0, 10, 0), hjust = 0
+    ),
+    axis.text = element_text(size = 14),
+    legend.title = element_text(size = 15),
+    legend.text = element_text(size = 13),
+    legend.box.background = element_blank(),
+    panel.grid.minor = element_line(color = "#D3D3D3", size = 0.2),
+    panel.grid.major = element_blank(), # Remove major grid
+    panel.background = element_blank()
+  )+ # Remove background color of plot
+  labs(
+    x = 'pH',
+    y = 'Dissolved Oxygen',
+    title = 'Relationship Between pH and Dissolved Oxygen')
+ggsave("do_ph.png", width = 5, height = 4, dpi = "retina")
+```
+
+
+```{r}
+library(tidyverse)
+dat = dataset
+#dat$cond = 'Neutral'
+#dat$cond[dat$pH < 6.5] = 'Acidic'
+#dat$cond[dat$pH > 7.5] = 'Basic'
+
+plt = ggplot() +
+  geom_point(data = dat,aes(x = pH, y = DO_pctSat, color = pH),size = .1)+
+  geom_hline(yintercept=70, color = "black",size=2.3, linetype = "dashed")+
+  geom_line(data = df, aes(x = pH, y = do), color = "darkblue", size = 2.3,
+               arrow = arrow(length=unit(.75,"cm"), ends="first", type = "closed"))+
+  geom_text(aes(9.14, 70, label = 'Dangerous Oxygen Line', vjust = - 1), size = 7.5, fontface = "bold")+
+  geom_text(aes(8.8, 115, label = 'Trend Line', vjust = - 1, angle = 14.5), size = 7.5, fontface = "bold")+
+   scale_color_distiller(type = "div",palette = "Spectral",direction = 1, name = "pH Level")+
+   theme(plot.title = element_text(
+       size = 33, # Enlarge & center title
+       margin = margin(10, 0, 10, 0), 
+       hjust = .5,
+       face = "bold"
+     ),
+     axis.title = element_text(size = 22),
+     axis.text = element_text(size = 20),
+     legend.title = element_text(size = 20),
+     legend.text = element_text(size = 18),
+     legend.box.background = element_blank(),
+     legend.key=element_blank(),
+     panel.grid.minor = element_line(color = "#D3D3D3", size = 0.3),
+     panel.grid.major = element_blank(), # Remove major grid
+     panel.background = element_blank()
+   )+ # Remove background color of plot
+  guides(color = guide_colorbar(override.aes = list(size=5)))+
+  labs(
+    x = 'pH',
+    y = '% Saturated Dissolved Oxygen',
+    title = 'Relationship Between pH and Dissolved Oxygen')
+ggsave(filename = "do_ph_temp.png", plot = plt, width = 15, height = 10, dpi = "retina")
+
+```
+
+```{r}
+lin_mod = lm(DO_pctSat ~ pH, data = dataset)
+x = tibble("pH" = seq(min(dataset$pH),max(dataset$pH), by = .01))
+do = as.numeric(predict(lin_mod, x))
+df = tibble(x,do)
+
+
+
+```

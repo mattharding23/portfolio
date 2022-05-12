@@ -1,0 +1,466 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+## Import Libraries
+```{r}
+
+library(tidyverse)
+library(ggplot2)
+library(rpart)
+library(rattle) 
+library(rpart.plot)
+library(RColorBrewer)
+library(network)
+library(plyr)
+library(factoextra)
+library(GGally)
+library(ggpubr)
+library(lubridate)
+library(plotly) 
+library(htmlwidgets)
+library(philentropy)
+library(gt)
+library(igraph)
+library(cvms)
+library(tibble)
+library(caret)
+library(gridExtra)     
+library(caretEnsemble)
+library(tm)
+library(slam)
+library(quanteda)
+library(SnowballC)
+library(arules)
+library(proxy)
+library(cluster)
+library(Matrix)
+library(plyr) 
+library(mclust) 
+library(naivebayes)
+library(psych)
+library(mice)
+library(e1071)
+library(mlr)
+```
+
+
+## Confusion Matrix Function
+```{r}
+### Function below from: https://stackoverflow.com/a/66606295 for confusion matrix visual
+
+conf_matrix <- function(df.true, df.pred, true.lab ="True Class", pred.lab ="Predicted Class",
+                        high.col = 'green3', low.col = 'white',title = "Confusion Matrix") {
+  #convert input vector to factors, and ensure they have the same levels
+  df.true <- as.factor(df.true)
+  df.pred <- factor(df.pred, levels = levels(df.true))
+  
+  #generate confusion matrix, and confusion matrix as a pecentage of each true class (to be used for color) 
+  df.cm <- table(True = df.true, Pred = df.pred)
+  df.cm.col <- df.cm / rowSums(df.cm)
+  
+  #convert confusion matrices to tables, and binding them together
+  df.table <- reshape2::melt(df.cm)
+  df.table.col <- reshape2::melt(df.cm.col)
+  df.table <- left_join(df.table, df.table.col, by =c("True", "Pred"))
+  
+  #calculate accuracy and class accuracy
+  acc.vector <- c(diag(df.cm)) / c(rowSums(df.cm))
+  class.acc <- data.frame(Pred = "Class Acc.", True = names(acc.vector), value = acc.vector)
+  acc <- sum(diag(df.cm)) / sum(df.cm)
+  
+  #plot
+  ggplot() +
+    geom_tile(aes(x=Pred, y=True, fill=value.y),
+              data=df.table, size=0.2, color=grey(0.5)) +
+    geom_tile(aes(x=Pred, y=True),
+              data=df.table[df.table$True==df.table$Pred, ], size=1, color="black", fill = 'transparent') +
+    scale_x_discrete(position = "top",  limits = c(levels(df.table$Pred), "Class Acc.")) +
+    scale_y_discrete(limits = rev(unique(levels(df.table$Pred)))) +
+    labs(x=pred.lab, 
+         y=true.lab, 
+         fill=NULL,
+         title = title,
+         caption = paste0("Total Accuracy: ", round(100*acc, 1), "%")) +
+    geom_text(aes(x=Pred, y=True, label=value.x),
+              data=df.table, size=4, colour="black") +
+    geom_text(data = class.acc, aes(Pred, True, label = paste0(round(100*value), "%"))) +
+    scale_fill_gradient(low=low.col, high=high.col, labels = scales::percent,
+                        limits = c(0,1), breaks = c(0,0.5,1)) +
+    guides(scale = "none") +
+    theme_bw() +
+    theme(panel.border = element_blank(), legend.position = "bottom",
+          axis.text = element_text(color='black'), axis.ticks = element_blank(),
+          panel.grid = element_blank(), axis.text.x.top = element_text(angle = 30, vjust = 0, hjust = 0),
+          plot.title = element_text(size=17, face="bold", 
+      margin = margin(10, 0, 10, 0),hjust =.5),
+      plot.subtitle = element_text(hjust =.5)) +
+    coord_fixed()
+
+} 
+
+```
+
+## Read in Data
+```{r}
+eotb = read.csv('EOTB_Cleaned.csv')
+
+```
+
+## Clean & Structure Data
+```{r}
+# Get Rid of non numeric/factor columns
+eotb = eotb[,5:11]
+
+# Rename columns
+colnames(eotb) = c("Salinity","pH","Dis_Oxygen","Turbidity","Chlorophyll","Temperature","Month")
+#eotb$Station = as.factor(eotb$Station)
+eotb$Month = as.factor(eotb$Month)
+```
+
+
+
+## Change Oxygen Values to labels
+```{r}
+# Change Oxygen Values to labels - target of study for now. 
+ox_lab = eotb
+
+do = ox_lab[,3]
+
+tdo = function(do){
+  if(do < 70)
+    x = 'Low_Oxygen'
+  else if(do >=70 & do < 100)
+    x = 'Normal_Oxygen'
+  else
+    x = "High_Oxygen"
+  return(x)
+}
+dissolved_oxygen = sapply(do, function(x) tdo(x))
+ox_lab$Dis_Oxygen = as.factor(dissolved_oxygen)
+rm(do,tdo,dissolved_oxygen)
+
+```
+
+
+## View amounts of each label
+```{r}
+#table(ox_lab$Dis_Oxygen)
+
+```
+
+## Scale the data
+```{r}
+ox_lab$Salinity = scale(ox_lab$Salinity)
+ox_lab$pH = scale(ox_lab$pH)
+ox_lab$Turbidity = scale(ox_lab$Turbidity)
+ox_lab$Chlorophyll = scale(ox_lab$Chlorophyll)
+ox_lab$Temperature = scale(ox_lab$Temperature)
+
+```
+
+## Split into test & training set
+```{r}
+set.seed = 123
+# Need even amounts in training set to train data:, low_oxygen has fewest labels so least common denominator
+
+# Create column of index rows
+ox_lab$row_num = 1:nrow(ox_lab)
+
+# Find amount of low oxygen values
+l = nrow(ox_lab[ox_lab$Dis_Oxygen == 'Low_Oxygen',])
+
+# Make training size 70% of set
+train_size = l*.7
+
+# Extract indicies of even amount of each label for training
+high_o_sam = sample(ox_lab$row_num[ox_lab$Dis_Oxygen == 'High_Oxygen'],train_size)
+norm_o_sam = sample(ox_lab$row_num[ox_lab$Dis_Oxygen == 'Normal_Oxygen'],train_size)
+low_o_sam = sample(ox_lab$row_num[ox_lab$Dis_Oxygen == 'Low_Oxygen'],train_size)
+
+# Combine Indicies
+train_ind = c(high_o_sam,norm_o_sam,low_o_sam)
+
+# Remove row indicies from df
+ox_lab = ox_lab[,1:7]
+
+# Get training and Testing Set
+train_set = ox_lab[train_ind,]
+test_set = ox_lab[-train_ind,]
+
+# Save Labels in variables
+train_labs = train_set$Dis_Oxygen
+test_labs = test_set$Dis_Oxygen
+
+# Remove Labels from sets
+train_set = train_set[,c(1:2,4:7)]
+test_set = test_set[,c(1:2,4:7)]
+rm(ox_lab,high_o_sam,norm_o_sam,low_o_sam,l,train_size,train_ind)
+```
+
+## Run Naive Bayes on Test Set
+```{r}
+model = e1071::naiveBayes(train_set, 
+                       train_labs, 
+                       laplace = 1)
+
+
+model_predict = predict(model, test_set)
+
+
+```
+
+```{r}
+#model
+cm = conf_matrix(test_labs,model_predict)
+ggsave('ox_cm.png',plot = cm)
+
+```
+
+## Create Tables to show relevant statistics
+```{r}
+# Create variables to fill with low oxygen level info
+VARIABLE = c('Salinity','pH','Turbidity','Chlorophyll','Temperature','Month')
+MEAN = c()
+SD = c()
+
+# Fill in variables with low ox level info
+for (i in 1:5){
+  tb = model$tables[[VARIABLE[i]]]
+  MEAN = append(MEAN,round(tb[2,1],3))
+  SD = append(SD,round(tb[2,2],3))
+}
+
+# Create variable with month cond. probs for low ox levels
+MONTH = model$tables[[VARIABLE[6]]]
+MONTH = round(MONTH[2,],5)
+
+# create df and change col names for table
+df = data.frame(VARIABLE[1:5],MEAN,SD)
+colnames(df) = c('Variable','Mean','Standard Deviation')
+
+# Create table for mean and SD of variables
+stats_tb = gt(df,rownames_to_stub = T)
+stats_tb = stats_tb %>%
+  
+# Create title & Subtitle
+  tab_header(
+    title = 'Mean & Standard Deviation of Predicted Variables for Low Oxygen Levels',
+    subtitle = 'All Variables are Normalized')%>%
+  tab_style(
+    style = cell_fill(color = "yellow"),
+    locations = cells_body(
+      columns = `Standard Deviation`,
+      rows = `Standard Deviation` < 0.8
+    ))
+       
+  
+
+# Save table as variable
+ox_stats = stats_tb
+#ox_stats
+gtsave(ox_stats,'Ox_stats_tab.html')
+
+
+# Create DF for cond. probs by month, change col names for table
+df = data.frame(c('January','February','March','April','May','June','July','August','September','October','November','December'),MONTH)
+colnames(df) = c('Month','Conditional Probability')
+
+# Create Table
+mon_tb= gt(df)
+mon_tb = mon_tb %>%
+  tab_header(
+    title = 'Conditional Probability of Predicted Low Oxygen Levels by Month') %>%
+  tab_style(
+    style = cell_fill(color = "yellow"),
+    locations = cells_body(
+      columns = `Conditional Probability`,
+      rows = `Conditional Probability` > 10^(-1)
+    ))
+ox_mon_tb = mon_tb
+#ox_mon_tb
+gtsave(ox_mon_tb,'Ox_mon_tab.html')
+  
+
+rm(VARIABLE,MEAN,SD,tb,MONTH,df,stats_tb,ox_stats,mon_tb,ox_mon_tb,i)
+
+```
+
+
+
+## Change Chlorophyll values
+```{r}
+cl_lab = eotb
+
+cl = cl_lab[5]
+#summary(cl)
+cl = cl[cl > 0 & cl < 500]
+
+tcl = function(cl){
+  if(cl < 15)
+    x  = 'Not Harmful CL'
+
+  else if(cl >= 15)
+    x = 'Harmful CL'
+  return(x)
+}
+cl = sapply(cl, function(x) tcl(x))
+cl_lab$Chlorophyll = as.factor(cl)
+rm(cl,tcl)
+
+# Change necessary data types to factors
+cl_lab$Month = as.factor(cl_lab$Month)
+```
+
+
+## View amounts of each label
+```{r}
+#table(cl_lab$Chlorophyll)
+
+```
+
+## Scale the data
+```{r}
+cl_lab$Salinity = scale(cl_lab$Salinity)
+cl_lab$pH = scale(cl_lab$pH)
+cl_lab$Turbidity = scale(cl_lab$Turbidity)
+cl_lab$Dis_Oxygen = scale(cl_lab$Dis_Oxygen)
+cl_lab$Temperature = scale(cl_lab$Temperature)
+
+```
+
+## Split into test & training set
+```{r}
+set.seed = 123
+# Need even amounts in training set to train data:, harmful CL has fewest labels so least common denominator
+
+# Create column of index rows
+cl_lab$row_num = 1:nrow(cl_lab)
+
+# Find amount of harmful CL values
+l = nrow(cl_lab[cl_lab$Chlorophyll == 'Harmful CL',])
+
+# Make training size 70% of set
+train_size = l*.7
+
+# Extract indicies of even amount of each label for training
+harm = sample(cl_lab$row_num[cl_lab$Chlorophyll == 'Harmful CL'],train_size)
+not_harm = sample(cl_lab$row_num[cl_lab$Chlorophyll == 'Not Harmful CL'],train_size)
+
+# Combine Indicies
+train_ind = c(harm,not_harm)
+
+# Remove row indicies from df
+cl_lab = cl_lab[,1:7]
+
+# Get training and Testing Set
+train_set = cl_lab[train_ind,]
+test_set = cl_lab[-train_ind,]
+
+# Save Labels in variables
+train_labs = train_set$Chlorophyll
+test_labs = test_set$Chlorophyll
+
+# Remove Labels from sets
+train_set = train_set[,c(1:4,6:7)]
+test_set = test_set[,c(1:4,6:7)]
+
+rm(harm,not_harm,cl_lab,l,train_ind,train_size)
+```
+
+## Run Naive Bayes on Test Set
+```{r}
+model = e1071::naiveBayes(train_set, 
+                       train_labs, 
+                       laplace = 1)
+
+
+model_predict = predict(model, test_set)
+
+
+```
+
+```{r}
+#model
+cm = conf_matrix(test_labs,model_predict)
+#cm
+ggsave('cl_cm.png',plot = cm)
+rm(cm)
+```
+
+## Create Tables to show relevant statistics
+```{r}
+# Create variables to fill with relevant table values
+VARIABLE = c('Salinity','pH','Dis_Oxygen','Turbidity','Temperature','Month')
+MEAN = c()
+SD = c()
+
+# Fill harmful chlorophyll values into created variables
+for (i in 1:5){
+  tb = model$tables[[VARIABLE[i]]]
+  MEAN = append(MEAN,round(tb[1,1],3))
+  SD = append(SD,round(tb[1,2],3))
+}
+
+# Put values of harmful chlorophyll cond. probs into variable
+MONTH = model$tables[[VARIABLE[6]]]
+MONTH = round(MONTH[1,],5)
+
+# Create dataframe with variables, means and standard deviations
+df = data.frame(VARIABLE[1:5],MEAN,SD)
+
+# Change Column names for table
+colnames(df) = c('Variable','Mean','Standard Deviation')
+
+# Create table
+stats_tb = gt(df,rownames_to_stub = T)
+stats_tb = stats_tb %>%
+  
+# Create title & Subtitle
+  tab_header(
+    title = 'Mean & Standard Deviation of Predicted Variables for Harmful Chlorophyll Levels',
+    subtitle = 'All Variables are Normalized')%>%
+  tab_style(
+    style = cell_fill(color = "yellow"),
+    locations = cells_body(
+      columns = `Standard Deviation`,
+      rows = `Standard Deviation` < 0.8
+    ))
+       
+  
+
+# Save table as variable
+cl_stats = stats_tb
+#cl_stats
+ 
+
+
+# Create separate data frame for months and cond. probs
+df = data.frame(c('January','February','March','April','May','June','July','August','September','October','November','December'),MONTH)
+
+# Change col names for table
+colnames(df) = c('Month','Conditional Probability')
+
+# Create Table
+mon_tb= gt(df)
+mon_tb = mon_tb %>%
+  tab_header(
+    title = 'Conditional Probability of Predicted Low Oxygen Levels by Month') %>%
+  tab_style(
+    style = cell_fill(color = "yellow"),
+    locations = cells_body(
+      columns = `Conditional Probability`,
+      rows = `Conditional Probability` > .15
+    ))
+cl_mon_tb = mon_tb
+#cl_mon_tb
+gtsave(cl_mon_tb,'CL_mon_tab.html')
+  
+
+
+rm(VARIABLE,MEAN,SD,tb,MONTH,df,stats_tb,cl_stats,mon_tb,cl_mon_tb,i)
+
+```
+
+
