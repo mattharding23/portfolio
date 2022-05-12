@@ -1,8 +1,0 @@
-png('par_coord_lift.png',width=1000, height=600)
-
-plot(eotb_rules_lift[1:15], 
-     method="paracoord", 
-     control=list(alpha=0.9, reorder=TRUE), 
-     main = 'Parallel Coordinates Plot for Top 15 Lift Items')
-
-dev.off()
