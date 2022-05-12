@@ -29,6 +29,11 @@ figcaption {
     border-radius:50%;
     width:150px;
 }
+#top_bar{
+    display: block;
+    width: 100%;
+    text-align: justify;
+}
 
 #avatar{
     display:inline-block;
@@ -61,15 +66,18 @@ figcaption {
     display:block;
     margin:auto;
     margin-top:15px;
-    width: 83%;
+    width: 55%;
+    text-align: center;
 }
 #contact_block{
     display: inline-block;
-    margin:auto;
-    width: 25%;
-    text-align: center;
-    padding: 5px;
+    width: auto;
+    float: right;
+    text-align: right;
     vertical-align: top;
+    margin-top: 10px;
+    margin-right: 7%;
+
 
 }
 #contact_heading{
@@ -83,15 +91,18 @@ figcaption {
 
 #aboutme_block{
     display: inline-block;
-    width: 55%;
+    width: 100%;
     height: auto;
     vertical-align: top;
+    margin-left: auto;
+    margin-right: auto;
     
 }
 #aboutme{
     font-size:20px;
     padding:10px;
     text-align:justify;
+
 }
 
 #projects_block{
