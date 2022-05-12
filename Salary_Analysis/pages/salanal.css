@@ -1,0 +1,156 @@
+body{
+    font-family: optima;
+}
+figure{
+    display:inline-block;
+}
+
+figcaption {
+  margin: 4px;
+  text-align: center;
+  font-style: italic;
+  font-size:12;
+    
+}
+
+.top_image_box{
+    width: 100%;  
+    height: auto;
+    text-align: center;
+    top:-65px;
+    overflow:hidden;
+    }
+
+/* Sal analysis section*/
+
+/* Heading */
+#Anly_header{
+    display:block;
+    margin:auto;
+    width: 82%;
+    text-align: left;
+    margin-top: 10px;
+    font-size: 50px;
+}
+
+/* Paragraph Structure */
+
+#use_block{
+    display:inline-block;
+    margin:auto;
+    margin-top:30px;
+    width: 65%;
+}
+#para_block{
+    display: inline-block;
+    width: 100%;
+    height: auto;
+    margin: auto;
+    vertical-align: top;
+}
+#wrapping{
+    text-align: justify;
+    font-size: 20px;
+}
+
+/* Image Structure */
+
+#sal_img_left{
+    display:block;
+    width:95%; 
+    float: left;
+    margin: 6px;
+
+}
+#sal_img_right{
+    display:block;
+    width:95%; 
+    float: right;
+    margin: 6px;
+
+}
+#sal_fig1{
+    width:49%; 
+    float: left;
+    margin: 10px;
+}
+
+#sal_fig2{
+    width:49%; 
+    float: right;
+    margin: 10px;
+}
+#sal_fig3{
+    width:49%; 
+    float: left;
+    margin: 10px;
+}
+
+#sal_fig4{
+    width:49%; 
+    float: right;
+    margin: 10px;
+}
+#sal_fig5{
+    width:54%; 
+    float: left;
+    margin: 10px;
+}
+#sal_fig6{
+    width:49%; 
+    float: right;
+    margin: 10px;
+}
+
+#sal_fig{
+    display: block;
+    width:50%;
+    padding: 1%;
+    margin:auto;
+    
+}
+
+#sal_fig_line{
+    display: block;
+    width: 100%;
+    margin:auto;
+}
+
+/* Buttons*/
+
+#button_header{
+    display:block;
+    margin:auto;
+    width: 50%;
+    margin-top: 30px;
+    font-size: 30px;
+    text-align: center;
+}
+
+
+#buttons_block{
+    display:block;
+    margin:auto;
+    margin-top:18px;
+    width: 50%;
+    text-align:center;
+    margin-bottom:150px;
+    
+}
+
+/* Nav buttons*/
+#nav_block{
+    display:inline-block;
+    width: 10%;
+    margin-top:20px;
+    margin-left:3%;
+
+}
+
+
+
+/* End sal analysis section*/
+
+
+
+

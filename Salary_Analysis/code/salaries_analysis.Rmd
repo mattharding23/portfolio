@@ -1,0 +1,619 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+## Libraries
+```{r}
+library(ggplot2)
+library(XLConnect)
+library(tidyverse)
+library(ggimage)
+library(jsonlite)
+library(httr)
+library(rvest)
+library(gghighlight)
+library(reshape2) 
+library(kableExtra)
+library(ggpubr)
+library(gt)
+`%!in%` <- Negate(`%in%`)
+options(java.parameters = "- Xmx1024m")
+```
+
+## Import cleaned salary dataset
+```{r}
+sal = read_csv('all_seasons_salaries.csv')
+
+```
+## Match Players to teams by season & Add statistics columns
+```{r}
+# Amount of rows in data set
+seasons = 12
+teams = 30
+l = seasons*teams
+
+# Copy dataset
+copy_sal = sal
+
+# Create empty new dataframe for output
+sal_dist = data.frame('Team'=character(l),
+                      'Season'=character(l),
+                      'Mean_Salary'=numeric(l),
+                      'Median-Salary'=numeric(l),
+                      'Max'=numeric(l),
+                      'Min'=numeric(l),
+                      'Standard_deviation'=numeric(l),
+                      'Total' = numeric(l),
+                      'salaries' = numeric(l))
+
+# For counting players on teams
+i = 1
+
+# For loop to transform data to new dataframe
+for(z in 1:l){
+  
+  # Get team and season
+  team = copy_sal$TEAM[1]
+  yr = copy_sal$year[1]
+  
+  # Extract salaries by team and season
+  sals = copy_sal$salary[copy_sal$TEAM == team & copy_sal$year == yr & !is.na(copy_sal$salary)]
+  
+  # Place team, season, & salary statistics in data frame
+  sal_dist$Team[z] = team
+  sal_dist$Season[z] = yr
+  sal_dist$Mean_Salary[z] = mean(sals)
+  sal_dist$Median.Salary[z] = median(sals)
+  sal_dist$Max[z] = max(sals)
+  sal_dist$Min[z] = min(sals)
+  sal_dist$Standard_deviation[z] = sd(sals)
+  sal_dist$Total[z] = sum(sals)
+  sal_dist$salaries[z] = list(sals)
+  
+  # Remove data from copied data frame
+  c_len = length(copy_sal$salary)
+  len = length(sals)
+  copy_sal = copy_sal[1+len:c_len,]
+
+}
+```
+
+
+# Explore Data using box plots
+```{r}
+boxplot(sal_dist$Mean_Salary)
+boxplot(sal_dist$Median.Salary)
+boxplot(sal_dist$Max)
+boxplot(sal_dist$Min)
+boxplot(sal_dist$Standard_deviation)
+boxplot(sal_dist$Total)
+
+
+
+
+```
+## Match abbreviation to city to match dataset with win dataset
+```{r}
+
+for(i in 1:length(sal_dist$Team)){
+  if(sal_dist$Team[i] == "ATL")
+    sal_dist$nickname[i] = "Atlanta"
+  else if(sal_dist$Team[i] == "BOS")
+    sal_dist$nickname[i] = "Boston"
+  else if(sal_dist$Team[i] == "CHA")
+    sal_dist$nickname[i] = "Charlotte"
+  else if(sal_dist$Team[i] == "CHI")
+    sal_dist$nickname[i] = "Chicago"
+  else if(sal_dist$Team[i] == "CLE")
+    sal_dist$nickname[i] = "Cleveland"
+  else if(sal_dist$Team[i] == "DAL")
+    sal_dist$nickname[i] = "Dallas"
+  else if(sal_dist$Team[i] == "DEN")
+    sal_dist$nickname[i] = "Denver"
+  else if(sal_dist$Team[i] == "DET")
+    sal_dist$nickname[i] = "Detroit"
+  else if(sal_dist$Team[i] == "GSW")
+    sal_dist$nickname[i] = "Golden State"
+  else if(sal_dist$Team[i] == "HOU")
+    sal_dist$nickname[i] = "Houston"
+  else if(sal_dist$Team[i] == "IND")
+    sal_dist$nickname[i] = "Indiana"
+  else if(sal_dist$Team[i] == "LAC")
+    sal_dist$nickname[i] = "LA Clippers"
+  else if(sal_dist$Team[i] == "LAL")
+    sal_dist$nickname[i] = "LA Lakers"
+  else if(sal_dist$Team[i] == "MEM")
+    sal_dist$nickname[i] = "Memphis"
+  else if(sal_dist$Team[i] == "MIA")
+    sal_dist$nickname[i] = "Miami"
+  else if(sal_dist$Team[i] == "MIL")
+    sal_dist$nickname[i] = "Milwaukee"
+  else if(sal_dist$Team[i] == "MIN")
+    sal_dist$nickname[i] = "Minnesota"
+  else if(sal_dist$Team[i] == "NJN")
+    sal_dist$nickname[i] = "New Jersey"
+  else if(sal_dist$Team[i] == "NOH")
+    sal_dist$nickname[i] = "New Orleans"
+  else if(sal_dist$Team[i] == "NYK")
+    sal_dist$nickname[i] = "New York"
+  else if(sal_dist$Team[i] == "OKC")
+    sal_dist$nickname[i] = "Okla City"
+  else if(sal_dist$Team[i] == "ORL")
+    sal_dist$nickname[i] = "Orlando"
+  else if(sal_dist$Team[i] == "PHI")
+    sal_dist$nickname[i] = "Philadelphia"
+  else if(sal_dist$Team[i] == "PHX")
+    sal_dist$nickname[i] = "Phoenix"
+  else if(sal_dist$Team[i] == "POR")
+    sal_dist$nickname[i] = "Portland"
+  else if(sal_dist$Team[i] == "SAC")
+    sal_dist$nickname[i] = "Sacramento"
+  else if(sal_dist$Team[i] == "SAS")
+    sal_dist$nickname[i] = "San Antonio"
+  else if(sal_dist$Team[i] == "TOR")
+    sal_dist$nickname[i] = "Toronto"
+  else if(sal_dist$Team[i] == "UTA")
+    sal_dist$nickname[i] = "Utah"
+  else if(sal_dist$Team[i] == "WAS")
+    sal_dist$nickname[i] = "Washington"
+  else if(sal_dist$Team[i] == "BKN")
+    sal_dist$nickname[i] = "Brooklyn"
+  else if(sal_dist$Team[i] == "NOP")
+    sal_dist$nickname[i] = "New Orleans"
+  
+}
+```
+
+## Clean up naming & column order of new dataset
+```{r}
+names(sal_dist)[10] = "City"
+sal_dist = sal_dist[,c("Team","City","Season","Mean_Salary","Median.Salary",
+                      "Max","Min","Standard_deviation","Total","salaries")]
+```
+
+## Combine dataset with Wins dataset
+```{r}
+wins = readWorksheetFromFile("wins.xlsx",sheet = 1,header = T)
+sal_dist = sal_dist %>%
+  left_join(wins, by = c('City' = 'Team','Season'='year'))
+#sum(is.na(sal_dist$wp))
+```
+
+```{r}
+# Save in case needed for later usage
+write_csv(sal_dist,'sal_dist.csv')
+
+```
+
+## View Mean differences between winning and losing teams. 
+```{r}
+# Split winning and losing team labels
+sal_dist$WinTeam = "Winning Teams"
+sal_dist$WinTeam[sal_dist$wp < .5] = "Losing Teams"
+
+# Save as variables
+w = sal_dist$WinTeam[sal_dist$WinTeam == "Winning Teams"]
+l = sal_dist$WinTeam[sal_dist$WinTeam == "Losing Teams"]
+
+# NBA colors
+logocolors = c('#17408B',"#C9082A")
+
+# Boxplot
+box_mean = ggplot(data = sal_dist)+
+  geom_boxplot(aes(x = WinTeam,y = Mean_Salary),color = logocolors)+
+  labs(x = "",
+       y = "Mean Player Salary",
+       title = "Mean Player Salaries by Winning & Losing Teams",
+       subtitle = "2009-2020 Seasons"
+         ) +
+  theme(plot.title = element_text(size=17, face="bold", 
+    margin = margin(10, 0, 10, 0),hjust =.5),
+    plot.subtitle = element_text(hjust =.5),
+    axis.text=element_text(size=10),
+    panel.grid.major = element_blank(), 
+    panel.grid.minor = element_blank())+
+  scale_y_continuous(labels = scales::comma)
+box_mean
+ggsave('mean_box.png',width = 12, height = 9, dpi = 'retina')
+
+  
+```
+## View Median differences between winning and losing teams. 
+```{r}
+
+box_median = ggplot(data = sal_dist)+
+  geom_boxplot(aes(x = WinTeam,y = Median.Salary),color = logocolors)+
+  labs(x = "",
+       y = "Median Player Salary",
+       title = "Median Player Salaries by Winning & Losing Teams",
+       subtitle = "2009-2020 Seasons"
+         ) +
+  theme(plot.title = element_text(size=17, face="bold", 
+    margin = margin(10, 0, 10, 0),hjust =.5),
+    plot.subtitle = element_text(hjust =.5),
+    axis.text=element_text(size=10),
+    panel.grid.major = element_blank(), 
+    panel.grid.minor = element_blank())+
+  scale_y_continuous(labels = scales::comma)
+box_median
+ggsave('median_box.png',width = 12, height = 9, dpi = 'retina')
+
+  
+```
+## View Standard deviation differences between winning and losing teams. 
+```{r}
+
+box_sd = ggplot(data = sal_dist)+
+  geom_boxplot(aes(x = WinTeam,y = Standard_deviation),color = logocolors)+
+  labs(x = "",
+       y = "Standard Deviation",
+       title = "Standard Deviation of Team's Player Salaries",
+       subtitle = "By Winning & Losing Teams (2009-2020 Seasons)"
+         ) +
+  theme(plot.title = element_text(size=17, face="bold", 
+    margin = margin(10, 0, 10, 0),hjust =.5),
+    plot.subtitle = element_text(hjust =.5),
+    axis.text=element_text(size=10),
+    panel.grid.major = element_blank(), 
+    panel.grid.minor = element_blank())+
+  scale_y_continuous(labels = scales::comma)
+box_sd
+ggsave('sd_box.png',width = 12, height = 9, dpi = 'retina')
+
+  
+```
+## View Total Spend differences between winning and losing teams. 
+```{r}
+
+box_total = ggplot(data = sal_dist)+
+  geom_boxplot(aes(x = WinTeam,y = Total),color = logocolors)+
+  labs(x = "",
+       y = "Total Salary Spent",
+       title = "Total Salaray Spent by Winning & Losing Teams",
+       subtitle = "2009-2020 Seasons"
+         ) +
+  theme(plot.title = element_text(size=17, face="bold", 
+    margin = margin(10, 0, 10, 0),hjust =.5),
+    plot.subtitle = element_text(hjust =.5),
+    axis.text=element_text(size=10),
+    panel.grid.major = element_blank(), 
+    panel.grid.minor = element_blank())+
+  scale_y_continuous(labels = scales::comma)
+box_total
+ggsave('total_box.png',width = 12, height = 9, dpi = 'retina')
+
+  
+```
+```{r}
+grid_plot = ggarrange(box_mean, box_median, box_sd,box_total , 
+          
+          ncol = 2, nrow = 2)%>%
+  ggexport(flinename =  'grid_box.png',width = 15, height = 12)
+
+```
+
+
+```{r}
+ci_df = data.frame('Statistic' = as.character(),'Lower Limit' = as.numeric(), 'Upper Limit' = as.numeric())
+colnames(ci_df) = c("Statistic",'Lower Limit','Upper Limit')
+
+```
+
+## Run bootstrapping on mean differences to find 95% confidence intervals 
+```{r}
+set.seed(1234)
+
+# 100000 bootstrapping samples
+N = 100000
+
+x = numeric(N)
+
+## Run bootstrapping samples to find difference between winning and losing teams
+for (i in 1:N){
+  win <- mean(sample(sal_dist$Mean_Salary[sal_dist$WinTeam == "Winning Teams"], length(w), replace = T))
+  loss <- mean(sample(sal_dist$Mean_Salary[sal_dist$WinTeam == 'Losing Teams'],length(l), replace = T))
+  x[i] = win-loss
+}
+
+# Develop Confidence Intervals
+std = sd(x)
+LL=mean(x)-1.96*std
+UL=mean(x)+1.96*std
+mean_ci = c('Mean Difference',LL,UL)
+#cat('95% Confidence Interval: [',ci[1],',',ci[2],']')
+ci_df[1,] = mean_ci
+
+```
+
+
+## Run bootstrapping on median differences to find 95% confidence intervals 
+```{r}
+set.seed(1234)
+
+# 100000 bootstrapping samples
+N = 100000
+
+x = numeric(N)
+
+## Run bootstrapping samples to find difference between winning and losing teams
+for (i in 1:N){
+  win <- mean(sample(sal_dist$Median.Salary[sal_dist$WinTeam == "Winning Teams"], length(w), replace = T))
+  loss <- mean(sample(sal_dist$Median.Salary[sal_dist$WinTeam == 'Losing Teams'],length(l), replace = T))
+  x[i] = win-loss
+}
+
+# Develop Confidence Intervals
+std = sd(x)
+LL=mean(x)-1.96*std
+UL=mean(x)+1.96*std
+median_ci = c('Mean Difference',LL,UL)
+#cat('95% Confidence Interval: [',ci[1],',',ci[2],']')
+ci_df[2,] = median_ci
+
+
+```
+
+```{r}
+set.seed(1234)
+
+# 100000 bootstrapping samples
+N = 100000
+
+x = numeric(N)
+
+## Run bootstrapping samples to find difference between winning and losing teams
+for (i in 1:N){
+  win <- mean(sample(sal_dist$Standard_deviation[sal_dist$WinTeam == 'Winning Teams'], length(w), replace = T))
+  loss <- mean(sample(sal_dist$Standard_deviation[sal_dist$WinTeam == 'Losing Teams'],length(l), replace = T))
+  x[i] = win-loss
+}
+
+# Develop Confidence Intervals
+std = sd(x)
+LL=mean(x)-1.96*std
+UL=mean(x)+1.96*std
+
+sd_ci = c('Median Difference',LL,UL)
+ci_df[3,] = sd_ci
+#cat('95% Confidence Interval: [',ci[1],',',ci[2],']')
+
+
+
+```
+
+```{r}
+set.seed(1234)
+
+# 100000 bootstrapping samples
+N = 100000
+
+x = numeric(N)
+
+## Run bootstrapping samples to find difference between winning and losing teams
+for (i in 1:N){
+  win <- mean(sample(sal_dist$Total[sal_dist$WinTeam == 'Winning Teams'], length(w), replace = T))
+  loss <- mean(sample(sal_dist$Total[sal_dist$WinTeam == 'Losing Teams'],length(l), replace = T))
+  x[i] = win-loss
+}
+
+# Develop Confidence Intervals
+std = sd(x)
+LL=mean(x)-1.96*std
+UL=mean(x)+1.96*std
+ci = c(LL,UL)
+cat('95% Confidence Interval: [',ci[1],',',ci[2],']')
+
+tot_ci = c('Total Difference',LL,UL)
+ci_df[4,] = tot_ci
+
+```
+```{r}
+ci_df$`Lower Limit` = round(as.numeric(ci_df$`Lower Limit`),-4)
+ci_df$`Upper Limit` = round(as.numeric(ci_df$`Upper Limit`),-4)
+
+ci_tb = gt(ci_df)
+ci_tb = ci_tb %>%
+  
+# Create title & Subtitle
+  tab_header(
+    title = 'Confidence Intervals for Each Distribution Statistic',
+    subtitle = 'Difference in Statistic of Winning and Losing Teams')%>%
+  fmt_currency(
+    columns = `Lower Limit`,
+    currency = "USD") %>%
+  fmt_currency(
+    columns = `Upper Limit`,
+    currency = "USD") 
+ci_tb
+#gtsave(acc_tb,'OX_acc_tab.html')
+
+
+```
+## Melt Winning dataframe in order to plot each individual team as its own line 
+```{r}
+
+# Create new data frame
+df_w = data.frame(x=1:21)
+
+# Copy salaries as new variable
+sals = sal_dist$salaries[sal_dist$WinTeam == 'Winning Teams']
+
+# Get salaries from each team and make it a new column in df
+for (i in 1:length(w)){
+
+  a = replicate(21,0)
+  b = sort(sals[[i]],decreasing =T)
+  a[1:length(b)] = b
+
+  nam = paste("col", i, sep = "")
+  df_w = cbind(df_w,a)
+  colnames(df_w)[ncol(df_w)] = nam
+  
+  
+}
+
+# melt dataframe to make x's repeat & y's be salaries of each team 
+df_w = melt(df_w, id = "x")
+```
+
+## Melt Losing dataframe in order to plot each individual team as its own line 
+```{r}
+# Create new data frame
+df_l = data.frame(x=1:21)
+
+# Copy salaries as new variable
+sals = sal_dist$salaries[sal_dist$WinTeam == 'Losing Teams']
+
+# Get salaries from each team and make it a new column in df
+for (i in 1:length(l)){
+
+  a = replicate(21,0)
+  b = sort(sals[[i]],decreasing = T)
+  a[1:length(b)] = b
+  nam = paste("col", i, sep = "")
+  
+  df_l = cbind(df_l,a)
+  colnames(df_l)[ncol(df_l)] = nam
+  
+  
+}
+
+# melt dataframe to make x's repeat & y's be salaries of each team 
+df_l = melt(df_l, id = "x")
+
+```
+
+## Find mins and maxes for plotting ribbon
+```{r}
+win_max = c()
+win_min = c()
+lose_max = c()
+lose_min = c()
+for (i in 1:21){
+  d = df_w$value[df_w$x == i]
+  e = df_l$value[df_l$x == i]
+  win_max = append(win_max,max(d))
+  win_min = append(win_min,min(d))
+  lose_max = append(lose_max,max(e))
+  lose_min = append(lose_min,min(e))
+}
+
+```
+
+## Plot each teams salary distribution from dataset. Separating winning and losing teams
+```{r}
+colors <- c("Winning Teams" = logocolors[2], "Losing Teams" = logocolors[1])
+
+plt <- ggplot() +
+  geom_line(data = df_w,aes(group = variable, x = x,y = value/100,color = "Winning Teams"),alpha = .5)+
+  geom_line(data = df_l,aes(group = variable, x = x,y = value/100,color = "Losing Teams"),alpha = .5)+
+  geom_ribbon(aes(x = 1:21,ymin = win_min/100, ymax = win_max/100), fill = logocolors[2],alpha = .45 )+
+  geom_ribbon(aes(x = 1:21,ymin = lose_min/100, ymax = lose_max/100), fill = logocolors[1],alpha = .45)+
+  labs(x = "Players",
+       y = "Salary",
+       color = "Legend",
+       title = "Salary Distribution of NBA Teams",
+       subtitle = "2009-2020 Seasons",
+       caption = "Winning & losing teams split at 50% win loss record"
+         ) +
+  scale_color_manual(values = colors)+
+  theme(plot.title = element_text(size=17, face="bold", 
+    margin = margin(10, 0, 10, 0),hjust =.5),
+    plot.subtitle = element_text(hjust =.5),
+    plot.caption = element_text(hjust=0.5))+
+  scale_y_continuous(labels = scales::comma)
+plt
+ggsave('Team Salary Distributions.png',plot = plt)
+```
+
+
+## EDA for presentation
+```{r}
+# Salaries Example
+ex = sal[sal$TEAM == 'BKN' & sal$year == '20_21',]
+ex = ex[1:13,]
+
+plt <- ggplot(data = ex,aes(x = fct_reorder(player,-salary), y = salary))+
+  geom_bar(fill = 'black',color = 'grey', stat = "identity", alpha = 0.9)+
+  labs(x = "Players",
+       y = "Salary",
+       title = "Salary Distribution of the Brooklyn Nets",
+       subtitle = "2020-2021 Season"
+         ) +
+  theme(plot.title = element_text(size=17, face="bold", 
+    margin = margin(10, 0, 10, 0),hjust =.5),
+    plot.subtitle = element_text(hjust =.5),
+    axis.text.x = element_text(angle = 60, vjust = 0.99, hjust=1),
+    panel.grid.major = element_blank(), 
+    panel.grid.minor = element_blank(),
+    panel.background = element_blank())+
+  scale_y_continuous(labels = scales::comma)
+
+plt
+ggsave('Nets_20_21.png',plot = plt,width = 12, height = 9, dpi = 'retina')
+```
+
+
+```{r}
+# Salary Cap Example
+cap = sal_dist[sal_dist$Season == '20_21',]
+plt <- ggplot(data = cap,aes(x = fct_reorder(Team,-Total), y = Total))+
+  geom_bar(fill = 'blue', stat = "identity", alpha = 0.9)+
+  geom_hline(yintercept=112414000, linetype="dashed", color = "red",size=1.3)+
+  geom_text(aes(28, 112414000, label = 'Salary Cap', vjust = - 1))+
+  labs(x = "Teams",
+       y = "Total Salary Spent",
+       title = "Total Salary Spent by NBA Teams",
+       subtitle = "2020-2021 Season"
+         ) +
+  theme(plot.title = element_text(size=17, face="bold", 
+    margin = margin(10, 0, 10, 0),hjust =.5),
+    plot.subtitle = element_text(hjust =.5),
+    axis.text.x = element_text(angle = 60, vjust = 0.99, hjust=1),
+    axis.text=element_text(size=12),
+    panel.grid.major = element_blank(), 
+    panel.grid.minor = element_blank())+
+  scale_y_continuous(labels = scales::comma)
+
+plt
+ggsave('sal_cap_20_21.png',plot = plt,width = 12, height = 9, dpi = 'retina')
+```
+
+```{r}
+# Data table
+dt = cap[1:7,c(1,2,11,10)]
+colnames(dt)[3] = 'Win Percentage'
+colnames(dt)[4] = 'Salaries'
+
+dt %>%
+  kbl() %>%
+  kable_material(c("striped", "hover"))
+
+```
+
+
+```{r}
+# Histogram  of player salaries on winning and losing teams
+colors <- c("Winning Teams" = logocolors[2], "Losing Teams" = logocolors[1])
+
+plt <- ggplot() +
+  geom_histogram(data = df_w[df_w$value>20000000,],aes(x = value,color = "Winning Teams"), fill = logocolors[2], bins = 15,alpha = .5)+
+  geom_histogram(data = df_l[df_l$value>20000000,],aes(x = value,color = "Losing Teams"), fill = logocolors[1], bins = 15, alpha = .5)+
+  labs(x = "Salary",
+       y = "Players",
+       color = "Legend",
+       title = "Salaries of NBA Players > $20M",
+       subtitle = "2009-2020 Seasons"
+         ) +
+  scale_color_manual(values = colors)+
+  theme(plot.title = element_text(size=17, face="bold", 
+    margin = margin(10, 0, 10, 0),hjust =.5),
+    plot.subtitle = element_text(hjust =.5))+
+  scale_x_continuous(labels = scales::comma)+
+  scale_color_manual(values = colors)
+plt
+ggsave('player_sals.png',plot = plt)
+
+
+```

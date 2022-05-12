@@ -1,0 +1,144 @@
+<html>
+    <head>
+        <link rel="stylesheet" type="text/css" href="https://mharding.georgetown.domains/home/SalaryAnalysis/salanal.css"/>
+        
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/css/bootstrap.min.css" rel="stylesheet" >
+        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" ></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.min.js" integrity="sha384-Atwg2Pkwv9vp0ygtn1JAojH0nYbwNJLPhwyoVbhoPwBhjQPR5VtM2+xf0Uwh9KtT" crossorigin="anonymous"></script>
+
+
+
+
+    
+    </head>
+    <body>
+  
+        <div class = "top_image_box">
+            <img src="http://mharding.georgetown.domains/home/SalaryAnalysis/nbaheader.jpeg" width = "1400" height = "200"/>
+        </div>
+
+        <div id = "anly_header">
+            NBA Salary Distribution Analysis
+        </div>
+        <div id = "nav_block">
+            <ul class="nav flex-column" >
+                <li class="active"><a href="http://mharding.georgetown.domains">Home</a></li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Projects</a>
+                    <div class="dropdown-menu">
+                        <a class="dropdown-item" href="http://mharding.georgetown.domains/ANLY_501/Introduction.html">Chesapeake Bay</a>
+                        <a class="dropdown-item" href="http://mharding.georgetown.domains/home/SalaryAnalysis.html">NBA Salary</a>
+                    </div>
+                </li>
+
+            </ul>
+            
+            
+        </div>
+        <div id = "use_block">
+            
+            <div id="para_block">
+                <figure id = "sal_fig1">
+                    <img src="http://mharding.georgetown.domains/home/SalaryAnalysis/Nets_20_21.png"  id = "sal_img_left">
+                    <figcaption>
+                        Figure 1: Brooklyn Nets salary distribution 2020-2021 season
+                    </figcaption>
+                </figure>
+                <p id="wrapping">
+                    In recent decades, the NBA has become not only a thriving sports league generating billions in revenue annually, but also a dominating cultural presence on the international stage. Individual teams in the league are now competing to capture giant markets not only in the Unites States but around the world. However, the league is also a business and it is imporant for teams to understand how they should be allocating their resources in order to give themselves the best chance at capturing their targeted market. One of the most difficult resources to optimize is the money that is allotted for player salaries. This is something each team must do every season and creating a proper balance in the distribution the salaries is known to be crucial for sustainable success. But what does that distibution look like for successful teams compared to teams that are unsuccessful? 
+                </p>
+                
+                <figure id = "sal_fig2">
+                    <img src="http://mharding.georgetown.domains/home/SalaryAnalysis/sal_cap_20_21.png"  id = "sal_img_right">
+                    <figcaption>
+                        Figure 2: Team spending 2020-2021 season
+                    </figcaption>
+                </figure>
+                <p id = "wrapping">
+                        
+                    Teams are attempting to pay their best players enough money to keep them from leaving to play for another team while also trying to leave enough money to pay other players to surround them and create a team that has as many strengths as possible. Teams also have to abide by a salary cap in the NBA. This means that there is a maximum amount of money a team can spend in a given season. While this amount changes from season to season, it is the same for each team during a given season. However, there is a way around the salary cap which allows teams to spend over the limit. By paying a tax to the league based on how much over the salary cap a team spent, a team may surpass the limit set by the salary cap. In general, some teams tend to spend over the salary cap in a given season while others may spend significantly less than the allotted amount. An example of spending during a given season can be seen in <i>Figure 2</i>. Given how salaries are distributed in the NBA, it would be pertinent both from a business perspective and a team success standpoint to understand if and how salary distribution on a given team affects the overall success of that team.
+                </p>
+                <p id = "wrapping">
+                    Player salary data was manually copied from <a href = "https://hoopshype.com/salaries/players/">hoopshype.com</a> into an excel workbook. This data consisted of the player, the team, and the player's salary for a given season. The data was then aggregated in such a way that it combined each player on a team in a given season into a row that kept the player's salaries in a list in the dataframe along with the team and the season. Then using a dataset from <a href = "https://www.teamrankings.com/nba/stat/win-pct-all-games">teamrankings.com</a>, the win percentages from each team in a given season were matched to the corresponding team. A sample of what the cleaned data looks like can be found in <i>Table 1</i>.
+                </p>
+                
+                <div id = "sal_fig_line">
+                    <figure id = "sal_fig" >
+                        <img src="http://mharding.georgetown.domains/home/SalaryAnalysis/Data_Table.png" width  = 100%>
+                        <figcaption>
+                            Table 1: Proportion of liklihood of low dissolved oxygen events 
+                        </figcaption>
+                    </figure>
+                </div>
+                
+                
+                <figure id = "sal_fig3">
+                    <img src="http://mharding.georgetown.domains/home/SalaryAnalysis/box_grid.jpg"  id = "sal_img_left">
+                    <figcaption>
+                        Figure 3: Differences in salary statistics between winning & losing teams
+                    </figcaption>
+                </figure>
+                <p id = "wrapping">
+                    The purpose of studying the way teams spend their money is to understand whether or not the successful teams spend their money differently from unsuccessful teams. In order to do this the data first needed to be labeled. The teams with a winning percentage greater than 50% were labeled a winning team while those with a winning percentage of less than 50% were labeled a losing team. Then, to understand the distributions of the data better, new columns in the data were created to specify the mean, median, standard deviation, and total salary for each team respectively. Before any analysis was done boxplots for each of the mentioned statistics were created to inspect for significant differences between winning and losing teams. <i>Figure 3</i> shows each of these boxplots. From these plots, it appears that the winning team tends to be larger in each distribution statistic. In an attempt to confirm this, a 95% confidence interval was created for the difference between winning and losing teams for each distribution statistic using bootstrapping. Bootstrapping was utilized because of the relatively small sample size for each of the winning and losing teams.
+                </p>
+                <figure id = "sal_fig4">
+                    <img src="http://mharding.georgetown.domains/home/SalaryAnalysis/ci_table.png"  id = "sal_img_right">
+                    <figcaption>
+                        Table 2: Confidence intervals for difference in distribution statistics of winning and losing teams (Rounded to nearest $10,000)
+                    </figcaption>
+                </figure>
+                
+                <p id = "wrapping">
+                    For each distribution statistic, the difference in the mean of the statistic for winning and losing teams of each of 100,000 bootstrapping samples was compiled. 95% confidence intervals for the difference in winning and losing teams were then calculated yielding the results shown in <i>Table 2</i>. From the resulting table, it can be seen that each confidence interval is strictly positive, meaning that for every distribution statistic, the winning teams have larger values than the losing teams.
+                </p>
+                <p id = "wrapping">
+                    The results show that, in general, winning teams tend to spend more money than losing teams. This is not a groundbreaking conclusion, however it does confirm the idea that spending more money does lead to winning more games. This information would also be useful to the teams who, as seen on the right side of <i>Figure 2</i> , spent well under the allotted salary cap. Regardless of their success that season, this information would imply that spending more money than they did would have given them a better chance to have more success than they did.
+                </p>
+                <figure id = "sal_fig5">
+                    <img src="http://mharding.georgetown.domains/home/SalaryAnalysis/TeamSalaryDistributions.png"  id = "sal_img_left">
+                    <figcaption>
+                        Figure 5: Salary distribution of each team in the dataset from highest to lowest paid player
+                    </figcaption>
+                </figure>
+                
+                
+                <p id = "wrapping">
+                    The more insightful conclusion from this data comes from the fact that the differences in player salary mean and team salary standard deviation are much larger than that of the median. This would suggest that winning teams are more likely to spend more money on their best players than losing teams. <i>Figures 5 & 6</i> illustrate this using the real data. <i>Figure 5</i> shows the salary distribution of each team in the dataset with the highest paid player being on the left and lowest paid player being on the right. It can be seen clearly on the left side of the graph that winning teams are spending more money than losing teams on these top players. <i>Figure 6</i> again proves this point in another way. It shows a histogram of salaries of players who made more than $20 million in a given season and is separated by winning and losing teams. Again, this plot is clearly dominated by winning teams. Given these results, an NBA team that wants to be more successful should consider signing a star player as the results back up that star players contribute to more wins and are worth spending the extra money when team success is the variable being solved for.
+                    
+                </p>
+                
+                <figure id = "sal_fig6">
+                    <img src="http://mharding.georgetown.domains/home/SalaryAnalysis/player_sals.png"  id = "sal_img_right">
+                    <figcaption>
+                        Figure 6: Salaries of players who made more than $20 million in a given season
+                    </figcaption>
+                </figure>
+                
+                <p id = "wrapping">
+                    In reality however, some teams are just not willing to spend the large amounts of money that others are. In this case, this analysis would not be all that useful to them and they will likely not have as much success as other teams who are willing to spend the money. Though, a similar analysis could be done in order to be more useful to these more frugal teams. Instead of doing an analysis on the actual salary of each player, the data could be normalized in a way by using the percentage of total salary a team spent on each given player. This type of analysis could lead to some different results as it could be seen clearly in <i>Figure 2</i> that some teams spent significantly less money than other teams did.
+                    
+                    
+
+
+                </p>
+                
+            </div>
+        </div>
+        <div id = "button_header">
+            Downloads
+        </div>
+        <div id = "buttons_block">
+            <a class="btn btn-outline-secondary btn-sm" href = "http://mharding.georgetown.domains/home/SalaryAnalysis/raw.zip" download="raw.zip" role = "button">Raw Data</a>
+                        
+            <a class="btn btn-outline-secondary btn-sm" href = "http://mharding.georgetown.domains/home/SalaryAnalysis/cleaned.zip" download="cleaned.zip" role = "button">Cleaned Data</a>
+            <a class="btn btn-outline-secondary btn-sm" href = "http://mharding.georgetown.domains/home/SalaryAnalysis/salary_data_cleaning.Rmd" download="salary_data_cleaning.Rmd" role = "button">Data Cleaning Code</a>
+                        
+            <a class="btn btn-outline-secondary btn-sm" href = "http://mharding.georgetown.domains/home/SalaryAnalysis/salaries_analysis.Rmd" download="salaries_analysis.Rmd" role = "button">Analysis Code</a>
+        </div>
+        
+        
+
+    </body>
+    
+</html>
