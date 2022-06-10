@@ -1,0 +1,1088 @@
+---
+title: "Source Code for Peak Bloom Predictions"
+output: html_notebook
+---
+
+
+
+
+### Import Libraries
+```{r}
+library(tidyverse)
+library(rnoaa)
+library(leaps)
+library(caret)
+library(gam)
+library(glmnet)
+
+```
+
+
+
+## Import and clean weather data
+
+Meteostat has historical weather data by location. To extract the data I need, I found the closest weather station to each latitude and longitude and then was able to download a .csv file of that locations historical data. 
+
+https://dev.meteostat.net/bulk/stations.html#endpoints
+https://dev.meteostat.net/bulk/daily.html#endpoints
+
+
+DC - https://bulk.meteostat.net/v2/daily/72405.csv.gz
+Vancouver - https://bulk.meteostat.net/v2/daily/71892.csv.gz
+Kyoto - https://bulk.meteostat.net/v2/daily/47759.csv.gz
+
+There was not data available for Liestal so I will use the NOAA database for that. 
+### Washington DC
+```{r}
+## Read in csv file
+dc_weather <- read_csv("data/DC_weather.csv")
+
+# set column names
+weather_names <- c("date", "tavg_C", "tmin_C", "tmax_C", "precip_mm", "snow_mm", "wind_dir_deg", "wind_sp_km/h", "peak_wind_km/", "pres_hPa", "sun_min")
+colnames(dc_weather) <- weather_names
+
+# Separate month, day & year
+dc_weather <- dc_weather %>%
+  extract(date,
+    into = c("year", "month", "day"),
+    regex = "([0-9]+)[-]([0-9]+)[-]([0-9]+)$"
+  ) %>%
+  # Make individual date variables numeric
+  mutate(across(c(year, day, month), as.numeric)) %>%
+  # Filter for years that precipitation was included & no missing values of temperature which would include years after 1946.
+  filter(year >= 1946) %>%
+  # add total days count column by year
+  group_by(year) %>%
+  mutate("days_into_year" = row_number()) %>%
+  # Replace missing tavg values with avg of min and max tempuratures of said day
+  # This is imperfect as the values are slightly different than the actual average for the day
+  # However, I believe this to be more useful than deleting the rows.
+  ungroup() %>%
+  group_by(year, day, month) %>%
+  mutate("avg_T" = (tmax_C + tmin_C) / 2)
+dc_weather$tavg_C[is.na(dc_weather$tavg_C)] <- dc_weather$avg_T[is.na(dc_weather$tavg_C)]
+
+# Remove unneeded variables
+# Note: Wanted to keep the sun minutes variable, however, there were many years of missing values
+# after trying to build a model to replace values the model was not able to capture the noise in the sun minutes variable
+# and therefore I felt it best to leave the variable out.
+dc_weather <- dc_weather %>%
+  select(-avg_T, -snow_mm, -wind_dir_deg, -`wind_sp_km/h`, -`peak_wind_km/`, -pres_hPa, -sun_min)
+
+# convert celcius to kelvin - I plan to find cumulative values of temperature and having negative values was an issue.
+# So I chose to use an absolute scale (Kelvin) as opposed to Celcius.
+dc_weather$tavg_C <- dc_weather$tavg_C + 273.15
+dc_weather$tmin_C <- dc_weather$tmin_C + 273.15
+dc_weather$tmax_C <- dc_weather$tmax_C + 273.15
+
+colnames(dc_weather)[4:6] <- c("tavg_K", "tmin_K", "tmax_K")
+
+# Save cleaned weather data
+write_csv(dc_weather, "dc_weather_clean")
+```
+
+
+### Kyoto
+```{r}
+## Read in csv file
+ky_weather <- read_csv("data/kyoto_weather.csv")
+
+# set column names
+weather_names <- c("date", "tavg", "tmin", "tmax", "precip_mm", "snow_mm", "wind_dir_deg", "wind_sp_km/h", "peak_wind_km/", "pres_hPa", "sun_min")
+colnames(ky_weather) <- weather_names
+
+# Separate month, day & year
+ky_weather <- ky_weather %>%
+  extract(date,
+    into = c("year", "month", "day"),
+    regex = "([0-9]+)[-]([0-9]+)[-]([0-9]+)$"
+  ) %>%
+  
+  # Make individual date variables numeric
+  mutate(across(c(year, day, month), as.numeric)) %>%
+  
+  # Filter for years where there is enough weather data to work with
+  filter(year >= 1946) %>%
+  
+  # add total days count column by year
+  group_by(year) %>%
+  mutate("days_into_year" = row_number()) %>%
+  ungroup()
+```
+
+
+```{r}
+
+### Replace NA values for Tmax with a modeled version
+
+# Create dummy data frame for values that are not NA in the shown variables
+ky_na <- ky_weather %>%
+  filter(!is.na(tmax) | !is.na(tmin) | !is.na(tavg))
+
+set.seed(1212)
+
+# For 10- fold cross validation
+k <- 10 
+
+folds <- sample(1:k, nrow(ky_na), replace = TRUE)
+
+# Place holder for errors
+cv.errors <- c() 
+
+# Write a for loop that performs cross-validation
+for (i in 1:k) {
+  dat <- ky_na[folds != i, ]
+  cv_mod <- glm(tmax ~ tavg + days_into_year, data = ky_na)
+  pred <- as.numeric(predict(cv_mod, ky_na[folds == i, ], id = i, na.rm = T))
+  cv.errors[i] <- mean((ky_na$tmax[folds == i] - pred)^2, na.rm = T)
+}
+# View mean CV error
+# mean(cv.errors)
+
+# Create model if mean CV error is satisfactory
+tmax_mod <- glm(tmax ~ tavg + days_into_year, data = ky_na)
+
+# Insert model values of tmax where there is currently and NA
+ky_weather$tmax[is.na(ky_weather$tmax)] <- predict(tmax_mod, ky_weather[is.na(ky_weather$tmax), ])
+```
+
+```{r}
+### Replace min temp NA values
+
+# Create dummy data frame for values that are not NA in the shown variables
+ky_na <- ky_weather %>%
+  filter(!is.na(tmin) | !is.na(tavg))
+
+set.seed(1212)
+
+# For 10- fold cross validation
+k <- 10 
+
+folds <- sample(1:k, nrow(ky_na), replace = TRUE)
+
+# Place holder for errors
+cv.errors <- c() 
+
+# Write a for loop that performs cross-validation
+for (i in 1:k) {
+  dat <- ky_na[folds != i, ]
+  cv_mod <- glm(tmin ~ tavg + days_into_year + tmax, data = ky_na)
+  pred <- as.numeric(predict(cv_mod, ky_na[folds == i, ], id = i, na.rm = T))
+  cv.errors[i] <- mean((ky_na$tmin[folds == i] - pred)^2, na.rm = T)
+}
+# View CV errors
+# mean(cv.errors)
+
+# Create model if mean CV error is satisfactory
+tmin_mod <- glm(tmin ~ tavg + days_into_year + tmax, data = ky_na)
+
+# Insert model values of tmax where there is currently and NA
+ky_weather$tmin[is.na(ky_weather$tmin)] <- predict(tmin_mod, ky_weather[is.na(ky_weather$tmin), ])
+```
+
+
+```{r}
+### Finish cleaning Kyoto weather data
+
+# Now that I have all tmax and min values modeled I can replace tavg values with average with min and max
+#   replace missing tavg values with avg of min and max tempuratures of said day
+#   this is imperfect as the values are slightly different than the actual average for the day
+#   however, I believe this to be more useful than deleting the rows.
+
+ky_weather <- ky_weather %>%
+  group_by(year, day, month) %>%
+  mutate("avg_T" = (tmax + tmin) / 2)
+ky_weather$tavg[is.na(ky_weather$tavg)] <- ky_weather$avg_T[is.na(ky_weather$tavg)]
+
+# Remove unneeded variables
+ky_weather <- ky_weather %>%
+  select(-avg_T, -snow_mm, -wind_dir_deg, -`wind_sp_km/h`, -`peak_wind_km/`, -pres_hPa, -sun_min)
+
+# Convert celcius to kelvin 
+ky_weather$tavg <- ky_weather$tavg + 273.15
+ky_weather$tmin <- ky_weather$tmin + 273.15
+ky_weather$tmax <- ky_weather$tmax + 273.15
+
+colnames(ky_weather)[4:6] <- c("tavg_K", "tmin_K", "tmax_K")
+
+write_csv(ky_weather,"ky_weather_cleaned.csv")
+```
+
+
+### Liestal
+```{r}
+## Data base that had data for other 3 cities did not have data from Liestal so I will use te noaa package to get data
+liest <- ghcnd_search(
+  stationid = "GME00127786", var = c("all"),
+  date_min = "1950-01-01", date_max = "2021-12-31"
+)
+
+# Get max and min temps
+liest_max <- liest[[1]]
+liest_min <- liest[[2]]
+```
+
+
+```{r}
+### Get into format to create model variables
+
+# Join temps together with date
+li_weather <- liest_max %>%
+  left_join(liest_min, by = c("date" = "date")) %>%
+  
+  # Keep only relevant columns
+  select(date, tmin, tmax) %>%
+  
+  # Separate month, day & year
+  extract(date,
+    into = c("year", "month", "day"),
+    regex = "([0-9]+)[-]([0-9]+)[-]([0-9]+)$"
+  ) %>%
+  
+  # Make individual date variables numeric
+  mutate(across(c(year, day, month), as.numeric)) %>%
+  
+  # Add days into year column
+  group_by(year) %>%
+  mutate("days_into_year" = row_number()) %>%
+  ungroup()
+
+#Convert temperatures to Kelvin
+li_weather$tmin <- li_weather$tmin/10 + 273.15
+li_weather$tmax <- li_weather$tmax/10 + 273.15
+
+colnames(li_weather)[4:5] <- c("tmin_K", "tmax_K")
+```
+
+Model to find tavg must be created because simply taking the average of the max and min over the entire data set will create colinearity. 
+
+
+```{r}
+### To calculate tavg - need to create a model
+
+weath_comb <- rbind(dc_weather, ky_weather)
+
+set.seed(1212)
+
+# For 10- fold cross validation
+k <- 10 
+
+folds <- sample(1:k, nrow(weath_comb), replace = TRUE)
+
+# Place holder for errors
+cv.errors <- c() 
+
+# Write a for loop that performs cross-validation
+for (i in 1:k) {
+  dat <- weath_comb[folds != i, ]
+  cv_mod <- glm(tavg_K ~ tmin_K + days_into_year + tmax_K + year, data = weath_comb)
+  pred <- as.numeric(predict(cv_mod, weath_comb[folds == i, ], id = i, na.rm = T))
+  cv.errors[i] <- mean((weath_comb$tavg_K[folds == i] - pred)^2, na.rm = T)
+}
+# View CV error
+#mean(cv.errors)
+
+# Run model once satisfied with CV error
+tavg_mod <- glm(tavg_K ~ tmin_K + days_into_year + tmax_K + year, data = weath_comb)
+
+# Create average temperature variable and fill it with model predictions
+li_weather$tavg_K <- predict(tavg_mod, li_weather)
+
+# Reorder variables in weather data frame
+li_weather <- li_weather[, c(1:3, 7, 4:6)]
+
+write_csv(li_weather, "li_weather_cleaned.csv")
+```
+
+### Vancouver
+```{r}
+van_weather <- read_csv("data/vancuv_weather.csv")
+
+# set column names
+weather_names <- c("date", "tavg", "tmin", "tmax", "precip_mm", "snow_mm", "wind_dir_deg", "wind_sp_km/h", "peak_wind_km/", "pres_hPa", "sun_min")
+colnames(van_weather) <- weather_names
+
+# Separate month, day & year
+van_weather <- van_weather %>%
+  extract(date,
+    into = c("year", "month", "day"),
+    regex = "([0-9]+)[-]([0-9]+)[-]([0-9]+)$"
+  ) %>%
+  
+  # Make individual date variables numeric
+  mutate(across(c(year, day, month), as.numeric)) %>%
+  
+  # Start of full year weather data being captured
+  filter(year >= 1958) %>%
+  
+  # add total days count column by year
+  group_by(year) %>%
+  mutate("days_into_year" = row_number()) %>%
+  ungroup()
+```
+
+
+```{r}
+### Replace 1 missing tavg value with avg of values around it
+
+ind <- which(is.na(van_weather$tavg))
+van_avg <- mean(van_weather$tavg[c((ind - 5):(ind - 1), (ind + 1):(ind + 5))])
+van_weather$tavg[is.na(van_weather$tavg)] <- van_avg
+```
+
+
+
+```{r}
+### Create model to replace missing tmin values
+
+van_na <- van_weather %>%
+  filter(!is.na(tmax) | !is.na(tmin))
+
+set.seed(1212)
+
+# 10- fold cross validation
+k <- 10 
+
+folds <- sample(1:k, nrow(van_na), replace = TRUE)
+
+# Place holder for errors
+cv.errors <- c() 
+
+# write a for loop that performs cross-validation
+for (i in 1:k) {
+  dat <- van_na[folds != i, ]
+  cv_mod <- glm(tmin ~ tavg + days_into_year, data = van_na)
+  pred <- as.numeric(predict(cv_mod, van_na[folds == i, ], id = i, na.rm = T))
+  cv.errors[i] <- mean((van_na$tmin[folds == i] - pred)^2, na.rm = T)
+}
+
+# View CV error
+#mean(cv.errors)
+
+# Create model if CV error is satisfactory
+tmin_mod <- glm(tmin ~ tavg + days_into_year, data = van_na)
+
+# Update NA values for tmin with model values
+van_weather$tmin[is.na(van_weather$tmin)] <- predict(tmin_mod, van_weather[is.na(van_weather$tmin), ])
+```
+
+```{r}
+### Create model to replace missing tmin values
+
+van_na <- van_weather %>%
+  filter(!is.na(tmax))
+
+set.seed(1212)
+
+# 10- fold cross validation
+k <- 10
+
+folds <- sample(1:k, nrow(van_na), replace = TRUE)
+
+# Place holder for errors
+cv.errors <- c() 
+
+# write a for loop that performs cross-validation
+for (i in 1:k) {
+  dat <- van_na[folds != i, ]
+  cv_mod <- glm(tmax ~ tmin + tavg + days_into_year, data = van_na)
+  pred <- as.numeric(predict(cv_mod, van_na[folds == i, ], id = i, na.rm = T))
+  cv.errors[i] <- mean((van_na$tmax[folds == i] - pred)^2, na.rm = T)
+}
+# View CV error
+#mean(cv.errors)
+
+# Create model if CV error is satisfactory
+tmax_mod <- glm(tmax ~ tmin + tavg + days_into_year, data = van_na)
+
+# Update NA values for tmax with model values
+van_weather$tmax[is.na(van_weather$tmax)] <- predict(tmax_mod, van_weather[is.na(van_weather$tmax), ])
+```
+
+```{r}
+### Complete cleaning of vancouver weather data
+
+# Remove unneeded variables 
+van_weather <- van_weather %>%
+  select(-snow_mm, -wind_dir_deg, -`wind_sp_km/h`, -`peak_wind_km/`, -pres_hPa, -sun_min)
+
+# Convert celcius to kelvin 
+van_weather$tavg <- van_weather$tavg + 273.15
+van_weather$tmin <- van_weather$tmin + 273.15
+van_weather$tmax <- van_weather$tmax + 273.15
+
+
+colnames(van_weather)[4:6] <- c("tavg_K", "tmin_K", "tmax_K")
+
+write_csv(van_weather,"vc_weather_cleaned.csv")
+```
+
+## Import and transform blossom data
+
+### Create function to merge weather data with bloom data to build model
+```{r}
+
+bloom_merge <- function(bloom, weather, yr) {
+  
+#' Create and save variables to use in models for predicting cherry 
+#'  blossom blooms
+#'
+#' Takes a data frame of bloom data and a data frame of weather data from same
+#'   location and a year and calculates variables to use in model
+
+  # Filter bloom data by year
+  bloom <- bloom %>%
+    filter(year == yr)
+
+  # Filter weather data to get only data from that year and first 150 days
+  weather <- weather %>%
+    filter(year == yr & days_into_year <= 150)
+
+  # Save day of year of bloom that year
+  bdoy <- as.numeric(bloom[7])
+  consec = 0
+  count = 14
+  bloom$warm_start = 150
+  while(consec == 0 & count < 150){
+    if(all(weather$tavg_K[(weather$days_into_year >= count-6) & (weather$days_into_year <= (count))] >= 280)){
+      bloom$warm_start = count - 13
+      consec = 1
+    }
+    count = count + 1
+  }
+
+
+  # Cumulative weather data from days 61-90 of the year
+  bloom$third_30_avgT <- sum(weather$tavg_K[61:90])
+  bloom$third_30_maxT <- sum(weather$tmax_K[61:90])
+  bloom$third_30_minT <- sum(weather$tmin_K[61:90])
+  bloom$week70_84_avg_t <- sum(weather$tavg_K[70:84])
+  bloom$week70_84_max_t <- sum(weather$tmax_K[70:84])
+  bloom$week70_84_min_t <- sum(weather$tmin_K[70:84])
+  bloom$week85_98_avg_t <- sum(weather$tavg_K[85:98])
+  bloom$week85_98_max_t <- sum(weather$tmax_K[85:98])
+  bloom$week85_98_min_t <- sum(weather$tmin_K[85:98])
+
+  return(bloom)
+}
+```
+
+### Transform DC
+```{r}
+# Read in DC cherry tree data
+dc_cherry <- read_csv("data/washingtondc.csv")
+
+# Filter cherry tree data for past 1946 (first point in which there is precipitation data)
+dc_cherry_w_weath <- dc_cherry %>%
+  filter(year >= 1946)
+
+# Initialize tibble with first row
+dc_bloom <- as_tibble(bloom_merge(dc_cherry_w_weath, dc_weather, 1946))
+
+# Loop through all other rows to create data frame with all variables from bloom_merge function
+for (i in 2:nrow(dc_cherry_w_weath)) {
+  yr <- dc_cherry_w_weath$year[i]
+  dc_bloom[i, ] <- bloom_merge(dc_cherry_w_weath, dc_weather, yr)
+}
+write_csv(dc_bloom, "dc_model_data.csv")
+```
+
+### Transform Kyoto
+```{r}
+# Read in DC cherry tree data
+ky_cherry <- read_csv("data/kyoto.csv") %>%
+  
+  # Remove 2005 because no weather data available for that year
+  filter(year != 2005)
+
+## Now that I have replaced missing values I will combine the blooming data set and weather dataset.
+# Filter cherry tree data for past 1951 (first year in which all data is there)
+ky_cherry_w_weath <- ky_cherry %>%
+  filter(year >= 1951)
+
+# Initialize tibble with first row
+ky_bloom <- as_tibble(bloom_merge(ky_cherry_w_weath, ky_weather, 1951))
+
+# Loop through all other rows to create data frame with all variables from bloom_merge function
+for (i in 2:nrow(ky_cherry_w_weath)) {
+  yr <- ky_cherry_w_weath$year[i]
+  ky_bloom[i, ] <- bloom_merge(ky_cherry_w_weath, ky_weather, yr)
+}
+
+write_csv(ky_bloom,"ky_model_data")
+```
+
+### Transform Liestal 
+```{r}
+# Read in DC cherry tree data
+li_cherry <- read_csv("data/liestal.csv") %>%
+  
+  # Missing weather data for 2015
+  filter(year != 2015)
+
+
+# Filter cherry tree data for past 1954 (first year in which there is all data)
+li_cherry_w_weath <- li_cherry %>%
+  filter(year >= 1954)
+
+# Initialize tibble with first row
+li_bloom <- as_tibble(bloom_merge(li_cherry_w_weath, li_weather, 1954))
+
+# Loop through all other rows to create data frame with all variables from bloom_merge function
+for (i in 2:nrow(li_cherry_w_weath)) {
+  yr <- li_cherry_w_weath$year[i]
+  li_bloom[i, ] <- bloom_merge(li_cherry_w_weath, li_weather, yr)
+}
+
+write_csv(li_bloom,"li_model_data.csv")
+```
+
+## Combine cities data for modeling
+```{r}
+blooms <- rbind(dc_bloom, ky_bloom, li_bloom)
+```
+
+
+## Create Model
+
+### Build training and testing sets
+```{r}
+# Create training and test sets
+set.seed(1212)
+training_samples <- blooms$bloom_doy %>%
+  createDataPartition(p = .75, list = FALSE)
+train_data <- blooms[training_samples, c(5, 7:17)]
+test_data <- blooms[-training_samples, c( 5,7:17)]
+
+# Set up data in matrix to run ridge regression
+x <- model.matrix(bloom_doy ~ ., train_data)[, -1]
+y <- train_data$bloom_doy
+
+x_test <- model.matrix(bloom_doy ~ ., test_data)[, -1]
+```
+
+### Elastic Net regression
+```{r}
+## Using elastic net regression to try to find best combination of alpha and lambda parameters
+
+# Build the model using the training set
+set.seed(1212)
+cv_elas_net <- train(
+  bloom_doy ~ .,
+  data = train_data, method = "glmnet",
+  trControl = trainControl("cv", number = 10),
+  tuneLength = 100
+)
+
+# Best tuning parameter
+(en_lambda <- cv_elas_net$bestTune)
+```
+
+### Run and Test Model
+```{r}
+# Fit elastic net regression model to training data using optimal lambda value found
+# from cross validation
+next_10_years_model <-glmnet(x, y, alpha = cv_elas_net$bestTune[1], lambda = cv_elas_net$bestTune[2])
+
+# View coefficients
+#coef(next_10_years_model)
+
+
+# Make predictions from net elastic regression model
+pred <- next_10_years_model %>%
+  predict(x_test) %>%
+  as.vector()
+
+# View model performance metrics
+tibble(
+  net_RMSE = RMSE(pred, test_data$bloom_doy),
+  net_Rsquare = R2(pred , test_data$bloom_doy)
+)
+
+pred_df <- tibble(blooms$year[-training_samples], test_data$bloom_doy, pred)
+```
+
+## Plot linear correlation for Narrative
+```{r}
+ggplot(data = blooms) +
+  geom_point(aes(y = bloom_doy, x = third_30_maxT), color = "darkblue", alpha = .8) +
+  labs(title = "Example of Variable Correlation",
+       x = "Cumulative Maximum Temperature for days 60-90",
+       y = "Bloom Day of the Year") +
+  
+   theme(
+    plot.title = element_text(
+      size = 25, # Enlarge & center title
+      margin = margin(10, 0, 10, 0), hjust = .5
+    ),
+    axis.title = element_text(size = 16),
+    axis.text = element_text(size = 14),
+    panel.grid.minor = element_line(color = "#D3D3D3", size = 0.2),
+    panel.grid.major = element_blank(), # Remove major grid
+    panel.background = element_blank()
+  ) 
+ggsave("figure1.png", width = 15, height = 12, dpi = "retina")
+
+
+```
+
+
+## Make model for predicting temperatures for next 10 years
+
+### Add columns to all weather datasets then combine for modeling
+```{r}
+dc_weath_comb = dc_weather
+dc_weath_comb$location = "washingtondc"
+dc_weath_comb$lat = 38.8853
+dc_weath_comb$long = -77.0386
+dc_weath_comb$alt = 0
+dc_weath_comb$rand = rnorm(nrow(dc_weath_comb), mean = 287.5, sd = 9.5)
+
+ky_weath_comb = ky_weather
+ky_weath_comb$location = "kyoto"
+ky_weath_comb$lat = 35.0120
+ky_weath_comb$long = 135.6761
+ky_weath_comb$alt = 44
+ky_weath_comb$rand = rnorm(nrow(ky_weath_comb), mean = 289, sd = 8.7)
+
+li_weath_comb = li_weather
+li_weath_comb$location = "liestal"
+li_weath_comb$lat = 47.4814
+li_weath_comb$long = 7.730519
+li_weath_comb$alt = 350
+li_weath_comb$rand = rnorm(nrow(li_weath_comb), mean = 284, sd = 7.5)
+
+vc_weath_comb = van_weather
+vc_weath_comb$location = "kyoto"
+vc_weath_comb$lat = 49.2237
+vc_weath_comb$long = -123.1636
+vc_weath_comb$alt = 24
+vc_weath_comb$rand = rnorm(nrow(vc_weath_comb), mean = 283.5, sd = 5.8)
+
+
+
+weath_comb = rbind(dc_weath_comb,
+                   ky_weath_comb,
+                   li_weath_comb,
+                   vc_weath_comb)
+```
+
+### Do cross validation for model 
+```{r}
+set.seed(1212)
+weath_comb = weath_comb %>%
+  filter(days_into_year <= 150)
+# 10- fold cross validation
+k <- 10
+
+folds <- sample(1:k, nrow(weath_comb), replace = TRUE)
+
+# Place holder for errors
+cv.errors <- c()
+
+# write a for loop that performs cross-validation
+for (i in 1:k) {
+  dat <- weath_comb[folds != i, ]
+  cv_mod <- lm(tavg_K ~ s(year)+
+                   poly(days_into_year,2)+
+                   lat
+                 , data = weath_comb[folds != i, ])
+  
+  pred <- as.numeric(predict(cv_mod, weath_comb[folds == i, ], id = i, na.rm = T))
+  cv.errors[i] <- mean((weath_comb$tavg_K[folds == i] - pred)^2, na.rm = T)
+}
+# View CV error
+mean(cv.errors)
+```
+
+
+### Create Models
+```{r}
+# Create model if CV error is satisfactory
+tavg_pred_model <- lm(tavg_K ~ s(year)+
+                   poly(days_into_year,2)+
+                   lat
+                 , data = weath_comb)
+tmax_pred_model <- lm(tmax_K ~ s(year)+
+                   poly(days_into_year,2)+
+                   lat
+                 , data = weath_comb)
+tmin_pred_model <- lm(tmin_K ~ s(year)+
+                   poly(days_into_year,2)+
+                   lat
+                 , data = weath_comb)
+
+```
+
+
+# Make Predictions
+
+### Create column of dates
+```{r}
+dates = tibble("date" = seq(as.Date("2022-01-01"),as.Date("2031-12-31"),"days")) %>%
+  extract(date,
+    into = c("year", "month", "day"),
+    regex = "([0-9]+)[-]([0-9]+)[-]([0-9]+)$",
+    remove = FALSE) %>%
+  # Make individual date variables numeric
+  mutate(across(c(year, day, month), as.numeric)) %>%
+  
+  # add total days count column by year
+  group_by(year) %>%
+  mutate("days_into_year" = row_number()) %>%
+  ungroup() %>%
+  filter(days_into_year <= 150)
+
+```
+
+## Washington D.C.
+
+### Create dataframe for DC predictions
+```{r}
+dc_weather_pred = dates[2:5]
+dc_weather_pred$location = "washingtondc"
+dc_weather_pred$lat = 38.8853
+dc_weather_pred$long = -77.0386
+dc_weather_pred$alt = 0
+dc_weather_pred$rand = rnorm(nrow(dc_weather_pred), mean = 287.5, sd = 9.5)
+
+dc_weather_pred$tavg_K = predict(tavg_pred_model,dc_weather_pred)
+dc_weather_pred$tmax_K = predict(tmax_pred_model,dc_weather_pred)
+dc_weather_pred$tmin_K = predict(tmin_pred_model,dc_weather_pred)
+
+```
+
+### Replace already known weather data for 2022
+```{r}
+known_dc_2022 = read_csv("data/DC_weather.csv") 
+
+# set column names
+weather_names <- c("date", "tavg_K", "tmin_K", "tmax_K", "precip_mm", "snow_mm", "wind_dir_deg", "wind_sp_km/h", "peak_wind_km/", "pres_hPa", "sun_min")
+colnames(known_dc_2022) <- weather_names
+  
+known_dc_2022 = known_dc_2022 %>%
+  extract(date,
+    into = c("year", "month", "day"),
+    regex = "([0-9]+)[-]([0-9]+)[-]([0-9]+)$") %>%
+  # Make individual date variables numeric
+  mutate(across(c(year, day, month), as.numeric)) %>%
+
+  filter(year == 2022)
+
+known_dc_2022$tavg_K = known_dc_2022$tavg_K + 273.15
+known_dc_2022$tmin_K = known_dc_2022$tmin_K + 273.15
+known_dc_2022$tmax_K = known_dc_2022$tmax_K + 273.15
+
+
+dc_weather_pred$tavg_K[1:nrow(known_dc_2022)] = known_dc_2022$tavg_K
+dc_weather_pred$tavg_K[1:nrow(known_dc_2022)] = known_dc_2022$tavg_K
+dc_weather_pred$tavg_K[1:nrow(known_dc_2022)] = known_dc_2022$tavg_K
+
+```
+
+### Get into format for predicting 
+```{r}
+set.seed(1212)
+dc_bloom_pred = tibble("location" = "washingtondc",
+                       "lat" = 38.8853,
+                       "long" = -77.0386,
+                       "alt" = 0,
+                       "year" = 2022:2031,
+                       "bloom_date" = "2022-01-01",
+                       "bloom_doy" = sample(80:120,10,replace = TRUE)
+                       )
+dc_weather_pred = dc_weather_pred[,c(1:3,10:12,4)]
+
+```
+
+### Create Variables for model input
+```{r}
+# Initialize tibble with first row
+dc_bloom_predictors <- as_tibble(bloom_merge(dc_bloom_pred, dc_weather_pred, 2022))
+
+# Loop through all other rows to create data frame with all variables from bloom_merge function
+for (i in 2:nrow(dc_bloom_pred)) {
+  yr <- dc_bloom_pred$year[i]
+  dc_bloom_predictors[i, ] <- bloom_merge(dc_bloom_pred, dc_weather_pred, yr)
+}
+```
+
+### Run model
+```{r}
+x_test <- model.matrix(bloom_doy ~ ., dc_bloom_predictors[,c( 5,7:17)])[, -1]
+
+dc_fut_pred <- next_10_years_model %>%
+  predict(x_test) %>%
+  as.vector()
+
+(dc_predictions = tibble( "year" = dc_bloom_predictors$year, 
+                         "prediction" = round(dc_fut_pred,0)))
+
+
+```
+
+### Create Data Frame for all predictions
+```{r}
+final_predictions = tibble("year" = dc_predictions$year,
+                           "kyoto" = 1,
+                           "liestal" = 1,
+                           "washingtondc" = dc_predictions$prediction,
+                           "vancouver" = 1
+                           )
+```
+
+## Kyoto
+
+```{r}
+ky_weather_pred = dates[2:5]
+ky_weather_pred$location = "kyoto"
+ky_weather_pred$lat = 35.0120	
+ky_weather_pred$long = 135.6761
+ky_weather_pred$alt = 44
+ky_weather_pred$rand = rnorm(nrow(ky_weather_pred), mean = 289, sd = 8.7)
+
+ky_weather_pred$tavg_K = predict(tavg_pred_model,ky_weather_pred)
+ky_weather_pred$tmax_K = predict(tmax_pred_model,ky_weather_pred)
+ky_weather_pred$tmin_K = predict(tmin_pred_model,ky_weather_pred)
+
+```
+
+### Replace already known weather data for 2022
+```{r}
+known_ky_2022 = read_csv("data/kyoto_weather.csv") 
+
+# set column names
+weather_names <- c("date", "tavg_K", "tmin_K", "tmax_K", "precip_mm", "snow_mm", "wind_dir_deg", "wind_sp_km/h", "peak_wind_km/", "pres_hPa", "sun_min")
+colnames(known_ky_2022) <- weather_names
+  
+known_ky_2022 = known_ky_2022 %>%
+  extract(date,
+    into = c("year", "month", "day"),
+    regex = "([0-9]+)[-]([0-9]+)[-]([0-9]+)$") %>%
+  # Make individual date variables numeric
+  mutate(across(c(year, day, month), as.numeric)) %>%
+
+  filter(year == 2022)
+
+known_ky_2022$tavg_K = known_ky_2022$tavg_K + 273.15
+known_ky_2022$tmin_K = known_ky_2022$tmin_K + 273.15
+known_ky_2022$tmax_K = known_ky_2022$tmax_K + 273.15
+
+
+ky_weather_pred$tavg_K[1:nrow(known_ky_2022)] = known_ky_2022$tavg_K
+ky_weather_pred$tavg_K[1:nrow(known_ky_2022)] = known_ky_2022$tavg_K
+ky_weather_pred$tavg_K[1:nrow(known_ky_2022)] = known_ky_2022$tavg_K
+
+```
+
+### Get into format for predicting 
+```{r}
+set.seed(1212)
+ky_bloom_pred = tibble("location" = "kyoto",
+                       "lat" = 35.0120,
+                       "long" = 135.6761,
+                       "alt" = 44,
+                       "year" = 2022:2031,
+                       "bloom_date" = "2022-01-01",
+                       "bloom_doy" = sample(80:120,10,replace = TRUE)
+                       )
+ky_weather_pred = ky_weather_pred[,c(1:3,10:12,4)]
+
+```
+
+### Create Variables for model input
+```{r}
+# Initialize tibble with first row
+ky_bloom_predictors <- as_tibble(bloom_merge(ky_bloom_pred, ky_weather_pred, 2022))
+
+# Loop through all other rows to create data frame with all variables from bloom_merge function
+for (i in 2:nrow(ky_bloom_pred)) {
+  yr <- ky_bloom_pred$year[i]
+  ky_bloom_predictors[i, ] <- bloom_merge(ky_bloom_pred, ky_weather_pred, yr)
+}
+```
+
+### Run model
+```{r}
+x_test <- model.matrix(bloom_doy ~ ., ky_bloom_predictors[,c(5, 7:17)])[, -1]
+
+
+ky_fut_pred <- next_10_years_model %>%
+  predict(x_test) %>%
+  as.vector()
+
+(ky_predictions = tibble( "year" = ky_bloom_predictors$year, 
+                         "prediction" = round(ky_fut_pred,0)))
+
+```
+### Update final predictions
+```{r}
+final_predictions$kyoto = ky_predictions$prediction
+
+```
+
+
+## Vancouver
+
+```{r}
+vc_weather_pred = dates[2:5]
+vc_weather_pred$location = "vancouver"
+vc_weather_pred$lat = 49.2237	
+vc_weather_pred$long = -123.1636
+vc_weather_pred$alt = 24
+vc_weather_pred$rand = rnorm(nrow(vc_weather_pred), mean = 283.5, sd = 5.8)
+
+vc_weather_pred$tavg_K = predict(tavg_pred_model,vc_weather_pred)
+vc_weather_pred$tmax_K = predict(tmax_pred_model,vc_weather_pred)
+vc_weather_pred$tmin_K = predict(tmin_pred_model,vc_weather_pred)
+
+```
+
+### Replace already known weather data for 2022
+```{r}
+known_vc_2022 = read_csv("data/vancuv_weather.csv") 
+
+# set column names
+weather_names <- c("date", "tavg_K", "tmin_K", "tmax_K", "precip_mm", "snow_mm", "wind_dir_deg", "wind_sp_km/h", "peak_wind_km/", "pres_hPa", "sun_min")
+colnames(known_vc_2022) <- weather_names
+  
+known_vc_2022 = known_vc_2022 %>%
+  extract(date,
+    into = c("year", "month", "day"),
+    regex = "([0-9]+)[-]([0-9]+)[-]([0-9]+)$") %>%
+  # Make individual date variables numeric
+  mutate(across(c(year, day, month), as.numeric)) %>%
+
+  filter(year == 2022)
+
+known_vc_2022$tavg_K = known_vc_2022$tavg_K + 273.15
+known_vc_2022$tmin_K = known_vc_2022$tmin_K + 273.15
+known_vc_2022$tmax_K = known_vc_2022$tmax_K + 273.15
+
+
+vc_weather_pred$tavg_K[1:nrow(known_vc_2022)] = known_vc_2022$tavg_K
+vc_weather_pred$tavg_K[1:nrow(known_vc_2022)] = known_vc_2022$tavg_K
+vc_weather_pred$tavg_K[1:nrow(known_vc_2022)] = known_vc_2022$tavg_K
+
+```
+
+### Get into format for predicting 
+```{r}
+set.seed(1212)
+vc_bloom_pred = tibble("location" = "vancouver",
+                       "lat" = 49.2237,
+                       "long" = -123.1636,
+                       "alt" = 24,
+                       "year" = 2022:2031,
+                       "bloom_date" = "2022-01-01",
+                       "bloom_doy" = sample(80:120,10,replace = TRUE)
+                       )
+vc_weather_pred = vc_weather_pred[,c(1:3,10:12,4)]
+
+```
+
+### Create Variables for model input
+```{r}
+# Initialize tibble with first row
+vc_bloom_predictors <- as_tibble(bloom_merge(vc_bloom_pred, vc_weather_pred, 2022))
+
+# Loop through all other rows to create data frame with all variables from bloom_merge function
+for (i in 2:nrow(vc_bloom_pred)) {
+  yr <- vc_bloom_pred$year[i]
+  vc_bloom_predictors[i, ] <- bloom_merge(vc_bloom_pred, vc_weather_pred, yr)
+}
+```
+
+### Run Model
+```{r}
+x_test <- model.matrix(bloom_doy ~ ., vc_bloom_predictors[,c(5, 7:17)])[, -1]
+
+
+vc_fut_pred <- next_10_years_model %>%
+  predict(x_test) %>%
+  as.vector()
+
+(vc_predictions = tibble( "year" = vc_bloom_predictors$year, 
+                         "prediction" = round(vc_fut_pred,0)))
+
+```
+### Update final predictors
+```{r}
+final_predictions$vancouver = vc_predictions$prediction
+
+```
+
+
+## Liestal
+
+
+```{r}
+li_weather_pred = dates[2:5]
+li_weather_pred$location = "liestal"
+li_weather_pred$lat = 47.4814	
+li_weather_pred$long = 7.730519
+li_weather_pred$alt = 350
+li_weather_pred$rand = rnorm(nrow(li_weather_pred), mean = 284, sd = 7.5)
+
+li_weather_pred$tavg_K = predict(tavg_pred_model,li_weather_pred)
+li_weather_pred$tmax_K = predict(tmax_pred_model,li_weather_pred)
+li_weather_pred$tmin_K = predict(tmin_pred_model,li_weather_pred)
+
+```
+
+
+### Get into format for predicting 
+```{r}
+set.seed(1212)
+li_bloom_pred = tibble("location" = "liestal",
+                       "lat" = 47.4814,
+                       "long" = 7.730519,
+                       "alt" = 350,
+                       "year" = 2022:2031,
+                       "bloom_date" = "2022-01-01",
+                       "bloom_doy" = sample(80:120,10,replace = TRUE)
+                       )
+li_weather_pred = li_weather_pred[,c(1:3,10:12,4)]
+
+```
+
+### Create Variables for model input
+```{r}
+# Initialize tibble with first row
+li_bloom_predictors <- as_tibble(bloom_merge(li_bloom_pred, li_weather_pred, 2022))
+
+# Loop through all other rows to create data frame with all variables from bloom_merge function
+for (i in 2:nrow(li_bloom_pred)) {
+  yr <- li_bloom_pred$year[i]
+  li_bloom_predictors[i, ] <- bloom_merge(li_bloom_pred, li_weather_pred, yr)
+}
+```
+
+### Run model
+```{r}
+x_test <- model.matrix(bloom_doy ~ ., li_bloom_predictors[,c(5, 7:17)])[, -1]
+
+
+li_fut_pred <- next_10_years_model %>%
+  predict(x_test) %>%
+  as.vector()
+
+(li_predictions = tibble( "year" = li_bloom_predictors$year, 
+                         "prediction" = round(li_fut_pred,0)))
+
+```
+### Update predictions
+```{r}
+final_predictions$liestal = li_predictions$prediction
+
+```
+
+
+## Save predictions as a .csv
+```{r}
+write_csv(final_predictions, file = "cherry-predictions.csv")
+
+```
+
+
+
