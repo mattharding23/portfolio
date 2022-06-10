@@ -12,6 +12,9 @@ figcaption {
   font-style: bold;
     
 }
+h3{
+    text-align: center;
+}
 
 /* ------------- Header Area -------------- */
 .top_image_box{
@@ -213,8 +216,9 @@ figcaption {
       display: flex;
       flex-direction: column;
       margin: 10px;
-      width: 415px;
-      height: 575px;
+      vertical-align: middle;
+      width: 0%;
+      height: 0%;
     }
 
     .sticky-thing figcaption {
@@ -227,8 +231,7 @@ figcaption {
     }
 
     .sticky-thing iframe {
-      width: 415px;
-      height: 575px;
+
       margin-left: auto;
       margin-right: auto;
       margin-top: 0px;
@@ -239,12 +242,12 @@ figcaption {
 
     .step {
       margin: 0 auto 2rem auto;  
-      color: #FAF0E6;
-      margin-bottom: 500px;
+      color: #ffffff;
+      margin-bottom: 400px;
     }
 
     .step:last-child {
-      margin-bottom: 0;
+      margin-bottom: 300px;
     }
 
     .step.is-active {
@@ -258,16 +261,16 @@ figcaption {
       font-size: 15px;
 
     }
+
 a,
 a:visited,
 a:hover {
-  color: teal;
   text-decoration: none;
   border-bottom: 2px solid currentColor;
 }
 
 #outro {
-  height: 300px;
+  height: 200px;
 }
 
 @media (min-width: 840px) {
