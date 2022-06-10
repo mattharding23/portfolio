@@ -14,16 +14,16 @@
         <main>
             <section>
                 <div class = "top_image_box">
-                    <img src="http://mharding.georgetown.domains/home/Web_header.png" width = "90%"/>
+                    <img src="home/Web_header.png" width = "90%"/>
                 </div>
                 <div id = "top_bar">
-                    <img src="http://mharding.georgetown.domains/avatar.jpg" alt = "avatar" id="avatar"/>
+                    <img src="home/avatar.jpg" alt = "avatar" id="avatar"/>
         
                     <div id = "name_bar">
                         Matt Harding
                     </div>
                     <div id = "contact_block">
-                        <a href = "Matthew_Harding_Resume.pdf" class="btn btn-secondary" style="background-color: #7c788b;" download target = "blank">Resume</a>
+                        <a href = "home/Matthew_Harding_Resume.pdf" class="btn btn-secondary" style="background-color: #7c788b;" download = "Matthew_Harding_Resume.pdf" target = "blank">Resume</a>
                         <a href = "https://twitter.com/m__hard3/" class="btn btn-primary" style="background-color: #55acee;" role="button"><i class="fab fa-twitter me-2"></i>Twitter</a>
                         <a href = "https://www.linkedin.com/in/matt-harding-72b535b2/" class="btn btn-primary" style="background-color: #0082ca;" role="button"><i class="fab fa-linkedin-in"></i>Linkedin</a>
                         <a href = "mailto:mmh178@georgetown.edu" class="btn btn-danger" style="background-color: #dd4b39;" role="button"><i class="fab fa-google me-2"></i>Email</a>
@@ -41,32 +41,75 @@
                     </div>
                 </div>
             </section>
+
             <div id = "port_bar">
                 Portfolio
             </div>
             <section id = "scrolly">
                 <article>
-                    <div class="step" data-step= "ANLY_501/Conclusions/do_vs_ph.png" data-w = "100%" data-h = "665px" data-colw = "60%" data-figcap = "The trend of dissolved oxygen in the water vs. the pH of the water <br /> <a href='ANLY_501/Introduction.html' target='_blank'>See entire analysis here</a>">
+
+                    <!-- ------------- 501 Analysis (Chesapeake) ------------ -->
+
+
+                    <div class="step" data-step= "ANLY_501/visuals/Conclusions/do_ph_temp.png" inter = "F" data-w = "80%" data-colw = "60%" data-figcap = "The trend of dissolved oxygen in the water vs. the pH of the water <br /> <a href='ANLY_501/pages/Introduction.html' target='_blank'>See entire analysis here</a>">
+                        <br>
+                        <br>
+                        <br>
+                        <br>
+                        <br>
+                        <br>
+                        <br>
+                        <br>
+
                         <h3>Chesapeake Bay: Dissolved Oxygen Analysis</h3>
                         <p>
-                            This analysis was completed as a semester long project for an intro data science and analytics class. It goes through the full data science life cycle in an attempt to better understand dissolved oxygen levels within the water of the Chesapeake Bay. The analysis uses Chesapeake Bay water quality data from 2007-2020 to find trends and create predictive models in order to try to understand when and why low level dissolved oxygen level events occur. 
+                            This analysis was completed as a semester long project for an intro data science and analytics class. It goes through the full data science life cycle in an attempt to better understand dissolved oxygen levels within the water of the Chesapeake Bay. The analysis uses Chesapeake Bay water quality data from 2007-2020 to find trends and create predictive models in order to try to understand when and why low level dissolved oxygen level events occur. This gives an overview of many different aspects of data science that I have been exposed to. 
                         </p>
                     </div>
 
-                    <div class="step" data-step= "home/team_sal_dist.png" data-w = "100%" data-h = "665px" data-colw = "60%" data-figcap = "NBA team salary distributions split between winnnig & losing teams<br /> <a href='home/SalaryAnalysis.html' target='_blank'>See entire analysis here</a>">
+
+                    <!-- ------------- 511 Analysis (NBA) ------------ -->
+
+
+                    <div class="step" data-step= "Salary_Analysis/visuals/team_sal_dist.png" inter = "F" data-w = "80%" data-colw = "60%" data-figcap = "NBA team salary distributions split between winning & losing teams<br /> <a href='Salary_Analysis/pages/SalaryAnalysis.html' target='_blank'>See entire analysis here</a>">
                         <h3>NBA Salary Distribution Analysis</h3>
                         <p>
-                            The NBA salary distribution analysis was completed as a part of a group project that analyzed multiple factors as to how they contribute to winning in the NBA.  The link below the image will focus on only the salary distribution analysis, however there is a link to download the full group report <a href = "http://mharding.georgetown.domains/home/SalaryAnalysis/511Report.pdf" download="511Report.pdf" role = "button">here</a>. 
+                            The NBA salary distribution analysis was completed as a part of a group project that analyzed multiple factors as to how they contribute to winning in the NBA. The salary distribution analysis uses statistical techniques in order to determine whether there are significant difference between how winning and losing teams distribute their salaries. This section displays my ability to apply statistical methods to a real world setting. The link below the image will focus on only the salary distribution analysis, however there is a link to download the full group report <a href = "Salary_Analysis/pages/511Report.pdf" download="511Report.pdf" role = "button">here</a>. 
+                        </p>
+                    </div>
+
+
+                    <!-- ------------- Cherry Blossom Predictions ------------ -->
+
+
+                    <div class="step" data-step= "cherry_blossoms/visuals/figure1.png" inter = "F" data-w = "80%" data-colw = "60%" data-figcap = "Cherry blossom figure to be added later<br /> <a href='cherry_blossoms/pages/cherry_blossom_narrative.html' target='_blank'>See entire analysis here</a>">
+                        <h3>Peak Cherry Blossom Predictions</h3>
+                        <p>
+
+
+
+                            The peak cherry blossom predictions analysis was done as part of competition for predicting the date of peak bloom of cherry blossoms at various locations across the world. The goal was to take in historical cherry blossom peak bloom dates and try to predict the peak bloom dates for the next decade. More can be found about the competition at this <a href="cherry_blossoms/pages/README.html" target = "blank">link</a>. Knowing the date of peak bloom is notoriously difficult to predict more than a few weeks in advance. However, it would be advantagous for cities, businesses, and travellers alike to be able to know when the peak bloom will occur months or even years in advance. My prediction utilized historical weather data to run a ridge regression and predict the dates of peak bloom for the next decade in four seperate locations around the world. More can be read about this analysis <a href = "Salary_Analysis/pages/511Report.pdf" download="511Report.pdf" role = "button">here</a>. 
+                        </p>
+                    </div>
+
+                    <!-- ------------- Cross Country ------------ -->
+
+
+                    <div class="step" data-step= "ANLY_503/Final_Project/visuals/map.html" inter = "T" data-w = "80%" data-colw = "60%" data-figcap = "Cross Country Course Map of NCAA National Championship Course. Displays changes in elevation with interactions to help runners strategize prior to a race.<br /> <a href='ANLY_503/Final_Project/pages/course_map_writeup.html' target='_blank'>See entire analysis here</a>">
+                        <h3>Cross Country Success Factors</h3>
+                        <p>
+                            For a final project in a data visualization course, myself and group members created visualizations and a narrative in order to help runners at the NCAA division 1 level be more successful. 
                         </p>
                     </div>
         
             
                 </article>
-                <div class = "sticky-thing">
-                    <figure width = 100% height = 665px>
-                        <iframe src = "ANLY_501/Conclusions/do_ph_temp.png"></iframe>
+                <div class = "sticky-thing" >
+                    <figure width = 80% height = auto>
+                        <iframe src = ""></iframe>
+                        <img src = "ANLY_501/visuals/Conclusions/do_ph_temp.png"></img>
                         <figcaption>
-                            The trend of dissolved oxygen in the water vs. the pH of the water <br /> <a href='ANLY_501/Introduction.html' target='_blank'>See entire analysis here</a>
+                            The trend of dissolved oxygen in the water vs. the pH of the water <br /> <a href='ANLY_501/pages/Introduction.html' target='_blank'>See entire analysis here</a>
                         </figcaption>
                     </figure>
                 </div>
@@ -100,10 +143,16 @@
 
                 // update graphic based on step
                 sticky.querySelector("figure").style.width = el.dataset.w;
-                sticky.querySelector("figure").style.height = el.dataset.h;
-                sticky.querySelector("iframe").src = el.dataset.step;
-                sticky.querySelector("iframe").style.width = "50%";
-                sticky.querySelector("iframe").style.height = "50%";
+                sticky.querySelector("figure").style.height = "auto";
+                if (el.dataset.inter == "T") {
+                    sticky.querySelector("iframe").src = el.dataset.step;
+                    sticky.querySelector("iframe").style.width = "100%";
+                    sticky.querySelector("iframe").style.height = "100%";
+                }else{
+                    sticky.querySelector("img").src = el.dataset.step;
+                    sticky.querySelector("img").style.width = "100%";
+                    sticky.querySelector("img").style.height = "100%";
+                }
                 sticky.querySelector("figcaption").innerHTML = el.dataset.figcap;
                 sticky.style.width = el.dataset.w;
                 sticky.style.height = el.dataset.h;
