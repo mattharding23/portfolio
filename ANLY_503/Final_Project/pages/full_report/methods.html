@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+   	body {
+  		background-color: linen;
+		width: 75%;
+      	margin-left: auto;
+      	margin-right: auto;
+  	}
+
+	h1 {
+  		color: #000000;
+  		font-family: arial, sans-serif;
+    		font-size: 40px;
+    		font-weight: bold;
+    		margin-top: 0px;
+    		margin-bottom: 1px;
+  	}
+
+	h2 {
+    		color: #000000;
+    		font-family: arial, sans-serif;
+    		font-size: 30px;
+    		margin-top: 0px;
+    		margin-bottom: 1px;
+    	}
+
+	h3 {
+    		color: #000000;
+    		font-family: arial, sans-serif;
+    		font-size: 22px;
+    		margin-top: 0px;
+    		margin-bottom: 1px;
+    	}
+
+	h4 {
+    		color: #000000;
+    		font-family: arial, sans-serif;
+    		font-size: 20px;
+    		margin-top: 0px;
+    		margin-bottom: 1px;
+    	}
+
+	p {
+    		color: #000000;
+    		font-family: arial, sans-serif;
+    		font-size: 15px;
+    		margin-top: 0px;
+    		margin-bottom: 1px;
+      	text-align: justify;
+    	}
+
+	ul {
+		color: #000000;
+    		font-family: arial, sans-serif;
+    		font-size: 15px;
+    		margin-top: 0px;
+    		margin-bottom: 1px;
+	}
+
+	a {
+    		font-family: arial, sans-serif;
+    		font-size: 15px;
+    		margin-top: 0px;
+    		margin-bottom: 1px;
+      	text-align: justify;
+	}
+
+
+</style>
+</head>
+
+<body>
+<main>
+<section id="intro">
+	<h1 style = "text-align:center">Methods Discussion</h1>
+	<h4 style = "text-align:center">Project Title: Success Factors in NCAA Division 1 Cross Country</h4>
+      <h4 style = "text-align:center">Authors: Matt Harding, Scott Johnson, Jude Moukarzel, Matt Young</h4>
+	<p style = "text-align:center">Project Group 26</p>
+</section>
+<br>
+<br>
+
+<h2>Figure 1 & 2 - Reddit Word Cloud & Word Frequency Bar Graph Visualizations</h2>
+<br>
+
+<h3>Data Collection</h3>
+<p>
+The text data was collected via the Reddit API where 1000 posts considered to be trendy or “hot” from popular subreddits "Track and Field" and "Cross Country" were collected. The text data was structured within a data frame, with the 2 main columns "title" and "body" containing the text content of the posts. Additionally, for more detail, please feel free to reference the code used to gather this data: <a href='Code/Text_Code/Reddit_API.py' target='_blank'>Reddit API</a>.
+</p>
+<br>
+
+<h3>Data Cleaning</h3>
+<p>
+The data frame was run through a loop in order to vectorize the text data within each post (body). Various stop words, mainly consisting of commonly used words such as "the" and "are", were removed from the data to avoid non-relevant words from being added to the Word Cloud. Additionally, other uninteresting words like "got" and "really", which weren't included in the original list of stop words, were added to the list and also removed from analysis. Finally, non-words like characters and numbers were also omitted, so that only meaningful words from the Reddit posts were captured. 
+</p>
+<br>
+
+<h3>Design Choices</h3>
+<p>
+Figure 1 is a Word Cloud in the shape of a running man that displays the most commonly used and important words in the running community. The purpose of this visual was to introduce the topic in an eye-catching manner and the shape of the image does just that. It is essential to the narrative because it shows the most important words in a unique way by showing the areas of focus for Cross Country athletes. The initial idea for this was to create a word frequency histogram or bar graph, which ended up being included as Figure 2. This second figure was created with the Plotly library, which enabled an interactive tooltip showing the exact frequency of word use. Thus, Figure 2 provided additional context to the Word Cloud by allowing users to see the exact word use frequencies. Figure 2 is essential because it explicitly shows true frequency of the most important subjects to a Cross Country athlete. Although Figure 1 is unique, fun, and interesting, much of the interpretability is lost without the supplement of Figure 2. The singular blue color encoding of the bars was chosen for simplicity in interpreting the visual, as well as the fact that it was an aesthetically pleasing complementary color with the linen background. Additionally, the plot had a linen background to match the theme of the entire document. Furthermore, the Word Cloud in Figure 1 was initially white when it was first made due to its unique shape requirements. To match the theme of the webpage, the white color was converted to the linen color theme of the webpage through PowerPoint. The code used to create Figure 1 and Figure 2 can be found at: <a href='Code/Text_Code/WordCloud_Python.py' target='_blank'>Figure 1: Word Cloud</a>, <a href='Code/Text_Code/Plotly_BarGraph_Python.py' target='_blank'>Figure 2: Plotly Bar Graph</a>
+</p>
+<br>
+
+<h3>Reflection</h3>
+<p>
+While the final product of Figures 1 & 2 turned out to be a Word Cloud and bar graph, a network graph was strongly considered because it would have captured and allowed for the investigation into the relationships between the various words. However, the text visuals are really meant to "kick off" the story. Therefore, the visuals should capture the overall sentiment and predominant word usage of the public, as opposed to the granular relationships. Upon further reflection, it still would have been nice to find a way to incorporate a network graph into the story.
+</p>
+<br>
+<br>
+
+
+<h2>Figure 3 - Significant Performing Teams Pie Chart Visualization</h2>
+<br>
+
+<h3>Data Collection</h3>
+<p>
+Data was acquired from <a href ="https://ustfccca.org" target='_blank'>the USTFCCCA website</a> through standard web scraping techniques. In this data, each NCAA Championship is separated by year and gender with information about the team, conference, points, change, previous week ranking, and date of competition. <a href ="https://www.ustfccca.org/team-rankings-polls-central/polls-rankings-hub?coll=11762" target='_blank'>Here</a> is an example of the data from the Men’s NCAA Championships in Tallahassee, FL. Additionally, for more detail, please feel free to reference the code used to gather this data: <a href='Code/Ranking_Code/ranking_scraping.py' target='_blank'>Scraping Source Code</a>.
+</p>
+<br>
+
+<h3>Data Cleaning</h3>
+<p>
+The dataset had various inconsistencies across years in both labeling and content. For example, one column denoted an unranked team differently across observations. In some observations it denoted unranked teams with “NR” (not ranked), and other observations denoted unranked teams with “LW: RV” (last week receiving votes). Therefore, these all needed to have common encoding after cleaning. Additionally, cleaning involved the removing of arrows (◀▶▲▼) from the data. Instead of including the arrow, the data was either represented with a “plus” or “minus”. Other cleaning obstacles included adding additional columns for data cells with multiple datapoints. Once completed, the dataset was in tidy format.
+<br><br>
+Beyond the base dataset, the pie chart visualization required filtering by ranking placement of one through four to only account for “podium” teams. From there the datasets were grouped by team, summarized, and rounded. Additionally of note, the data is already normalized because each placement at the NCAA championships is equivalent across all genders, teams, and time periods.
+</p>
+<br>
+
+<h3>Design Choices</h3>
+<p>
+The purpose of this visual is to get a broad understanding of the most successful teams competing in NCAA Division 1 Cross Country. This is important to understand before diving deeper into the specific factors discussed later on, such as altitude and weather effects. Additionally, the pie chart was a good option because it helps the reader see generally the weighting of different datapoints (teams in this case). Next, having two pie charts best shows the difference between the consistently successful teams for both genders. This helps show how some teams are great in both, and some teams are only good in Men’s or Women’s Cross Country.
+<br><br>
+Diving deeper into the components of the pie chart, the first tooltip items are the labels (Gender and School). These are important to differentiate from the other pie charts and other pieces of the pie chart. The third tooltip element is the NCAA podium placement(s) which is the unit of the pie chart. The more podium placements a team has, the larger their piece of the pie. Every team on the podium receives a trophy. Although national titles are the biggest honor, the use of the entire podium provides a larger scope of schools that are on the cusp of a national title consistently. Next is the average podium placement. This provides more detail in how well each team did on the podium. For example, if you scroll on the Men’s pie chart on BYU and Oklahoma State, you will see that Oklahoma State has a slightly higher podium placement average. Even though they have the same number of podium placements, Oklahoma State has done slightly better on the podium. Lastly, the Average Podium Team Score denotes the average sum of each team’s five runners' placements in the entire NCAA Cross Country Championship Meet field. This is added for slightly more detail, but it is least important, so it is left at the bottom.
+<br><br>
+By leaving out text annotations and adding a background color, this pie chart is more seamless and less distracting. Since there are so many teams, the annotations were overwhelming when initially looking at the plot. The code used to create Figure 3 can be found at: <a href='Code/Ranking_Code/PodiumPerformancesPieChart.R' target='_blank'>Figure 3: Top 6 Performance Pie Charts</a>
+</p>
+<br>
+
+<h3>Reflection</h3>
+<p>
+Initially, this plot was never going to be included. However, after reviewing comments from the various check-in meetings, a plot describing the key players in NCAA Division 1 Cross Country helps set the narrative and provide additional insight into the factors that are discussed later. These high performing teams often have the most rigorous training and talented recruiting classes. Although the plot is simple, it has many rewarding qualities that pave the way for future analysis.
+<br><br>
+Furthermore, the pie charts initially had many teams showing, but they were subset out in order to highlight the most significant teams in the NCAA. This gives the reader less to think about and ultimately better highlights powerhouse schools competing in Cross Country.
+</p>
+<br>
+<br>
+
+<h2>Figure 4 - <u>Innovative</u> Course Map Topographical Visualization</h2>
+<br>
+
+<h3>Data Collection</h3>
+<p>
+	Data was acquired from a few different sources to create this visualization. First, data was downloaded from <a href ="https://portal.opentopography.org/usgsDataset?dsid=USGS_LPC_FL_LeonCo_2018_LAS_2019" target='_blank'>Open Topography</a>. However, this data was mainly used for its coordinates because there is a USGS elevation API with data that was easier to work with. Using the coordinates from Open Topography, the USGS elevation API was accessed to get the required topographical data.
+
+</p>
+<br>
+
+<h3>Data Cleaning</h3>
+<p>
+	Per the data collection section, the data from Open Topography was used primarily for its coordinates. However, these coordinates were initially in UTM coordinates (a coordinate system for map projections) and the USGS elevation API needed latitude and longitude coordinates. The UTM coordinates were converted to latitude and longitude and then a box was created based on these coordinates so that the USGS elevation API could retrieve the data from the desired location. This data was saved and converted into a raster image so that it could be layered on top of a map to create a heatmap of the topography. 
+</p>
+<br>
+
+<h3>Design Choices</h3>
+<p>
+	Figure 4 is a key piece of the narrative and a visualization that is a very <b>innovative</b> view because it quickly and easily provides topographical information to a runner or coach who would otherwise likely have to physically run the course in order to get an understanding of the topography. While runners will typically run or walk a course before racing on it, this visual can help them to remember certain parts and visualize how they will run their race. It can also give them an idea of things to look out for when physically going over the course pre-race. Additionally, this visual was extremely time-consuming to get right for multiple reasons. Getting the data into the correct format was something that took time to understand and implement. Initially, the data was just the UTC data mentioned in the data collection section. However, after some research, it was determined that it would be better to just use the coordinates from that data to access the USGS elevation API. After that, the data was transformed into a raster image and the data formatting was done. The raster image was overlayed on top of the leaflet map to create a heatmap of the elevation on the course. The heatmap was encoded as blue to white to red based on elevation with blue being the lowest elevation and red being the highest. These colors were chosen as they are standard colors for indicating low to high. Additionally, a legend was added to show the lowest and highest elevation relative to the elevations on the course (i.e., the lowest relative elevation being 0 meters) along with their associated colors. 
+	<br><br>
+	The next step was to create a polygon in the shape of the course map. This was done manually because there is no data available regarding the coordinates for the course outline. Luckily, the course outline was drawn on the leaflet map so the polygon could be drawn with more of a guess and test method. Due to the shape of the course, it was very time-consuming to get the shape to a point where all of the curves on the course were accounted for. 
+	<br><br>
+	On top of the course map, markers were added to show the start of long stretches of increases or decreases in elevation. The markers are arrow icons that are colored green for downhill and red for uphill because these colors are typically associated with easier and harder tasks respectively. When the user clicks on the icon, a message pops up telling the user how much elevation they will be gaining or losing over the next stretch. Additionally, while most runners racing on this course likely will know the direction the course is run in, a "start here" label and an arrow pointing in the direction of running were added so that the user can orient themselves with the map. The code for this visualization can be found at: <a href='Code/Course_Map_Code/topographical_course.R' target='_blank'>Figure 4: Innovative Topography Course Map</a>.
+</p>
+<br>
+
+<h3>Reflection</h3>
+<p>
+	The final product of Figure 4 is different than was initially envisioned. The biggest factor driving these changes is that there was no data for the shape of the course. This limited the visualization in that initially the plan was to draw the path as is drawn on the leaflet map and encode the elevation as a heatmap only in the path. However, without having that shapefile, this was not possible to do. As a cascading effect, it was also more difficult to find the peaks and valleys of the course itself. While the visualization is not the same as was initially envisioned, Figure 4 was able to produce the same effect because the user is able to visualize the elevation on the course and interact with the markers to further understand the changes in elevation. 
+</p>
+<br>
+<br>
+
+
+<h2>Figure 5 - Team Altitude Map of U.S. Visualization</h2>
+<br>
+
+<h3>Data Collection</h3>
+<p>
+See Figure 3 section above for Ranking Data Collection.
+<br><br>
+The altitude data and latitude/longitude were collected through a simple Google search.
+</p>
+<ul>
+  <li>An example of the altitude search of Georgetown is as follows: <a href ="https://www.google.com/search?q=altitude+Georgetown+University&oq=altitude+Georgetown+University&aqs=chrome..69i57j33i299.138j0j9&sourceid=chrome&ie=UTF-8" target='_blank'>Google</a></li>
+  <li>An example of the latitude and longitude search of Georgetown is as follows: <a href ="https://www.google.com/search?q=latitude%2Flongitude+Georgetown+University&sxsrf=ALiCzsYCIOOwymnGAR-eKoP19Z2XQFJpqQ%3A1651859519346&ei=P2B1YtvmFMOGtQaN75boBQ&ved=0ahUKEwibgvqeuMv3AhVDQ80KHY23BV0Q4dUDCA4&uact=5&oq=latitude%2Flongitude+Georgetown+University&gs_lcp=Cgdnd3Mtd2l6EAMyBggAEBYQHjIFCAAQhgMyBQgAEIYDMgUIABCGAzIFCAAQhgM6BwgjELADECc6BwgAEEcQsANKBAhBGABKBAhGGABQ3QxYtRZgrBdoAXABeACAAYwBiAHQCZIBBDAuMTGYAQCgAQHIAQnAAQE&sclient=gws-wiz" target='_blank'>Google</a></li>
+</ul>
+<p>
+This process was quicker than finding an API and scraping. Then it was compiled in a data frame for every school identified from the Ranking Data Collection.
+</p>
+<br>
+
+<h3>Data Cleaning</h3>
+<p>
+  The data cleaning process was not very involved compared to other datasets. Because of the manual process of finding the altitude and geospatial data, the data only required a simple merge to the Ranking Dataset.
+</p>
+<br>
+
+<h3>Design Choices</h3>
+<p>
+This is arguably the most important visual of the document because altitude is the most heavily studied factor in the collection of factors that we are analyzing. It conveys that schools at a higher altitude perform better on average than many schools at lower altitudes. However, there are also teams that are very successful at low altitudes. This is important in noting that training at altitude is not the only thing that results in success.
+<br><br>
+A map was chosen to show the location of the schools that are at high altitudes and low altitudes. Additionally, the map shows a large number of schools across the country who have competed at the NCAA Championship Meet in the last 11 years. Furthermore, widgets were used to differentiate between the high/low altitude and gender. This solution provided the most seamless experience for interacting with the visual. Due to the monotonically varying numeric variable of "average placement" in the race, sequential color encoding was chosen for this particular view. This is different than most other views that have categorical target variables. The color choice of blue was made because it aligned with the previously chosen blue coloring in Figure 2, as well as the previously mentioned aesthetically pleasing nature of blue with the linen background.
+<br><br>
+Next, the ability to hover was added so the user could understand the specific details of every school. This included the label of the school, the elevation, and the number of appearances at the Championship Meet in the last 11 years. That last detail is important because some schools that placed highly on average may have only attended the meet one time. Finally, the average placement at the Championship Meet is the measure of “success” in this visual. The code for this visualization can be found at: <a href='Code/Altitude_Code/GeospatialAltitudeWidget.R' target='_blank'>Figure 5: Altitude Map</a>.
+</p>
+<br>
+
+<h3>Reflection</h3>
+<p>
+This plot turned out much different than expected. With multiple variables and the use of geospatial data, it proved difficult to show all of the points in one plot. From experimenting with a slider to trying buttons, nothing flowed very smoothly. Additionally, there were originally separate plots for Men and Women. Furthermore, attempting to combine the change in performance and success together proved to be incredibly confusing. To combat this, when studying client-side linking, the use of bscols in R proved to be a good solution for adding a selection option for Men and Women and a selection option for high altitude and low altitude. Rather than including separate plots for Men’s and Women’s teams, having everything in one place makes it easy for the reader to decipher the differences in teams. Additionally, utilizing the simple variable of average placement provided clearer and overall better results. Originally, implementation of the plot was difficult because adding two filter components was incredibly involved in Plotly. However, with the use of widgets and linking keys, this process was straightforward and distributable across multiple visuals. If the plot were to be made again from scratch, it may have been better to have a bubble plot with elevation as size and performance as color. This may have been easier to see the individual schools. Removing the geospatial element might help give the reader a bit more direction and see the difference more easily.
+</p>
+<br>
+<br>
+
+
+<h2>Figure 6 - Race Day Weather Conditions Radar Chart Visualization</h2>
+<br>
+
+<h3>Data Collection</h3>
+
+<p>
+See Figure 3 section above for Ranking Data Collection.
+<br>
+<br>
+The weather data for the past 11 NCAA D1 National Cross Country Championships was attained from WeatherSpark.com. 
+This site provided the recorded weather conditions experienced in the host city of each National Meet on the exact day the meet was held. 
+The data was attained through searching each race date and location on this webpage and was recorded into a csv file that already contained the year of the race, the host university, and the city that was input into WeatherSpark.com. 
+The weather data variables recorded were as follows: temperature (degrees Fahrenheit), Wind Speed (mph), and Cloud Cover. 
+An overarching weather condition was then determined for each race based on these variable values. 
+An example of the weather data collected is as follows: <a href ="https://weatherspark.com/h/d/12796/2018/11/18/Historical-Weather-on-Sunday-November-18-2018-in-Madison-Wisconsin-United-States#metar-09-53" target='_blank'>WeatherSpark.com</a>.<br>
+This manual gathering process was employed as it was quicker than finding an API and scraping for only 11 observations. 
+</p>
+<br>
+
+<h3>Data Cleaning</h3>
+<p>
+  There was minimal cleaning conducted for the race day weather conditions data due to the manual process of data collection. 
+However, this data was filtered to only contain observations for the years 2017, 2018, 2019, and 2021. 
+This step was completed because each of these race years experienced differing weather conditions: Wind, Snow, Rain, and Sun, respectively. 
+Following, this data was then joined with the ranking data by the “Year” column in both datasets (for explanation of data cleaning of ranking data see Figure 3 section above). 
+Afterwards, all observations that were not respective to the four previously noted race years were removed. 
+Finally, and very importantly, the “Rank” column in this newly joined dataset was adjusted. 
+Every observation in this column was mutated to now be equal to the difference of 32 and the initial rank value. 
+This step was conducted to allow for the radar chart to properly denote the strength of a team for a specific weather category with a large point in that direction. 
+Otherwise, teams that competed well and placed on the podium would have small points on the radar chart and the data would not be properly denoted in the visual encodings enabled with a radar chart. 
+</p>
+<br>
+
+<h3>Design Choices</h3>
+<p>
+The main reasoning behind the creation of Figure 6 was to display how teams competed in varying weather conditions to determine if race day weather conditions had any noticeable impact on how well a team performed at the NCAA Championship Cross Country Meet. 
+To enable this, a radar chart visual was utilized. The radar chart was chosen because it allowed for an easy comparison of a team’s performance in each of the weather conditions of interest. 
+The teams with large edges in a certain direction (associated with the weather condition) denoted strength in that condition, while small edges in a direction denoted weakness in that condition. 
+Moreover, the visual utilized widgets that allowed for the choice of gender to display, as well as the choice of team(s) to be displayed on the radar chart. 
+The denotation of gender was created to allow for easy understanding of what gender team is being displayed at the current time and could only be either Men or Women at any given time. 
+While the widget specific to the team(s) being displayed allowed for one or multiple teams. 
+The widget would allow for users to type in the name of a team and would provide recommendations as the name of a team was being input, and additionally let the user easily delete a team being displayed if desired. 
+If only a single team was chosen, then only a single radar chart visual was instantiated for that team. 
+However, if multiple teams were chosen each of the associated radar charts were overlayed on a single visual to enable easy comparison. 
+Moreover, each team’s radar chart was encoded with a unique color to provide ease of interpretation of which radar chart denoted which team; an associated key was additionally displayed to the right. 
+On top of that, this visual employed tooltip hover-ability for each of the data points. 
+If a user hovered over a data point, then a pop-up box would appear that displayed the team performance score value (in case it was difficult to know the exact value on the radar chart axis), as well as the year that race was ran. 
+Also, to help with ease of understanding of what denoted a good or bad team performance score, a scale was included immediately under the title of this visual.
+<br>
+<br>
+One important note regarding this visual is the choice to set an initial team display whenever this chart is first viewed. 
+Initially, this visual had every team’s performance radar chart overlayed on top of each other when first viewed; however, this was extremely cluttered and confusing to understand. 
+Thus, additional JavaScript code was added to the HTML document after creation and saving in an R script that would always have the Arkansas Men’s Cross Country team data being displayed first. 
+This specific team was chosen because it was important for the authors that the proper interpretation of this visual be included within the narrative. 
+As such, the Arkansas Men’s team performances provided a radar chart object that included both long and short edges in varying weather conditions, thus enabling the best example to be explained in the narrative. 
+<br>
+<br>
+Additionally, it should be noted that this visual digressed from the use of the discrete color scales employed by Figure 3. 
+This thematic change from the uniform color encoding was made because of the lower number of discrete colors within the other color scale. 
+It was feared that due to Figure 6’s ability to overlay multiple teams' radar chart objects there was the possibility that limiting the possible color options might increase the likelihood of two teams' radar chart objects being displayed in the same color, and thus difficult to interpret. 
+As such, a color scale with a higher number of color options was used for Figure 6. Code can be found at: <a href='Code/Weather_Code/weather_radarChart.R' target='_blank'>Figure 6: Weather Radar Chart</a>.
+</p>
+<br>
+
+<h3>Reflection</h3>
+<p>
+This visual underwent extensive changes between the midpoint and final project submissions. 
+Initially, two geospatial plots (one for Men’s teams the other for Women’s teams), like that utilized by figure 5, were created to display the relative strength of teams in varying weather conditions. 
+On this initial plot each school was encoded by a point on the geospatial plot and a diverging color scale was used to note how well each team performed at the NCAA Cross Country Championship Meet. 
+Moreover, a slider was employed to allow a user to choose which weather condition experienced at the meet they wanted to observe. 
+After reflecting it was determined that not only did this utilize the same visual type as figure 5 and thus did not increase the number of unique visuals in the project, but this data gained nothing from being visualized on a geospatial plot. 
+Furthermore, it was realized that it would be much more beneficial to allow for users to see a team’s overall performance score in each of the four weather conditions at once, as that was the focus and reasoning behind the creation of this visual. 
+Upon these conclusions it was determined that the optimal method of visualizing a team’s performance across a range of weather conditions would be best done using a radar chart.
+</p>
+<br>
+<br>
+
+<h2>Figure 7 - <u>Linked</u> Change from Previous Week Ranking to Performance at NCAA Championship</h2>
+<br>
+
+<h3>Data Collection</h3>
+<p>
+See Figure 3 section above for Ranking Data Collection.
+<br><br>
+Each team in NCAA Cross Country competes throughout the season before competing in the NCAA Cross Country Championships. From the culmination of all their regular season performances, they are ranked prior to the NCAA Championships. To determine the performance change for this visual, the performance at the NCAA Championships is subtracted from the Previous Week Ranking.
+</p>
+<br>
+
+<h3>Data Cleaning</h3>
+
+<p>
+See Figure 3 section above for Ranking Data Cleaning.
+<br><br>
+In order to have a cohesive highlight key between unique teams, the variables team and gender were combined to differentiate between a Men's Cross Country team and a Women's Cross Country team because some schools have athletes competing on both the Men's and Women's side.
+</p>
+<br>
+
+<h3>Design Choices</h3>
+<p>
+The purpose of this visual is to understand how some teams underperform or overperform with the pressure of an NCAA Championship. It is essential to the narrative because it showcases various schools rising to the occasion or falling apart when the stakes of racing are higher.
+<br><br>
+This was chosen as a linked view because a scatterplot of ranking change is best supplemented with a histogram of ranking change to show the total distribution of the performances coinciding the individual performances over time.
+<br><br>
+Furthermore, the ranking changes could be best explained by color encoding based on positive and negative numbers to separate overperformers and underperformers. This makes a clear separation of a good or bad performance or collection of performances. Discrete colors were used because they denoted either a "positive" change in green or a "negative" change in red for a team's performance, which is categorical.
+<br><br>
+In order to look at specific teams that are discussed in the narrative, the use of dropdown menus for both gender and team allow the user to look into how specific teams perform compared to how they are expected to perform.
+<br><br>
+To maintain consistency across Figures 5, 6, and 7 that all employed user interface widgets a specific custom theme was chosen and utilized in the creation of each of these figures. This custom theming included the font weight, font type, font size, font alignment, background color, and formatting of the visualizations. Moreover, all visual titles were written in title convention (with the first letter of important words being capitalized). The code for this visualization can be can be found at: <a href='Code/Ranking_Code/ChangePreviousRanktoPerformanceLinkedViewScatterPlotHistogram.R' target='_blank'>Figure 7: Linked Scatterplot and Histogram</a>. 
+</p>
+<br>
+
+<h3>Reflection</h3>
+<p>
+In the initial proposal, the ranking change element was merely a component of other visuals throughout the narrative. Ultimately, it combined too many factors for the reader at the same time, thus confusing the reader more than it explained trends in the ranking change of teams.
+<br><br>
+When creating this linked plot, each individual team performance was considered as the highlight key when connecting the two plots. However, this only linked single points and did not help the reader draw any conclusions. Additionally, highlighting by team did not work because it showed both Men's and Women's teams at the same time, overplotting without understandable trends.
+<br><br>
+After taking a step back and thinking through what this visual was trying to show, the variables "Team" and "Gender" were united to create a highlight key dependent on unique teams. With this small adjustment, linking is seamless and comparisons between overperformers and underperformers is incredibly clear.
+</p>
+<br><br>
+<h2>Change of Technical Goals</h2>
+<br>
+<p>
+
+After identifying our encompassing variables, our visualization goals changed from simply investigating the altitude teams trained at, to investigating the totality of factors that go into preparing for and executing a race. Furthermore, we realized that it would be best to differentiate between each of these variables with a separate visual; however, providing descriptions between visuals that help depict how each build on one another to tell our overall data science story. In summary, although there are places we believe we can improve, we stand firm in our belief that our visualizations are successful in facilitating the story we want to tell.
+</p>
+</main>
+</body>
+</html>
+
