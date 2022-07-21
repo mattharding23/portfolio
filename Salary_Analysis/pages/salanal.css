@@ -36,10 +36,11 @@ figcaption {
 /* Paragraph Structure */
 
 #use_block{
-    display:inline-block;
+    display:block;
+    width: 65%;
     margin:auto;
     margin-top:30px;
-    width: 65%;
+    
 }
 #para_block{
     display: inline-block;

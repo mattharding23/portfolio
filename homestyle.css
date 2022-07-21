@@ -112,7 +112,7 @@ h3{
     margin-left:27.5%;
     width: 25%;
     text-align: left;
-    margin-top: 10px;
+    margin-top: 25px;
     font-size: 50px;
 }
 
@@ -248,7 +248,7 @@ h3{
     }
 
     .step:last-child {
-      margin-bottom: 300px;
+      margin-bottom: 400px;
     }
 
     .step.is-active {
@@ -271,7 +271,7 @@ a:hover {
 }
 
 #outro {
-  height: 200px;
+  height: 5 px;
 }
 
 @media (min-width: 840px) {
