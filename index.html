@@ -51,7 +51,7 @@
                     <!-- ------------- 501 Analysis (Chesapeake) ------------ -->
 
 
-                    <div class="step" data-step= "ANLY_501/visuals/Conclusions/do_ph_temp.png" inter = "F" data-w = "80%" data-colw = "60%" data-figcap = "The trend of dissolved oxygen in the water vs. the pH of the water <br /> <a href='ANLY_501/pages/Introduction.html' target='_blank'>See entire analysis here</a>">
+                    <div class="step" data-step= "ANLY_501/visuals/Conclusions/do_ph_temp.png" data-inter = "F" data-w = "80%" data-h = "500px" data-colw = "60%" data-figcap = "The trend of dissolved oxygen in the water vs. the pH of the water <br /> <a href='ANLY_501/pages/Introduction.html' target='_blank'>See entire analysis here</a>">
                         <br>
                         <br>
                         <br>
@@ -71,7 +71,7 @@
                     <!-- ------------- 511 Analysis (NBA) ------------ -->
 
 
-                    <div class="step" data-step= "Salary_Analysis/visuals/team_sal_dist.png" inter = "F" data-w = "80%" data-colw = "60%" data-figcap = "NBA team salary distributions split between winning & losing teams<br /> <a href='SalaryAnalysis.html' target='_blank'>See entire analysis here</a>">
+                    <div class="step" data-step= "Salary_Analysis/visuals/team_sal_dist.png" data-inter = "F" data-w = "80%" data-h = "500px" data-colw = "60%" data-figcap = "NBA team salary distributions split between winning & losing teams<br /> <a href='SalaryAnalysis.html' target='_blank'>See entire analysis here</a>">
                         <h3>NBA Salary Distribution Analysis</h3>
                         <p>
                             The NBA salary distribution analysis was completed as a part of a group project that analyzed multiple factors as to how they contribute to winning in the NBA. The salary distribution analysis uses statistical techniques in order to determine whether there are significant difference between how winning and losing teams distribute their salaries. This section displays my ability to apply statistical methods to a real world setting. The link below the image will focus on only the salary distribution analysis, however there is a link to download the full group report <a href = "Salary_Analysis/pages/511Report.pdf" download="511Report.pdf" role = "button">here</a>. 
@@ -82,7 +82,7 @@
                     <!-- ------------- Cherry Blossom Predictions ------------ -->
 
 
-                    <div class="step" data-step= "cherry_blossoms/visuals/figure1.png" inter = "F" data-w = "80%" data-colw = "60%" data-figcap = "An example of he correlation between peak bloom day and one of the aggregated variables <br /> <a href='cherry_blossoms/pages/cherry_blossom_narrative.html' target='_blank'>See entire analysis here</a>">
+                    <div class="step" data-step= "cherry_blossoms/visuals/figure1.png" data-inter = "F" data-w = "80%" data-h = "500px" data-colw = "60%" data-figcap = "An example of he correlation between peak bloom day and one of the aggregated variables <br /> <a href='cherry_blossoms/pages/cherry_blossom_narrative.html' target='_blank'>See entire analysis here</a>">
                         <h3>Peak Cherry Blossom Predictions</h3>
                         <p>
 
@@ -95,12 +95,12 @@
                     <!-- ------------- Cross Country ------------ -->
 
 
-                   <!-- <div class="step" data-step= "ANLY_503/Final_Project/visuals/map.html" inter = "T" data-w = "80%" data-colw = "60%" data-figcap = "Cross Country Course Map of NCAA National Championship Course. Displays changes in elevation with interactions to help runners strategize prior to a race.<br /> <a href='ANLY_503/Final_Project/pages/course_map_writeup.html' target='_blank'>See entire analysis here</a>">
+                    <div class="step" data-step= "ANLY_503/Final_Project/visuals/map.html" data-inter = "T" data-w = "90%" data-h = "700px" data-colw = "30%" data-figcap = "Cross Country Course Map of NCAA National Championship Course. Displays changes in elevation with interactions to help runners strategize prior to a race.<br /> <a href='ANLY_503/Final_Project/pages/full_report/full_project.html' target='_blank'>See entire analysis here</a>">
                         <h3>Cross Country Success Factors</h3>
                         <p>
-                            For a final project in a data visualization course, myself and group members created visualizations and a narrative in order to help runners at the NCAA division 1 level be more successful. 
+                            For a final project in a data visualization course, myself and group members created visualizations and a narrative in order to help runners at the NCAA division 1 level be more successful. My work focused on our feature visualization which was an interactive topographical map of a national championship cross country course. The purpose of the visualization was to give runners insight into the course before actually running on it so that they can plan out a strategy for their race. The topography is shown by a heatmap overlayed on the map of the course and there are interactive markers showing the peaks and valleys of the course. The entire project narrative created by myself and my teammates can be viewed at the link below the figure. 
                         </p>
-                    </div> -->
+                    </div>
         
             
                 </article>
@@ -143,12 +143,19 @@
 
                 // update graphic based on step
                 sticky.querySelector("figure").style.width = el.dataset.w;
-                sticky.querySelector("figure").style.height = "auto";
+                sticky.querySelector("figure").style.height = el.dataset.h;
+                console.log(el.dataset.inter)
                 if (el.dataset.inter == "T") {
                     sticky.querySelector("iframe").src = el.dataset.step;
                     sticky.querySelector("iframe").style.width = "100%";
                     sticky.querySelector("iframe").style.height = "100%";
+                    sticky.querySelector("img").src = "";
+                    sticky.querySelector("img").style.width = "0%";
+                    sticky.querySelector("img").style.height = "0%";
                 }else{
+                    sticky.querySelector("iframe").src = "";
+                    sticky.querySelector("iframe").style.width = "0%";
+                    sticky.querySelector("iframe").style.height = "0%";
                     sticky.querySelector("img").src = el.dataset.step;
                     sticky.querySelector("img").style.width = "100%";
                     sticky.querySelector("img").style.height = "100%";

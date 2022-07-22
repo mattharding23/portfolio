@@ -244,11 +244,11 @@ h3{
     .step {
       margin: 0 auto 2rem auto;  
       color: #ffffff;
-      margin-bottom: 400px;
+      margin-bottom: 200px;
     }
 
     .step:last-child {
-      margin-bottom: 400px;
+      margin-bottom: 800px;
     }
 
     .step.is-active {
@@ -271,7 +271,7 @@ a:hover {
 }
 
 #outro {
-  height: 5 px;
+  height: 200px;
 }
 
 @media (min-width: 840px) {
